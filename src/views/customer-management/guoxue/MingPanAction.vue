@@ -59,6 +59,8 @@
   </div>
 </template>
 <script>
+import { checkAuth } from '../../../utils/authUtils'
+
 export default {
   name: "MingPanAction",
   props: {
@@ -72,6 +74,7 @@ export default {
   },
   methods: {
     closeChange(value, type) {
+      // if (!checkAuth(this)) return;
       console.log("🚀 ~ file:MingPanAction method:closeChange line:75 -----value", value, type)
 
       this.$emit('closeChange', type, value, this.actionIndex)
@@ -80,6 +83,7 @@ export default {
       this.$emit('repeatPostGuoxue', this.actionIndex)
     },
     delTable() {
+      if (!checkAuth(this)) return;
       this.$emit('delTable', this.actionIndex)
     },
   }

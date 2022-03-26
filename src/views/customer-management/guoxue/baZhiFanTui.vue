@@ -172,6 +172,7 @@ import 'element-ui/lib/theme-chalk/display.css';
 import { Solar } from 'lunar-typescript'
 import BaZhiFanTuiMoblie from './baZhiFanTuiMoblie.vue'
 import { mapState } from 'vuex';
+import { checkAuth } from '../../../utils/authUtils'
 
 export default {
   name: 'BaZhiFanTui',
@@ -290,6 +291,7 @@ export default {
       this.generateTimeGanZhiOptions(value[0])
     },
     onSubmit() {
+      if (!checkAuth(this)) return;
       this.$refs['baZhirules'].validate((valid) => {
         if (valid) {
           console.log(this.form);

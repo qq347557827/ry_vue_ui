@@ -56,6 +56,8 @@
 </template>
 
 <script>
+import { checkAuth } from '../../../utils/authUtils'
+
 export default {
   props: {
     form: {
@@ -73,6 +75,7 @@ export default {
   },
   methods: {
     onSubmit() {
+      if (!checkAuth(this)) return;
       this.$emit('onSubmit')
     },
     switchChange(v) {
