@@ -349,8 +349,12 @@
                 <el-descriptions-item label="总金额" :span="4">{{ detailOrder.totalAmount }}</el-descriptions-item>
                 <el-descriptions-item label="定金" :span="1">{{ detailOrder.deposit }}</el-descriptions-item>
                 <el-descriptions-item label="支付方式" :span="1">{{ detailOrder.payMethod }}</el-descriptions-item>
-               <el-descriptions-item v-if="detailOrder.secondaryRevenue" label="二次收款" :span="1">{{ detailOrder.secondaryRevenue }}</el-descriptions-item>
-                <el-descriptions-item v-if="detailOrder.secondaryRevenueMethod" label="二次收款方式" :span="1">{{ detailOrder.secondaryRevenueMethod }}</el-descriptions-item>
+                <el-descriptions-item v-if="detailOrder.secondaryRevenue" label="二次收款" :span="1">
+                  {{ detailOrder.secondaryRevenue }}
+                </el-descriptions-item>
+                <el-descriptions-item v-if="detailOrder.secondaryRevenueMethod" label="二次收款方式" :span="1">
+                  {{ detailOrder.secondaryRevenueMethod }}
+                </el-descriptions-item>
                 <el-descriptions-item label="代收货款" :span="1">{{ detailOrder.collectAmount }}</el-descriptions-item>
                 <el-descriptions-item label="快递公司" :span="2">{{ detailOrder.expressCompany }}</el-descriptions-item>
                 <el-descriptions-item label="快递单号" :span="2">{{ detailOrder.trackingNumber }}</el-descriptions-item>
@@ -363,7 +367,7 @@
           <template v-slot:action>
 
             <div class="bgf-pd10 ml10" v-if="detailOrder.status === '0'"
-                @click="handleCellUpdate(detailOrder)"
+                 @click="handleCellUpdate(detailOrder)"
             >
               <el-link type="primary">修改</el-link>
             </div>
@@ -374,39 +378,41 @@
 
             </template>
             <div class="bgf-pd10 ml10 mt1" v-if="detailOrder.status === '1' || detailOrder.status === '2'"
-                 @click="handleOrderReject(detailOrder.orderId)">
-              <el-link type="primary" >踢回修改</el-link>
+                 @click="handleOrderReject(detailOrder.orderId)"
+            >
+              <el-link type="primary">踢回修改</el-link>
             </div>
             <div class="bgf-pd10 ml10" v-if="detailOrder.status === '2'">
               <el-popover
                 placement="right"
                 width="400"
-                v-model="isDetailShipment">
+                v-model="isDetailShipment"
+              >
                 <template v-slot:reference>
-                  <div @click="detailShipmentClick" >
-                    <el-link type="primary" >发货/修改单号</el-link>
+                  <div @click="detailShipmentClick">
+                    <el-link type="primary">发货/修改单号</el-link>
                   </div>
                 </template>
-                  <el-form ref="form" :model="form" label-width="80px">
-                    <el-form-item label="快递公司">
-                      <el-select v-model="detailShipmentForm.expressCompany" placeholder="快递公司">
-                        <el-option
-                          v-for="item in order.sysExpressCompany"
-                          :key="item.dictCode"
-                          :label="item.dictLabel"
-                          :value="item.dictLabel"
-                        >
-                        </el-option>
-                      </el-select>
-                    </el-form-item>
-                    <el-form-item label="快递单号">
-                      <el-input v-model="detailShipmentForm.trackingNumber" placeholder="请输入快递单号"/>
-                    </el-form-item>
-                    <el-form-item>
-                      <el-button type="primary" @click="detailShipmentOnSubmit">确认</el-button>
-                      <el-button @click="detailShipmentOnCanel">取消</el-button>
-                    </el-form-item>
-                  </el-form>
+                <el-form ref="form" :model="form" label-width="80px">
+                  <el-form-item label="快递公司">
+                    <el-select v-model="detailShipmentForm.expressCompany" placeholder="快递公司">
+                      <el-option
+                        v-for="item in order.sysExpressCompany"
+                        :key="item.dictCode"
+                        :label="item.dictLabel"
+                        :value="item.dictLabel"
+                      >
+                      </el-option>
+                    </el-select>
+                  </el-form-item>
+                  <el-form-item label="快递单号">
+                    <el-input v-model="detailShipmentForm.trackingNumber" placeholder="请输入快递单号"/>
+                  </el-form-item>
+                  <el-form-item>
+                    <el-button type="primary" @click="detailShipmentOnSubmit">确认</el-button>
+                    <el-button @click="detailShipmentOnCanel">取消</el-button>
+                  </el-form-item>
+                </el-form>
 
               </el-popover>
 
@@ -416,15 +422,18 @@
                 <el-popover
                   placement="right"
                   width="400"
-                  v-model="isDetailSecondaryRevenue">
+                  v-model="isDetailSecondaryRevenue"
+                >
                   <template v-slot:reference>
-                    <div @click="detailSecondaryRevenueClick" >
+                    <div @click="detailSecondaryRevenueClick">
                       <el-link type="primary">二次收款</el-link>
                     </div>
                   </template>
                   <el-form ref="form" :model="form" label-width="80px">
                     <el-form-item label="收款方式">
-                      <el-select v-model="detailSecondaryRevenueForm.secondaryRevenueMethod" placeholder="请输入二次收款方式">
+                      <el-select v-model="detailSecondaryRevenueForm.secondaryRevenueMethod"
+                                 placeholder="请输入二次收款方式"
+                      >
                         <el-option
                           v-for="item in order.sysPayMethod"
                           :key="item.dictCode"
@@ -462,10 +471,11 @@
             <div class="bgf-pd10 ml10 mt1" v-if="detailOrder.status === '3' || detailOrder.status === '4'">
               <el-link type="primary">退差价</el-link>
             </div>
-            <div class="bgf-pd10 ml10 mt1" v-if="detailOrder.status === '3' || detailOrder.status ==='4'|| detailOrder.status ==='5'|| detailOrder.status ==='8'">
+            <div class="bgf-pd10 ml10 mt1"
+                 v-if="detailOrder.status === '3' || detailOrder.status ==='4'|| detailOrder.status ==='5'|| detailOrder.status ==='8'"
+            >
               <el-link type="primary">退款</el-link>
             </div>
-
 
 
           </template>
@@ -613,7 +623,10 @@ export default {
         // 是否更新已经存在的用户数据
         updateSupport: 0,
         // 设置上传的请求头部
-        headers: { Authorization: 'Bearer ' + getToken() },
+        headers: {
+          Authorization: 'Bearer ' + getToken(),
+          'Content-Type': 'application/json;charset=utf-8'
+        },
         // 上传的地址
         url: process.env.VUE_APP_BASE_API + '/system/order/importData'
       }
@@ -796,7 +809,7 @@ export default {
     },
     // 单个审核
     handleOrderApproval(orderId) {
-      console.log("orderId",orderId)
+      console.log('orderId', orderId)
       approvalRejectByOrderId({ orderId, status: '2' }).then(res => {
         console.log(res)
         if (res) {
@@ -821,12 +834,12 @@ export default {
     /** 详情页发货点击 */
     detailShipmentClick() {
       console.log('detailShipmentClick', this.isDetailShipment)
-      this.$set(this.detailShipmentForm, "expressCompany", this.detailOrder.expressCompany)
-      this.$set(this.detailShipmentForm, "trackingNumber", this.detailOrder.trackingNumber)
+      this.$set(this.detailShipmentForm, 'expressCompany', this.detailOrder.expressCompany)
+      this.$set(this.detailShipmentForm, 'trackingNumber', this.detailOrder.trackingNumber)
       // this.isDetailShipment = false
     },
     /** 详情页发货提交 */
-    async detailShipmentOnSubmit () {
+    async detailShipmentOnSubmit() {
       if (this.detailShipmentForm.expressCompany && this.detailShipmentForm.trackingNumber) {
         const data = {
           orderId: this.detailOrder.orderId,
@@ -837,9 +850,9 @@ export default {
           const res = await shipmentOrder(data)
           if (res) {
             this.$modal.msg('发货成功')
-            this.$set(this.detailOrder, "expressCompany", this.detailShipmentForm.expressCompany)
-            this.$set(this.detailOrder, "trackingNumber", this.detailShipmentForm.trackingNumber)
-            this.$set(this.detailOrder, "status", "3")
+            this.$set(this.detailOrder, 'expressCompany', this.detailShipmentForm.expressCompany)
+            this.$set(this.detailOrder, 'trackingNumber', this.detailShipmentForm.trackingNumber)
+            this.$set(this.detailOrder, 'status', '3')
             this.getList()
             this.detailShipmentForm = {}
             this.isDetailShipment = false
@@ -861,12 +874,12 @@ export default {
     /** 二次收款点击 */
     detailSecondaryRevenueClick() {
       console.log('detailShipmentClick', this.isDetailShipment)
-      this.$set(this.detailSecondaryRevenueForm, "secondaryRevenue", this.detailOrder.secondaryRevenue)
-      this.$set(this.detailSecondaryRevenueForm, "secondaryRevenueMethod", this.detailOrder.secondaryRevenueMethod)
+      this.$set(this.detailSecondaryRevenueForm, 'secondaryRevenue', this.detailOrder.secondaryRevenue)
+      this.$set(this.detailSecondaryRevenueForm, 'secondaryRevenueMethod', this.detailOrder.secondaryRevenueMethod)
       // this.isDetailShipment = false
     },
     /** 二次收款提交 */
-    async detailSecondaryRevenueOnSubmit () {
+    async detailSecondaryRevenueOnSubmit() {
       if (this.detailSecondaryRevenueForm.secondaryRevenue && this.detailSecondaryRevenueForm.secondaryRevenueMethod) {
         const data = {
           orderId: this.detailOrder.orderId,
@@ -877,8 +890,8 @@ export default {
           const res = await secondaryRevenueOrder(data)
           if (res) {
             this.$modal.msg('成功')
-            this.$set(this.detailOrder, "secondaryRevenue", this.detailSecondaryRevenueForm.secondaryRevenue)
-            this.$set(this.detailOrder, "secondaryRevenueMethod", this.detailSecondaryRevenueForm.secondaryRevenueMethod)
+            this.$set(this.detailOrder, 'secondaryRevenue', this.detailSecondaryRevenueForm.secondaryRevenue)
+            this.$set(this.detailOrder, 'secondaryRevenueMethod', this.detailSecondaryRevenueForm.secondaryRevenueMethod)
             this.getList()
             this.detailSecondaryRevenueForm = {}
             this.isDetailSecondaryRevenue = false

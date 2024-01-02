@@ -102,3 +102,11 @@ export function secondaryRevenueOrder(data) {
     data
   })
 }
+
+// 查询金额数据
+export function selectOrderAllAmount(orderId) {
+  return request({
+    url: '/system/order/selectOrderAllAmount',
+    method: 'get'
+  })
+}

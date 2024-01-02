@@ -37,7 +37,7 @@
               <div slot="header">
                 <div>商品信息</div>
               </div>
-              <el-form-item prop="orderGoodsList">
+
                 <el-table
                   :data="orderForm.orderGoodsList"
                   min-height="180"
@@ -101,6 +101,7 @@
                     </template>
                   </el-table-column>
                 </el-table>
+              <el-form-item prop="orderGoodsList">
               </el-form-item>
             </el-card>
             <el-card class="box-card" style="margin-top: 10px" shadow="never">
@@ -304,9 +305,9 @@ export default {
       customerForm: {},
       // 客户资料校验
       customerRules: {
-        wechat: [
-          { required: true, message: '微信不能为空', trigger: 'blur' }
-        ],
+        // wechat: [
+        //   { required: true, message: '微信不能为空', trigger: 'blur' }
+        // ],
         wechatDate: [
           { required: true, message: '添加时间不能为空', trigger: 'blur' }
         ]
