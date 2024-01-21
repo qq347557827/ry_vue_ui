@@ -1,35 +1,108 @@
 <template>
   <div class="guoxue">
     <div class="search">
-      <el-form :form="form" label-width="80px">
+      <el-form :form="form" label-width="80px" labelPosition="top">
         <el-row>
-          <el-col :span="6">
+          <el-col :span="4">
             <el-form-item label="姓名">
               <el-input v-model="form.name"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
-            <el-form-item label="性别">
-              <el-radio-group v-model="form.sex">
-                <el-radio label="0"></el-radio>
-                <el-radio label="1"></el-radio>
-              </el-radio-group>
+          <el-col :span="2">
+            <el-form-item label="是否公历">
+              <el-switch v-model="form.isSolar"></el-switch>
+            </el-form-item>
+          </el-col>
+          <!--          <el-col :span="4">-->
+          <!--            <el-form-item label="性别">-->
+          <!--              <el-radio-group v-model="form.sex">-->
+          <!--                <el-radio label="男"></el-radio>-->
+          <!--                <el-radio label="女"></el-radio>-->
+          <!--              </el-radio-group>-->
+          <!--            </el-form-item>-->
+          <!--          </el-col>-->
+          <el-col :span="2">
+            <el-form-item label="年份">
+              <el-select  v-model="form.nian" filterable placeholder="请选择">
+                <el-option
+                  v-for="item in 74"
+                  :key="item"
+                  :label="item + 1950"
+                  :value="item + 1950"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="2">
+            <el-form-item label="月">
+              <el-select v-model="form.yue" placeholder="请选择">
+                <el-option
+                  v-for="item in 12"
+                  :key="item"
+                  :label="item"
+                  :value="item"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="2">
+            <el-form-item label="是否闰月">
+              <el-switch v-model="form.isLeapMonth"></el-switch>
+            </el-form-item>
+          </el-col>
+          <el-col :span="2">
+            <el-form-item label="日">
+              <el-select v-model="form.ri" placeholder="请选择">
+                <el-option
+                  v-for="item in 30"
+                  :key="item"
+                  :label="item"
+                  :value="item"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="2">
+            <el-form-item label="时">
+              <el-select v-model="form.hh" placeholder="请选择">
+                <el-option
+                  v-for="item in timeArr"
+                  :key="item.time"
+                  :label="item.timeStr"
+                  :value="item.time"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="4">
+            <el-form-item>
+              <el-button type="primary" @click="onSubmit">立即创建</el-button>
+              <el-button>取消</el-button>
             </el-form-item>
           </el-col>
         </el-row>
       </el-form>
     </div>
-    <div class="main"></div>
+    <div class="main">
+      <div style="width: 760px; margin: auto" v-html="html"></div>
+    </div>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
+import calendar from "js-calendar-converter"
+import { postGuoxue } from '../../../api/customer_order_goods/customer'
 
 export default {
   name: 'GuoXue',
   data() {
     return {
+      html: null,
       form: {},
       timeArr: [
         { time: 0, timeStr: '00子时(晚上12点)' },
@@ -60,81 +133,39 @@ export default {
     }
   },
   created() {
-    // var originalString = "灵芝";
-    // var gb2312EncodedString = encodeURIComponent(originalString);
-    // console.log(gb2312EncodedString);
-    function stringToGB2312(str) {
-      var result = ''
-      for (var i = 0; i < str.length; i++) {
-        var code = str.charCodeAt(i)
-        result += '%' + (0xD5 + (code >> 8)).toString(16).toUpperCase() +
-          (0xD4 + (code & 0xFF)).toString(16).toUpperCase()
-      }
-      return result
-    }
 
-    var originalString = '赵'
-    var originalString2 = '灵芝'
-    var gb2312EncodedString = stringToGB2312(originalString)
-    var gb2312EncodedString2 = stringToGB2312(originalString2)
-    console.log(gb2312EncodedString, gb2312EncodedString2)
-    this.test3()
   },
   methods: {
-    test2() {
-      axios.get("https://rili.ximizi.com/nonglichaxun.php?ref=1").then(res => {
-        console.log(res)
-      }).catch(err => console.log(err))
-
-    },
-    test3() {
-      axios.get("https://www.dajiazhao.com/sm/scbz.asp").then(res => {
-        console.log(res)
-      }).catch(err => console.log(err))
-
-    },
-    test() {
-      const headers = {
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
-        'Accept-Encoding': 'gzip, deflate, br',
-        'Accept-Language': 'zh-CN,zh;q=0.9',
-        'Cache-Control': 'max-age=0',
-        'Content-Type': 'application/x-www-form-urlencoded',
-        // 'Cookie': 'Hm_lvt_1d379575d2847bbd3081e28d52c4633e=1703768926; laisuanming=sx=&mm1=&hh1=&hh2=&yue1=&xuexing=&nian1=&xingbie=&mm2=&yue2=&nian2=&ri1=&ming=&ri2=&xing=; ASPSESSIONIDQUTDCTDQ=FEBDMBKCODHMNMIDHPAIMKAF; Hm_lpvt_1d379575d2847bbd3081e28d52c4633e=1703781255',
-        'Origin': 'https://www.dajiazhao.com',
-        'Referer': 'https://www.dajiazhao.com/sm/scbz.asp',
-        'Sec-Ch-Ua': '"Not_A Brand";v="8", "Chromium";v="120", "Google Chrome";v="120"',
-        'Sec-Ch-Ua-Mobile': '?0',
-        'Sec-Ch-Ua-Platform': '"Windows"',
-        'Sec-Fetch-Dest': 'document',
-        'Sec-Fetch-Mode': 'navigate',
-        'Sec-Fetch-Site': 'same-origin',
-        'Sec-Fetch-User': '?1',
-        'Upgrade-Insecure-Requests': '1',
-        // 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
-      }
-
+    onSubmit() {
+      console.log(this.form)
+      const y =  calendar.lunar2solar(this.form.nian, this.form.yue, this.form.ri, this.form.isLeapMonth)
+      console.log(y)
       const data = {
-        // 根据实际需求提供请求的数据
-        xing: '%B6%EE',
-        ming: '%CE%CA%CE%CA',
-        xingbie: '%C5%AE',
-        nian: 2004,
-        yue: 12,
-        ri: 29,
-        hh: 0,
-        mm: 0
+        nian: y.cYear,
+        yue: y.cMonth,
+        ri: y.cDay,
+        hh: this.form.hh ? this.form.hh : 0,
+        mm: this.form.mm ? this.form.mm : 0,
       }
-
-      axios.post('https://www.dajiazhao.com/sm/scbz.asp', data, { headers })
-        .then(response => {
-          // 处理响应
-          console.log(response.data)
-        })
-        .catch(error => {
-          // 处理错误
-          console.error('Error:', error)
-        })
+      postGuoxue(data).then(res => {
+        console.log(res)
+        this.html = res
+        const  k = this.html.indexOf("<table")
+        console.log(k)
+        this.html = this.html.slice(k);
+        console.log(this.html)
+      }).catch(err => console.log(err))
+    },
+    reset() {
+      this.form = {
+        nian: null,
+        yue: null,
+        ri: null,
+        hh: null,
+        mm: null,
+        isLeapMonth: false,
+        isSolar:false
+      }
     }
   }
 }

@@ -42,3 +42,11 @@ export function delCustomer(id) {
     method: 'delete'
   })
 }
+
+export function postGuoxue(data) {
+  return request({
+    url: '/system/customer/guoxue',
+    method: 'post',
+    data: data
+  })
+}
