@@ -78,10 +78,10 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="4">
+          <el-col :span="4" label="操作" >
             <el-form-item>
-              <el-button type="primary" @click="onSubmit">立即创建</el-button>
-              <el-button>取消</el-button>
+              <el-button type="primary" @click="onSubmit">查询</el-button>
+              <el-button @click="reset">取消</el-button>
             </el-form-item>
           </el-col>
         </el-row>
@@ -147,17 +147,48 @@ export default {
         hh: this.form.hh ? this.form.hh : 0,
         mm: this.form.mm ? this.form.mm : 0,
       }
+      const loading = this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      });
       postGuoxue(data).then(res => {
-        console.log(res)
+        // console.log(res)
         this.html = res
         const  k = this.html.indexOf("<table")
         console.log(k)
         this.html = this.html.slice(k);
+
+        const lastClosingTableTagPosition = this.html.lastIndexOf("<table");
+        console.log(lastClosingTableTagPosition)
+        this.html = this.html.slice(0, lastClosingTableTagPosition);
+        this.replaceName(this.html)
         console.log(this.html)
-      }).catch(err => console.log(err))
+      })
+        .catch(err => console.log(err))
+        .finally(res => {
+          loading.close();
+        })
+    },
+    replaceName() {
+      if (!this.form.name) return;
+      const searchPattern = /<td width="6%".*?<\/td>/g; // 匹配以<b>赵开头，“<br /><br />”结尾的文本
+      let replaceText = '<td width="6%" rowspan="6" bgcolor="#FFFFFF" class="new">'
+      for (const char of this.form.name) {
+        console.log(char);
+        replaceText += `<b>${char}</b><br /><br />`
+      }
+      replaceText += '</td>'
+      this.html = this.replacePattern(this.html, searchPattern, replaceText);
+    },
+    replacePattern(html, searchPattern, replaceText) {
+      const regex = new RegExp(searchPattern, 'g');
+      return html.replace(regex, replaceText);
     },
     reset() {
       this.form = {
+        name: null,
         nian: null,
         yue: null,
         ri: null,
@@ -172,5 +203,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+.main::v-deep {
+   .new {
+    PADDING-RIGHT: 10px;
+    PADDING-LEFT: 10px;
+    FONT-SIZE: 16px;
+    PADDING-BOTTOM: 5px;
+    LINE-HEIGHT: 2;
+    PADDING-TOP: 5px;
+  }
+}
 </style>
