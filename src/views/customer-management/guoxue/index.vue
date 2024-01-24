@@ -1,7 +1,7 @@
 <template>
   <div class="guoxue">
     <div class="search">
-      <el-form :form="form" label-width="80px" labelPosition="top">
+      <el-form :model="form" :rules="rules" ref="ruleForm" label-width="80px" labelPosition="top" class="demo-ruleForm">
         <el-row>
           <el-col :span="4">
             <el-form-item label="姓名">
@@ -22,8 +22,8 @@
           <!--            </el-form-item>-->
           <!--          </el-col>-->
           <el-col :span="2">
-            <el-form-item label="年份">
-              <el-select  v-model="form.nian" filterable placeholder="请选择">
+            <el-form-item label="年份" prop="nian">
+              <el-select v-model="form.nian" filterable placeholder="年">
                 <el-option
                   v-for="item in 74"
                   :key="item"
@@ -35,8 +35,8 @@
             </el-form-item>
           </el-col>
           <el-col :span="2">
-            <el-form-item label="月">
-              <el-select v-model="form.yue" placeholder="请选择">
+            <el-form-item label="月" prop="yue">
+              <el-select v-model="form.yue" placeholder="月">
                 <el-option
                   v-for="item in 12"
                   :key="item"
@@ -53,10 +53,10 @@
             </el-form-item>
           </el-col>
           <el-col :span="2">
-            <el-form-item label="日">
-              <el-select v-model="form.ri" placeholder="请选择">
+            <el-form-item label="日" prop="ri">
+              <el-select v-model="form.ri" placeholder="日">
                 <el-option
-                  v-for="item in 30"
+                  v-for="item in 31"
                   :key="item"
                   :label="item"
                   :value="item"
@@ -78,8 +78,8 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="4" label="操作" >
-            <el-form-item>
+          <el-col :span="4" >
+            <el-form-item label="操作栏">
               <el-button type="primary" @click="onSubmit">查询</el-button>
               <el-button @click="reset">取消</el-button>
             </el-form-item>
@@ -95,7 +95,7 @@
 
 <script>
 import axios from 'axios'
-import calendar from "js-calendar-converter"
+import calendar from 'js-calendar-converter'
 import { postGuoxue } from '../../../api/customer_order_goods/customer'
 
 export default {
@@ -129,64 +129,136 @@ export default {
         { time: 21, timeStr: '21亥时(晚上9点)' },
         { time: 22, timeStr: '22亥时(晚上10点)' },
         { time: 23, timeStr: '23子时(晚上11点)' }
-      ]
+      ],
+      rules: {
+        nian: [
+          { required: true, message: '年份必填', trigger: 'blur' }
+        ],
+        yue: [
+          { required: true, message: '月份必填', trigger: 'blur' }
+        ],
+        ri: [
+          { required: true, message: '必填', trigger: 'blur' }
+        ]
+      }
     }
   },
   created() {
 
   },
   methods: {
-    onSubmit() {
-      console.log(this.form)
-      const y =  calendar.lunar2solar(this.form.nian, this.form.yue, this.form.ri, this.form.isLeapMonth)
-      console.log(y)
-      const data = {
-        nian: y.cYear,
-        yue: y.cMonth,
-        ri: y.cDay,
-        hh: this.form.hh ? this.form.hh : 0,
-        mm: this.form.mm ? this.form.mm : 0,
-      }
-      const loading = this.$loading({
-        lock: true,
-        text: 'Loading',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      });
-      postGuoxue(data).then(res => {
-        // console.log(res)
-        this.html = res
-        const  k = this.html.indexOf("<table")
-        console.log(k)
-        this.html = this.html.slice(k);
+    leapMonthFn() {
 
-        const lastClosingTableTagPosition = this.html.lastIndexOf("<table");
-        console.log(lastClosingTableTagPosition)
-        this.html = this.html.slice(0, lastClosingTableTagPosition);
-        this.replaceName(this.html)
-        console.log(this.html)
+    },
+    onSubmit() {
+      this.$refs['ruleForm'].validate((valid) => {
+        if (valid) {
+          let data
+          if (this.form.isSolar) {
+            data = {
+              nian: this.form.nian,
+              yue: this.form.yue,
+              ri: this.form.ri,
+              hh: this.form.hh ? this.form.hh : 0,
+              mm: this.form.mm ? this.form.mm : 0
+            }
+          } else {
+            if (this.form.isLeapMonth) {
+              const leapMonth = calendar.leapMonth(this.form.nian)
+              if (!leapMonth) {
+                this.$message('该年份没有闰月')
+                return
+              } else if (leapMonth !== this.form.yue) {
+                this.$message(`该年闰${leapMonth}月，请检查是否正确`)
+                return
+              }
+            }
+            const y = calendar.lunar2solar(this.form.nian, this.form.yue, this.form.ri, this.form.isLeapMonth)
+            data = {
+              nian: y.cYear,
+              yue: y.cMonth,
+              ri: y.cDay,
+              hh: this.form.hh ? this.form.hh : 0,
+              mm: this.form.mm ? this.form.mm : 0
+            }
+
+          }
+          const loading = this.$loading({
+            lock: true,
+            text: 'Loading',
+            spinner: 'el-icon-loading',
+            background: 'rgba(0, 0, 0, 0.7)'
+          })
+          postGuoxue(data).then(res => {
+            this.resetHH()
+            // console.log(res)
+            this.html = res
+            const k = this.html.indexOf('<table')
+            console.log(k)
+            this.html = this.html.slice(k)
+
+            const lastClosingTableTagPosition = this.html.lastIndexOf('<table')
+            console.log(lastClosingTableTagPosition)
+            this.html = this.html.slice(0, lastClosingTableTagPosition)
+            this.replaceName()
+            let parser = new DOMParser()
+            let doc = parser.parseFromString(this.html, 'text/html')
+            // console.log(doc)
+            // 获取第一个table元素
+            const table = doc.querySelector('table')
+            const td = table.querySelectorAll('td')
+// 输出table元素的内容
+            console.log(table)
+            console.log(td[24])
+            console.log(td[24].innerText)
+            this.replaceNianZhu(td[24].innerText)
+
+          })
+            .catch(err => console.log(err))
+            .finally(res => {
+              loading.close()
+            })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
       })
-        .catch(err => console.log(err))
-        .finally(res => {
-          loading.close();
-        })
+
+    },
+    replaceNianZhu(nianZhu) {
+      const str = nianZhu + "命"
+      const searchPattern = /日柱.*?命/g // 匹配以<b>赵开头，“<br /><br />”结尾的文本
+      this.html = this.replacePattern(this.html, searchPattern, str)
     },
     replaceName() {
-      if (!this.form.name) return;
-      const searchPattern = /<td width="6%".*?<\/td>/g; // 匹配以<b>赵开头，“<br /><br />”结尾的文本
-      let replaceText = '<td width="6%" rowspan="6" bgcolor="#FFFFFF" class="new">'
+      if (!this.form.name) return
+      let nameHtml = ''
       for (const char of this.form.name) {
-        console.log(char);
-        replaceText += `<b>${char}</b><br /><br />`
+        nameHtml += `<b>${char}</b><br><br>`
       }
-      replaceText += '</td>'
-      this.html = this.replacePattern(this.html, searchPattern, replaceText);
+      nameHtml += '</td>'
+      const searchPattern = /<b>赵.*?<\/td>/gs // 匹配以<b>赵开头，“<br /><br />”结尾的文本
+      this.html = this.replacePattern(this.html, searchPattern, nameHtml)
     },
     replacePattern(html, searchPattern, replaceText) {
-      const regex = new RegExp(searchPattern, 'g');
-      return html.replace(regex, replaceText);
+      const regex = new RegExp(searchPattern, 'g')
+      return html.replace(regex, replaceText)
+    },
+    initData() {
+      if (this.form.isSolar) {
+        return this.form
+      } else {
+
+      }
+    },
+    resetHH() {
+      this.$set(this.form, 'isSolar', false)
+      this.$set(this.form, 'isLeapMonth', false)
+      this.$set(this.form, 'hh', null)
+      this.$set(this.form, 'mm', null)
     },
     reset() {
+      this.$refs['ruleForm'].resetFields()
       this.form = {
         name: null,
         nian: null,
@@ -195,7 +267,7 @@ export default {
         hh: null,
         mm: null,
         isLeapMonth: false,
-        isSolar:false
+        isSolar: false
       }
     }
   }
@@ -204,7 +276,7 @@ export default {
 
 <style lang="scss" scoped>
 .main::v-deep {
-   .new {
+  .new {
     PADDING-RIGHT: 10px;
     PADDING-LEFT: 10px;
     FONT-SIZE: 16px;
