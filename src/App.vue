@@ -7,6 +7,7 @@
 
 <script>
 import ThemePicker from "@/components/ThemePicker";
+import './assets/fonts/fonts.css';
 
 export default {
   name: "App",
