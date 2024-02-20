@@ -130,6 +130,83 @@
         <el-col :span="12">
           <div class="main">
             <div v-html="tableHtml" id="table-html" style="background-color: red"></div>
+            <div>
+              <table>
+                <template v-for="(item, index) in tableVal.table">
+                  <tr>
+                    <td width="6%" rowspan="5" bgcolor="#FFFFFF" class="new no-internal-borders">
+                      {{ item.name }}
+                    </td>
+                    <td width="8%" rowspan="2" bgcolor="#FFFFFF" class="new no-internal-borders">
+                      出生<br>日期
+                    </td>
+                    <td width="10%" bgcolor="#FFFFFF" class="new no-internal-borders">
+                      公历
+                    </td>
+                    <td style="width:10%" bgcolor="#FFFFFF" class="new no-internal-borders">{{ item.solarYear }}</td>
+                    <td style=" width:10%" bgcolor="#FFFFFF" class="new no-internal-borders">{{ item.solarMonth }}</td>
+                    <td style=" width:12%" bgcolor="#FFFFFF" class="new no-internal-borders">{{ item.solarDay }}</td>
+                    <td style=" width:11%" bgcolor="#FFFFFF" class="new no-internal-borders">{{ item.closeSolarH ?  item.solarHh : '' }}</td>
+                    <td style=" width:30%;padding-left:4px;padding-right:4px;" rowspan="5" bgcolor="#FFFFFF"
+                        class="new no-internal-borders"
+                    >
+                      {{ item.gaiYao }}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td bgcolor="#FFFFFF" class="new no-internal-borders">农历</td>
+                    <td bgcolor="#FFFFFF" class="new no-internal-borders">{{ item.lunarYear }}</td>
+                    <td bgcolor="#FFFFFF" class="new no-internal-borders">{{ item.lunarMonth }}</td>
+                    <td bgcolor="#FFFFFF" class="new no-internal-borders">{{ item.lunarDay }}</td>
+                    <td bgcolor="#FFFFFF" class="new no-internal-borders">{{ item.closeLunarH ?  item.lunarHh : '' }}</td>
+                  </tr>
+                  <tr>
+                    <td colspan="2" bgcolor="#FFFFFF" class="new no-internal-borders">八字：</td>
+                    <td bgcolor="#FFFFFF" class="new no-internal-borders">{{ item.baZhiYear }}</td>
+                    <td bgcolor="#FFFFFF" class="new no-internal-borders">{{ item.baZhiMonth }}</td>
+                    <td bgcolor="#FFFFFF" class="new no-internal-borders">{{ item.baZhiDay }}</td>
+                    <td bgcolor="#FFFFFF" class="new no-internal-borders">{{ item.closeBaZhiH ?  item.baZhiHh : '' }}</td>
+                  </tr>
+                  <tr>
+                    <td colspan="2" bgcolor="#FFFFFF" class="new no-internal-borders">五行：</td>
+                    <td bgcolor="#FFFFFF" class="new no-internal-borders">{{
+                         item.wuXinYear
+                      }}
+                    </td>
+                    <td bgcolor="#FFFFFF" class="new no-internal-borders">{{
+                        item.wuXinMonth
+                      }}
+                    </td>
+                    <td bgcolor="#FFFFFF" class="new no-internal-borders">{{
+                        item.wuXinDay
+                      }}
+                    </td>
+                    <td bgcolor="#FFFFFF" class="new no-internal-borders">{{
+                        item.closeWuXinH ? item.wuXinHh : ''
+                      }}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td bgcolor="#ffffff" class="new no-internal-borders" colspan="6"> {{
+                        item.geShu ? item.geShu : '八字五行个数 :'
+                      }}
+                    </td>
+                  </tr>
+                </template>
+                <tr>
+                  <td colspan="8">
+                    <el-input
+                      type="textarea"
+                      :rows="2"
+                      autosize
+                      placeholder="请输入内容"
+                      v-model="textarea"
+                    >
+                    </el-input>
+                  </td>
+                </tr>
+              </table>
+            </div>
             <!--        <el-row>-->
             <!--          <el-col :span="1"><div class="grid-content bg-purple-dark"></div></el-col>-->
             <!--          <el-col :span="24"><div class="grid-content bg-purple-dark">-->
@@ -154,7 +231,7 @@
               <el-image
                 style="width: 100%; height: 100%"
                 :src="imgUrl"
-                ></el-image>
+              ></el-image>
             </div>
             <template v-if="this.html">
               <div style="" v-html="html"></div>
@@ -238,6 +315,43 @@ export default {
       textarea: '',
       list: [],
       tableKey: null,
+      tableVal: {
+        table: [
+        //   {
+        //   name: '',
+        //   gaiYao: '',
+        //   geShu: '',
+        //
+        //   solarYear: '',
+        //   solarMonth: '',
+        //   solarDay: '',
+        //   solarHh: '',
+        //
+        //   lunarYear: '',
+        //   lunarMonth: '',
+        //   lunarDay: '',
+        //   lunarHh: '',
+        //
+        //   baZhiYear: '',
+        //   baZhiMonth: '',
+        //   baZhiDay: '',
+        //   baZhiHh: '',
+        //
+        //   wuXinYear: '',
+        //   wuXinMonth: '',
+        //   wuXinDay: '',
+        //   wuXinHh: '',
+        //
+        //   close: {
+        //     solarH: true,
+        //     lunarH: true,
+        //     BaZhiH: true,
+        //     wuXinH: true
+        //   }
+        // }
+        ],
+        text: ''
+      },
       timeArr: [
         { time: 0, timeStr: '00子时(晚上12点)' },
         { time: 1, timeStr: '01丑时(凌晨1点)' },
@@ -279,7 +393,7 @@ export default {
   },
   created() {
     const tableListStr = this.$cache.local.get('table_list')
-    console.log(tableListStr)
+    // console.log(tableListStr)
     if (tableListStr) {
       this.list = JSON.parse(tableListStr)
 
@@ -290,46 +404,49 @@ export default {
   },
   methods: {
     checkIfMobile() {
-      this.isMobile = /iphone|ipad|ipod|android|blackberry|mini|windows\sce|palm/i.test(navigator.userAgent.toLowerCase());
-      console.log(this.isMobile)
+      this.isMobile = /iphone|ipad|ipod|android|blackberry|mini|windows\sce|palm/i.test(navigator.userAgent.toLowerCase())
+      // console.log(this.isMobile)
     },
-    leapMonthFn() {
+    initData(form) {
+      let data
+      if (form.isSolar) {
 
+        data = {
+          nian: form.nian,
+          yue: form.yue,
+          ri: form.ri,
+          hh: form.hh ? this.form.hh : 0,
+          mm: form.mm ? this.form.mm : 0
+        }
+      } else {
+        if (form.isLeapMonth) {
+          const leapMonth = calendar.leapMonth(form.nian)
+          if (!leapMonth) {
+            this.$message('该年份没有闰月')
+            return
+          } else if (leapMonth !== form.yue) {
+            this.$message(`该年闰${leapMonth}月，请检查是否正确`)
+            return
+          }
+        }
+        const y = calendar.lunar2solar(form.nian, form.yue, form.ri, form.isLeapMonth)
+        data = {
+          nian: y.cYear,
+          yue: y.cMonth,
+          ri: y.cDay,
+          hh: form.hh ? form.hh : 0,
+          mm: form.mm ? form.mm : 0
+        }
+
+      }
+      return data
     },
+
     onSubmit() {
-
       this.$refs['ruleForm'].validate((valid) => {
         if (valid) {
-          let data
-          if (this.form.isSolar) {
-            data = {
-              nian: this.form.nian,
-              yue: this.form.yue,
-              ri: this.form.ri,
-              hh: this.form.hh ? this.form.hh : 0,
-              mm: this.form.mm ? this.form.mm : 0
-            }
-          } else {
-            if (this.form.isLeapMonth) {
-              const leapMonth = calendar.leapMonth(this.form.nian)
-              if (!leapMonth) {
-                this.$message('该年份没有闰月')
-                return
-              } else if (leapMonth !== this.form.yue) {
-                this.$message(`该年闰${leapMonth}月，请检查是否正确`)
-                return
-              }
-            }
-            const y = calendar.lunar2solar(this.form.nian, this.form.yue, this.form.ri, this.form.isLeapMonth)
-            data = {
-              nian: y.cYear,
-              yue: y.cMonth,
-              ri: y.cDay,
-              hh: this.form.hh ? this.form.hh : 0,
-              mm: this.form.mm ? this.form.mm : 0
-            }
+          const data = this.initData(this.form)
 
-          }
           const loading = this.$loading({
             lock: true,
             text: 'Loading',
@@ -343,10 +460,10 @@ export default {
             // console.log(res)
             this.html = res
             const k = this.html.indexOf('<table')
-            console.log(k)
+            // console.log(k)
             this.html = this.html.slice(k)
             const lastClosingTableTagPosition = this.html.lastIndexOf('<table')
-            console.log(lastClosingTableTagPosition)
+            // console.log(lastClosingTableTagPosition)
             this.html = this.html.slice(0, lastClosingTableTagPosition)
             // const tableRuleTRege = new RegExp(/<table/)
             // this.html = this.html.replace(tableRuleTRege, `<table rules="none"`)
@@ -370,9 +487,9 @@ export default {
 // 输出table元素的内容
 
             const trArr = table.querySelectorAll('tr')
-            console.log('trArr', trArr)
+            // console.log('trArr', trArr)
             const trNaYing = trArr[4]
-            console.log(trNaYing)
+            // console.log(trNaYing)
 
             const tableGeShu = doc.querySelectorAll('table')[1]
             const trGeShu = tableGeShu.querySelector('tr')
@@ -380,7 +497,7 @@ export default {
             // tdGeShu.textContent = "测试"
             tdGeShu.colSpan = 6
             tdGeShu.classList.add('no-internal-borders')
-            console.log(trGeShu)
+            // console.log(trGeShu)
             // table.replaceChild(trGeShu, trNaYing)
             table.deleteRow(4)
             table.querySelector('tbody').append(trGeShu)
@@ -399,7 +516,7 @@ export default {
             // const f = this.html.test(searchPattern3)
 
             // console.log("table...............",table)
-            console.log('doc...............', tableStr)
+            // console.log('doc...............', tableStr)
             // this.replaceNianZhu(trNaYing.querySelectorAll('td')[1].innerText)
 
             const tdNianZhu = trNaYing.querySelectorAll('td')[1]
@@ -428,11 +545,25 @@ export default {
             tdGaiYao.innerHTML = tdGaiYaoStr
             // console.log(tdGaiYao)
             doc.body.removeChild(table)
-            console.log(doc)
+            // console.log(doc)
+            console.log(this.$cache.local.get('29bf2d47-cc7d-4208-b561-40794d713451'))
+
+            if (this.form.hh === null || this.form.hh === undefined || this.form.hh === '') {
+              tds[6].textContent = ''
+              tds[12].textContent = ''
+            }
+            console.log(tds)
+            const obj = this.initTableVal(table)
+            this.tableVal.table.push(obj)
             tableDom = table
             this.tableHtml = table.outerHTML
 
+            // if (!this.form.hh) {
+            //   this.tableClear1()
+            //   this.tableClear2()
+            // }
             this.html = doc.body.outerHTML
+            console.log(this.$cache.local.get('29bf2d47-cc7d-4208-b561-40794d713451'))
             this.addLocalTable()
             this.resetHH()
           })
@@ -447,6 +578,45 @@ export default {
       })
 
     },
+    initTableVal(table) {
+      const tds = table.querySelectorAll('td')
+      console.log(tds)
+      // console.log("tds[24].textContent",tds[24].textContent)
+      const obj = {
+        name: tds[0].textContent,
+        gaiYao: tds[7].textContent,
+        solarYear: tds[3].textContent,
+        solarMonth: tds[4].textContent,
+        solarDay: tds[5].textContent,
+        solarHh: tds[6].textContent,
+        lunarYear: tds[9].textContent,
+        lunarMonth: tds[10].textContent,
+        lunarDay: tds[11].textContent,
+        lunarHh: tds[12].textContent,
+        baZhiYear: tds[14].textContent,
+        baZhiMonth: tds[15].textContent,
+        baZhiDay: tds[16].textContent,
+        baZhiHh: tds[17].textContent,
+        wuXinYear: tds[19].textContent,
+        wuXinMonth: tds[20].textContent,
+        wuXinDay: tds[21].textContent,
+        wuXinHh: tds[22].textContent,
+        geShu: tds[23].textContent
+      }
+
+      if (this.form.hh === null || this.form.hh === undefined || this.form.hh === '') {
+        obj.closeSolarH = false
+        obj.closeLunarH = false
+        obj.closeBaZhiH = true
+        obj.closeWuXinH = true
+      } else {
+        obj.closeSolarH = true
+        obj.closeLunarH = true
+        obj.closeBaZhiH = true
+        obj.closeWuXinH = true
+      }
+      return obj
+    },
     repeatPostGuoxue() {
       const loading = this.$loading({
         lock: true,
@@ -454,7 +624,10 @@ export default {
         spinner: 'el-icon-loading',
         background: 'rgba(0, 0, 0, 0.7)'
       })
-      postGuoxue(this.checkForm).then(res => {
+      console.log(this.checkForm)
+      const data = this.initData(this.checkForm)
+      console.log('data', data)
+      postGuoxue(data).then(res => {
         let html = res
         const k = html.indexOf('<table')
         html = html.slice(k)
@@ -468,8 +641,8 @@ export default {
         // const match2 = html.match(new RegExp(geShuPattern, 'g'))
         html = this.replacePattern(html, geShuPattern, match[0])
         const table1_2Pattern = /<table.*?<\/table>/s
-        html = this.replacePattern(html, table1_2Pattern, "")
-        console.log(html)
+        html = this.replacePattern(html, table1_2Pattern, '')
+        // console.log(html)
         this.html = html
       })
         .catch(err => console.log(err))
@@ -483,27 +656,29 @@ export default {
       this.reset()
       this.resetTableImg()
       this.textarea = ''
-      console.log(item)
+      console.log(item.key)
       this.tableKey = item.key
       const str = this.$cache.local.get(item.key)
       this.tableHtml = str
       let parser = new DOMParser()
       let doc = parser.parseFromString(str, 'text/html')
       tableDom = doc.querySelector('table')
-      console.log(tableDom)
+      // console.log(tableDom)
       // this.form = item
       this.html = null
-      console.log(str)
+      // console.log(str)
     },
     deleteList(item) {
-      console.log(item.key)
+      // console.log(item.key)
       this.list.forEach((i, index) => {
         if (i.key === item.key) {
-          console.log(i.key)
-          this.tableKey = i.key
+          // console.log(i.key)
+          const tableKey = i.key
+          // this.tableKey = i.key
           this.list.splice(index, 1)
-          this.$cache.local.set('table_list', this.list)
-          this.$cache.local.remove(this.tableKey)
+          const listStr = JSON.stringify(this.list)
+          this.$cache.local.set('table_list', listStr)
+          this.$cache.local.remove(tableKey)
         }
       })
     },
@@ -518,10 +693,12 @@ export default {
     addLocalTable() {
       if (this.form.name) {
         this.tableKey = uuid()
+        console.log(this.tableKey)
+        console.log(this.list)
         const item = { key: this.tableKey, ...this.form }
         this.list.unshift(item)
         const listStr = JSON.stringify(this.list)
-        console.log(listStr)
+        // console.log(listStr)
         this.$cache.local.set('table_list', listStr)
         this.$cache.local.set(this.tableKey, this.tableHtml)
       }
@@ -533,8 +710,8 @@ export default {
         const odlStr = td.innerText
         const newStr = odlStr + '\n' + this.textarea
         td.textContent = newStr
-        console.log(newStr)
-        console.log(tableDom)
+        // console.log(newStr)
+        // console.log(tableDom)
 
       } else {
         const tdNew = document.createElement('td')
@@ -543,12 +720,12 @@ export default {
         trNew.id = 'tr-gaiYao'
         trNew.append(tdNew1)
         trNew.append(tdNew)
-        console.log(trNew)
+        // console.log(trNew)
         tableDom.querySelector('tbody').append(trNew)
-        console.log(this.tableDom)
+        // console.log(this.tableDom)
 
         tdNew.textContent = this.textarea
-        console.log(tdNew)
+        // console.log(tdNew)
         tdNew.classList.add('no-internal-borders')
         tdNew.classList.add('new')
         tdNew.id = 'pre-line'
@@ -579,7 +756,7 @@ export default {
       // const f = this.html.test(searchPattern3)
       const startRegex = new RegExp(table)
       const match = this.html.match(startRegex)[0]
-      console.log('match', match)
+      // console.log('match', match)
       const trTest = new RegExp(/<tr.*?<\/tr>/gs)
       const trMatchArr = match.match(trTest)
       const tr4 = trMatchArr[4]
@@ -592,31 +769,24 @@ export default {
     },
     replaceName() {
       let name
-
+      let nameHtml = ''
+      let searchPattern = /<b>赵.*?<\/td>/gs // 匹配以<b>赵开头，“<br /><br />”结尾的文本
       if (!this.form.name) {
-        name = '没写名'
+        nameHtml = ''
       } else {
         name = this.form.name
+        for (const char of name) {
+          nameHtml += `<b>${char}</b><br><br>`
+        }
+        nameHtml += '</td>'
       }
-      let nameHtml = ''
-      for (const char of name) {
-        nameHtml += `<b>${char}</b><br><br>`
-      }
-      nameHtml += '</td>'
-      const searchPattern = /<b>赵.*?<\/td>/gs // 匹配以<b>赵开头，“<br /><br />”结尾的文本
       this.html = this.replacePattern(this.html, searchPattern, nameHtml)
+
     },
     replacePattern(html, searchPattern, replaceText) {
       // const regex = new RegExp(searchPattern, 'g')
       const regex = new RegExp(searchPattern)
       return html.replace(regex, replaceText)
-    },
-    initData() {
-      if (this.form.isSolar) {
-        return this.form
-      } else {
-
-      }
     },
     resetHH() {
       this.$set(this.form, 'isSolar', false)
@@ -626,7 +796,7 @@ export default {
     },
     resetTableImg() {
       const tableImg = window.document.querySelector('#image-table')
-      tableImg.textContent = ""
+      tableImg.textContent = ''
     },
     tableClear1() {
 
@@ -668,11 +838,13 @@ export default {
       this.btnLoad = true
       const that = this
       const table = document.querySelector('#table-html')
-      html2canvas(table,{
+      html2canvas(table, {
         letterRendering: true,
+        // scale: window.devicePixelRatio
+        scale: 2
         // width: 760
       }).then(function(canvas) {
-        console.log(canvas)
+        // console.log(canvas)
         // document.body.appnedChild(canvas)
         const tableImg = window.document.querySelector('#image-table')
 
@@ -680,21 +852,21 @@ export default {
         that.btnLoad = false
         if (that.isMobile) {
           const tableImgUrl = window.document.querySelector('#image-png')
-          const downloadLink = document.createElement('a');
+          const downloadLink = document.createElement('a')
           // 将 Canvas 转为 Data URL
-          const dataUrl = canvas.toDataURL('image/png');
+          const dataUrl = canvas.toDataURL('image/png')
           // console.log(dataUrl)
           that.imgUrl = dataUrl
           // 设置下载链接的 href 属性为 Data URL
-          downloadLink.href = dataUrl;
+          downloadLink.href = dataUrl
 
           // 设置文件名
-          downloadLink.download = 'screenshot.png';
+          downloadLink.download = 'screenshot.png'
 
           // 模拟点击下载链接
-          document.body.appendChild(downloadLink);
-          downloadLink.click();
-          document.body.removeChild(downloadLink);
+          document.body.appendChild(downloadLink)
+          downloadLink.click()
+          document.body.removeChild(downloadLink)
         }
 
       })
@@ -754,7 +926,6 @@ export default {
   margin: auto;
 
 
-
   .new {
 
     //PADDING-RIGHT: 10px;
@@ -778,6 +949,7 @@ export default {
     white-space: pre-line;
   }
 }
+
 #table-html::v-deep {
   #image-table {
     background-color: red;
