@@ -2,22 +2,43 @@
   <div class="guoxue">
     <div class="search">
       <template v-if="isMobile">
-        <el-form :model="form" :rules="rules" ref="ruleForm" label-width="42px"
+        <el-form :model="form" :rules="rules" ref="ruleForm"
                  class="demo-ruleForm"
         >
           <el-row type="flex" class="row-bg">
-            <el-col :span="12">
-              <el-form-item label="姓名">
+            <el-col :span="11">
+              <el-form-item label="姓名" label-width="42px">
                 <el-input v-model.trim="form.name" clearable></el-input>
               </el-form-item>
             </el-col>
-            <el-col :span="4">
-              <el-form-item label="公历">
+            <el-col :span="6">
+              <el-form-item label="公历" label-width="42px">
                 <el-switch v-model="form.isSolar"></el-switch>
               </el-form-item>
             </el-col>
-            <el-col :span="8">
-              <el-form-item label="年" prop="nian" label-width="36px">
+            <el-col :span="5">
+              <el-form-item label="四季" label-width="42px">
+                <el-switch
+                  v-model="isShiJi"
+                  active-color="#13ce66"
+                  inactive-color="#ff4949"
+                >
+                </el-switch>
+              </el-form-item>
+            </el-col>
+
+            <!--          <el-col :span="4">-->
+            <!--            <el-form-item label="性别">-->
+            <!--              <el-radio-group v-model="form.sex">-->
+            <!--                <el-radio label="男"></el-radio>-->
+            <!--                <el-radio label="女"></el-radio>-->
+            <!--              </el-radio-group>-->
+            <!--            </el-form-item>-->
+            <!--          </el-col>-->
+          </el-row>
+          <el-row class="row-bg">
+            <el-col :span="6">
+              <el-form-item prop="nian">
                 <el-select v-model="form.nian" filterable placeholder="年" @change="changeYueSelect">
                   <el-option
                     v-for="item in 74"
@@ -29,19 +50,9 @@
                 </el-select>
               </el-form-item>
             </el-col>
-            <!--          <el-col :span="4">-->
-            <!--            <el-form-item label="性别">-->
-            <!--              <el-radio-group v-model="form.sex">-->
-            <!--                <el-radio label="男"></el-radio>-->
-            <!--                <el-radio label="女"></el-radio>-->
-            <!--              </el-radio-group>-->
-            <!--            </el-form-item>-->
-            <!--          </el-col>-->
-          </el-row>
-          <el-row type="flex" class="row-bg" justify="center">
 
-            <el-col :span="6">
-              <el-form-item label="月" prop="yue" label-width="36px">
+            <el-col :span="4">
+              <el-form-item prop="yue">
                 <el-select v-model="form.yue" placeholder="月">
                   <el-option
                     v-for="item in months"
@@ -53,13 +64,13 @@
                 </el-select>
               </el-form-item>
             </el-col>
-            <el-col :span="6">
-              <el-form-item label="闰" label-width="36px">
+            <el-col :span="4">
+              <el-form-item label="闰" label-width="18px">
                 <el-switch v-model="form.isLeapMonth"></el-switch>
               </el-form-item>
             </el-col>
-            <el-col :span="6">
-              <el-form-item label="日" prop="ri">
+            <el-col :span="4">
+              <el-form-item prop="ri">
                 <el-select v-model="form.ri" placeholder="日">
                   <el-option
                     v-for="item in 31"
@@ -72,8 +83,8 @@
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="时">
-                <el-select v-model="form.hh" placeholder="几点" clearable>
+              <el-form-item>
+                <el-select v-model="form.hh" placeholder="时" clearable>
                   <el-option
                     v-for="item in timeArr"
                     :key="item.time"
@@ -87,14 +98,15 @@
             </el-col>
           </el-row>
           <el-row>
-            <el-col :span="5">
+            <el-col :span="4">
               <el-popover
                 placement="bottom"
                 trigger="click"
               >
                 <el-card class="box-card">
                   <div slot="header" class="clearfix">
-                    <el-input v-model="searchVal" @change="changeSearch" placeholder="搜索名字" style="width: 260px"
+                    <el-input v-model="searchVal" @change="changeSearch" clearable placeholder="搜索名字"
+                              style="width: 260px"
                     />
                     <el-popconfirm
                       confirm-button-text="确认"
@@ -161,9 +173,10 @@
             <el-col :span="4">
               <el-popover
                 placement="bottom"
-                width="120">
+                width="120"
+              >
                 <div v-for="(item, index) in tableVal.table" :key="index" style="margin-bottom: 12px">
-                  <div class="mobile-action" >
+                  <div class="mobile-action">
                     <div class="">
                       <span>关闭时间</span>
                       <el-switch
@@ -255,56 +268,115 @@
                   <td width="8%" rowspan="2" bgcolor="#FFFFFF" class="new no-internal-borders">
                     出生<br>日期
                   </td>
-                  <td width="10%" bgcolor="#FFFFFF"  class="new no-internal-borders">
+                  <td width="10%" bgcolor="#FFFFFF" class="new no-internal-borders">
                     公历
                   </td>
-                  <td style="width:10%" bgcolor="#FFFFFF"  class="new no-internal-borders">{{ item.solarYear }}</td>
-                  <td style=" width:10%" bgcolor="#FFFFFF" :style="{ paddingLeft:Math.floor(Math.random() * 5) + 1  + 'px' }"  class="new no-internal-borders">{{ item.solarMonth }}</td>
-                  <td style=" width:12%" bgcolor="#FFFFFF" :style="{ paddingLeft:Math.floor(Math.random() * 5) + 1  + 'px' }"  class="new no-internal-borders">{{ item.solarDay }}</td>
-                  <td style=" width:11%" bgcolor="#FFFFFF" :style="{ paddingLeft:Math.floor(Math.random() * 5) + 1  + 'px' }"  class="new no-internal-borders">
+                  <td style="width:10%" bgcolor="#FFFFFF"
+                      :style="{ paddingBottom: randomOffsets[index].solarYear + 'px',  paddingLeft: randomOffsets[index].solarYear + 'px' }"
+                      class="new no-internal-borders"
+                  >{{ item.solarYear }}
+                  </td>
+                  <td style=" width:10%" bgcolor="#FFFFFF"
+                      :style="{paddingBottom: randomOffsets[index].solarMonth + 'px',  paddingLeft: randomOffsets[index].solarMonth + 'px' }"
+                      class="new no-internal-borders"
+                  >{{ item.solarMonth }}
+                  </td>
+                  <td style=" width:12%" bgcolor="#FFFFFF"
+                      :style="{paddingBottom: randomOffsets[index].solarDay + 'px',  paddingLeft: randomOffsets[index].solarDay + 'px' }"
+                      class="new no-internal-borders"
+                  >{{ item.solarDay }}
+                  </td>
+                  <td style=" width:11%" bgcolor="#FFFFFF"
+                      :style="{paddingBottom: randomOffsets[index].solarHh + 'px',  paddingLeft: randomOffsets[index].solarHh + 'px' }"
+                      class="new no-internal-borders"
+                  >
                     {{ item.closeSolarH ? item.solarHh : '' }}
                   </td>
                   <td style=" width:30%;padding-left:4px;padding-right:4px;" rowspan="5" bgcolor="#FFFFFF"
                       class="new no-internal-borders"
                   >
-                    {{ item.gaiYao }}
+                    {{ isShiJi ? item.gaiYao : item.gaiYao.slice(0, -5) }}
                   </td>
                 </tr>
                 <tr>
-                  <td bgcolor="#FFFFFF"   class="new no-internal-borders">农历</td>
-                  <td bgcolor="#FFFFFF"  class="new no-internal-borders">{{ item.lunarYear }}</td>
-                  <td bgcolor="#FFFFFF"  class="new no-internal-borders">{{ item.lunarMonth }}</td>
-                  <td bgcolor="#FFFFFF"  class="new no-internal-borders">{{ item.lunarDay }}</td>
-                  <td bgcolor="#FFFFFF"  class="new no-internal-borders">{{ item.closeLunarH ? item.lunarHh : '' }}</td>
+                  <td bgcolor="#FFFFFF" class="new no-internal-borders">农历</td>
+                  <td bgcolor="#FFFFFF"
+                      :style="{paddingBottom: randomOffsets[index].lunarYear + 'px', paddingLeft: randomOffsets[index].lunarYear + 'px' }"
+                      class="new no-internal-borders"
+                  >{{ item.lunarYear }}
+                  </td>
+                  <td bgcolor="#FFFFFF"
+                      :style="{paddingBottom: randomOffsets[index].lunarMonth + 'px', paddingLeft: randomOffsets[index].lunarMonth + 'px' }"
+                      class="new no-internal-borders"
+                  >{{ item.lunarMonth }}
+                  </td>
+                  <td bgcolor="#FFFFFF"
+                      :style="{paddingBottom: randomOffsets[index].lunarDay + 'px', paddingLeft: randomOffsets[index].lunarDay + 'px' }"
+                      class="new no-internal-borders"
+                  >{{ item.lunarDay }}
+                  </td>
+                  <td bgcolor="#FFFFFF"
+                      :style="{paddingBottom: randomOffsets[index].lunarHh + 'px', paddingLeft: randomOffsets[index].lunarHh + 'px' }"
+                      class="new no-internal-borders"
+                  >{{ item.closeLunarH ? item.lunarHh : '' }}
+                  </td>
                 </tr>
                 <tr>
-                  <td colspan="2" bgcolor="#FFFFFF"  class="new no-internal-borders">八字：</td>
-                  <td bgcolor="#FFFFFF"  class="new no-internal-borders">{{ item.baZhiYear }}</td>
-                  <td bgcolor="#FFFFFF"  class="new no-internal-borders">{{ item.baZhiMonth }}</td>
-                  <td bgcolor="#FFFFFF"  class="new no-internal-borders">{{ item.baZhiDay }}</td>
-                  <td bgcolor="#FFFFFF"  class="new no-internal-borders">{{ item.closeBaZhiH ? item.baZhiHh : '' }}</td>
+                  <td colspan="2" bgcolor="#FFFFFF" class="new no-internal-borders">八字：</td>
+                  <td bgcolor="#FFFFFF"
+                      :style="{paddingBottom: randomOffsets[index].baZhiYear + 'px', paddingLeft: randomOffsets[index].baZhiYear + 'px' }"
+                      class="new no-internal-borders"
+                  >{{ item.baZhiYear }}
+                  </td>
+                  <td bgcolor="#FFFFFF"
+                      :style="{paddingBottom: randomOffsets[index].baZhiMonth + 'px', paddingLeft: randomOffsets[index].baZhiMonth + 'px' }"
+                      class="new no-internal-borders"
+                  >{{ item.baZhiMonth }}
+                  </td>
+                  <td bgcolor="#FFFFFF"
+                      :style="{paddingBottom: randomOffsets[index].baZhiDay + 'px', paddingLeft: randomOffsets[index].baZhiDay + 'px' }"
+                      class="new no-internal-borders"
+                  >{{ item.baZhiDay }}
+                  </td>
+                  <td bgcolor="#FFFFFF"
+                      :style="{paddingBottom: randomOffsets[index].baZhiHh + 'px', paddingLeft: randomOffsets[index].baZhiHh + 'px' }"
+                      class="new no-internal-borders"
+                  >{{ item.closeBaZhiH ? item.baZhiHh : '' }}
+                  </td>
                 </tr>
                 <tr>
-                  <td colspan="2" bgcolor="#FFFFFF"  class="new no-internal-borders">五行：</td>
-                  <td bgcolor="#FFFFFF"  class="new no-internal-borders">{{
+                  <td colspan="2" bgcolor="#FFFFFF" class="new no-internal-borders">五行：</td>
+                  <td bgcolor="#FFFFFF"
+                      :style="{paddingBottom: randomOffsets[index].wuXinYear + 'px', paddingLeft: randomOffsets[index].wuXinYear + 'px' }"
+                      class="new no-internal-borders"
+                  >{{
                       item.wuXinYear
                     }}
                   </td>
-                  <td bgcolor="#FFFFFF"  class="new no-internal-borders">{{
+                  <td bgcolor="#FFFFFF"
+                      :style="{paddingBottom: randomOffsets[index].wuXinMonth + 'px', paddingLeft: randomOffsets[index].wuXinMonth + 'px' }"
+                      class="new no-internal-borders"
+                  >{{
                       item.wuXinMonth
                     }}
                   </td>
-                  <td bgcolor="#FFFFFF"  class="new no-internal-borders">{{
+                  <td bgcolor="#FFFFFF"
+                      :style="{paddingBottom: randomOffsets[index].wuXinDay + 'px', paddingLeft: randomOffsets[index].wuXinDay + 'px' }"
+                      class="new no-internal-borders"
+                  >{{
                       item.wuXinDay
                     }}
                   </td>
-                  <td bgcolor="#FFFFFF"  class="new no-internal-borders">{{
+                  <td bgcolor="#FFFFFF"
+                      :style="{paddingBottom: randomOffsets[index].wuXinHh + 'px', paddingLeft: randomOffsets[index].wuXinHh + 'px' }"
+                      class="new no-internal-borders"
+                  >{{
                       item.closeWuXinH ? item.wuXinHh : ''
                     }}
                   </td>
                 </tr>
                 <tr>
-                  <td bgcolor="#ffffff"  class="new no-internal-borders" colspan="6"> {{
+                  <td bgcolor="#ffffff" class="new no-internal-borders" colspan="6"> {{
                       item.geShu ? item.geShu : '八字五行个数 :'
                     }}
                   </td>
@@ -485,6 +557,16 @@
 
               </el-form-item>
             </el-col>
+            <el-col :span="2">
+              <el-form-item label="显示四季">
+                <el-switch
+                  v-model="isShiJi"
+                  active-color="#13ce66"
+                  inactive-color="#ff4949"
+                >
+                </el-switch>
+              </el-form-item>
+            </el-col>
           </el-row>
         </el-form>
         <div>
@@ -493,7 +575,8 @@
               <div>
                 <el-card class="box-card">
                   <div slot="header" class="clearfix">
-                    <el-input v-model="searchVal" @change="changeSearch" placeholder="搜索名字" style="width: 260px"
+                    <el-input v-model="searchVal" @change="changeSearch" clearable placeholder="搜索名字"
+                              style="width: 260px"
                     />
                     <el-popconfirm
                       confirm-button-text="确认"
@@ -544,7 +627,7 @@
               </div>
             </el-col>
             <el-col :span="12">
-              <div>{{randomOffsets}}</div>
+              <!--              <div>{{randomOffsets}}</div>-->
               <div class="main table-width">
                 <!--            <div v-html="tableHtml" id="table-html" style="background-color: red"></div>-->
                 <div>
@@ -567,56 +650,115 @@
                       <td width="8%" rowspan="2" bgcolor="#FFFFFF" class="new no-internal-borders">
                         出生<br>日期
                       </td>
-                      <td width="10%" bgcolor="#FFFFFF"  class="new no-internal-borders">
+                      <td width="10%" bgcolor="#FFFFFF" class="new no-internal-borders">
                         公历
                       </td>
-                      <td style="width:10%" bgcolor="#FFFFFF" :style="{ paddingBottom: randomOffsets[index].solarYear + 'px',  paddingLeft: randomOffsets[index].solarYear + 'px' }"  class="new no-internal-borders">{{ item.solarYear }}</td>
-                      <td style=" width:10%" bgcolor="#FFFFFF" :style="{paddingBottom: randomOffsets[index].solarMonth + 'px',  paddingLeft: randomOffsets[index].solarMonth + 'px' }" class="new no-internal-borders">{{ item.solarMonth }}</td>
-                      <td style=" width:12%" bgcolor="#FFFFFF" :style="{paddingBottom: randomOffsets[index].solarDay + 'px',  paddingLeft: randomOffsets[index].solarDay + 'px' }"  class="new no-internal-borders">{{ item.solarDay }}</td>
-                      <td style=" width:11%" bgcolor="#FFFFFF" :style="{paddingBottom: randomOffsets[index].solarHh + 'px',  paddingLeft: randomOffsets[index].solarHh + 'px' }"  class="new no-internal-borders">
+                      <td style="width:10%" bgcolor="#FFFFFF"
+                          :style="{ paddingBottom: randomOffsets[index].solarYear + 'px',  paddingLeft: randomOffsets[index].solarYear + 'px' }"
+                          class="new no-internal-borders"
+                      >{{ item.solarYear }}
+                      </td>
+                      <td style=" width:10%" bgcolor="#FFFFFF"
+                          :style="{paddingBottom: randomOffsets[index].solarMonth + 'px',  paddingLeft: randomOffsets[index].solarMonth + 'px' }"
+                          class="new no-internal-borders"
+                      >{{ item.solarMonth }}
+                      </td>
+                      <td style=" width:12%" bgcolor="#FFFFFF"
+                          :style="{paddingBottom: randomOffsets[index].solarDay + 'px',  paddingLeft: randomOffsets[index].solarDay + 'px' }"
+                          class="new no-internal-borders"
+                      >{{ item.solarDay }}
+                      </td>
+                      <td style=" width:11%" bgcolor="#FFFFFF"
+                          :style="{paddingBottom: randomOffsets[index].solarHh + 'px',  paddingLeft: randomOffsets[index].solarHh + 'px' }"
+                          class="new no-internal-borders"
+                      >
                         {{ item.closeSolarH ? item.solarHh : '' }}
                       </td>
                       <td style=" width:30%;padding-left:4px;padding-right:4px;" rowspan="5" bgcolor="#FFFFFF"
                           class="new no-internal-borders"
                       >
-                        {{ item.gaiYao }}
+                        {{ isShiJi ? item.gaiYao : item.gaiYao.slice(0, -5) }}
                       </td>
                     </tr>
                     <tr>
-                      <td bgcolor="#FFFFFF"   class="new no-internal-borders">农历</td>
-                      <td bgcolor="#FFFFFF" :style="{paddingBottom: randomOffsets[index].lunarYear + 'px', paddingLeft: randomOffsets[index].lunarYear + 'px' }" class="new no-internal-borders">{{ item.lunarYear }}</td>
-                      <td bgcolor="#FFFFFF" :style="{paddingBottom: randomOffsets[index].lunarMonth + 'px', paddingLeft: randomOffsets[index].lunarMonth + 'px' }" class="new no-internal-borders">{{ item.lunarMonth }}</td>
-                      <td bgcolor="#FFFFFF" :style="{paddingBottom: randomOffsets[index].lunarDay + 'px', paddingLeft: randomOffsets[index].lunarDay + 'px' }" class="new no-internal-borders">{{ item.lunarDay }}</td>
-                      <td bgcolor="#FFFFFF" :style="{paddingBottom: randomOffsets[index].lunarHh + 'px', paddingLeft: randomOffsets[index].lunarHh + 'px' }" class="new no-internal-borders">{{ item.closeLunarH ? item.lunarHh : '' }}</td>
+                      <td bgcolor="#FFFFFF" class="new no-internal-borders">农历</td>
+                      <td bgcolor="#FFFFFF"
+                          :style="{paddingBottom: randomOffsets[index].lunarYear + 'px', paddingLeft: randomOffsets[index].lunarYear + 'px' }"
+                          class="new no-internal-borders"
+                      >{{ item.lunarYear }}
+                      </td>
+                      <td bgcolor="#FFFFFF"
+                          :style="{paddingBottom: randomOffsets[index].lunarMonth + 'px', paddingLeft: randomOffsets[index].lunarMonth + 'px' }"
+                          class="new no-internal-borders"
+                      >{{ item.lunarMonth }}
+                      </td>
+                      <td bgcolor="#FFFFFF"
+                          :style="{paddingBottom: randomOffsets[index].lunarDay + 'px', paddingLeft: randomOffsets[index].lunarDay + 'px' }"
+                          class="new no-internal-borders"
+                      >{{ item.lunarDay }}
+                      </td>
+                      <td bgcolor="#FFFFFF"
+                          :style="{paddingBottom: randomOffsets[index].lunarHh + 'px', paddingLeft: randomOffsets[index].lunarHh + 'px' }"
+                          class="new no-internal-borders"
+                      >{{ item.closeLunarH ? item.lunarHh : '' }}
+                      </td>
                     </tr>
                     <tr>
-                      <td colspan="2" bgcolor="#FFFFFF"  class="new no-internal-borders">八字：</td>
-                      <td bgcolor="#FFFFFF" :style="{paddingBottom: randomOffsets[index].baZhiYear + 'px', paddingLeft: randomOffsets[index].baZhiYear + 'px' }"  class="new no-internal-borders">{{ item.baZhiYear }}</td>
-                      <td bgcolor="#FFFFFF" :style="{paddingBottom: randomOffsets[index].baZhiMonth + 'px', paddingLeft: randomOffsets[index].baZhiMonth + 'px' }" class="new no-internal-borders">{{ item.baZhiMonth }}</td>
-                      <td bgcolor="#FFFFFF" :style="{paddingBottom: randomOffsets[index].baZhiDay + 'px', paddingLeft: randomOffsets[index].baZhiDay + 'px' }" class="new no-internal-borders">{{ item.baZhiDay }}</td>
-                      <td bgcolor="#FFFFFF" :style="{paddingBottom: randomOffsets[index].baZhiHh + 'px', paddingLeft: randomOffsets[index].baZhiHh + 'px' }" class="new no-internal-borders">{{ item.closeBaZhiH ? item.baZhiHh : '' }}</td>
+                      <td colspan="2" bgcolor="#FFFFFF" class="new no-internal-borders">八字：</td>
+                      <td bgcolor="#FFFFFF"
+                          :style="{paddingBottom: randomOffsets[index].baZhiYear + 'px', paddingLeft: randomOffsets[index].baZhiYear + 'px' }"
+                          class="new no-internal-borders"
+                      >{{ item.baZhiYear }}
+                      </td>
+                      <td bgcolor="#FFFFFF"
+                          :style="{paddingBottom: randomOffsets[index].baZhiMonth + 'px', paddingLeft: randomOffsets[index].baZhiMonth + 'px' }"
+                          class="new no-internal-borders"
+                      >{{ item.baZhiMonth }}
+                      </td>
+                      <td bgcolor="#FFFFFF"
+                          :style="{paddingBottom: randomOffsets[index].baZhiDay + 'px', paddingLeft: randomOffsets[index].baZhiDay + 'px' }"
+                          class="new no-internal-borders"
+                      >{{ item.baZhiDay }}
+                      </td>
+                      <td bgcolor="#FFFFFF"
+                          :style="{paddingBottom: randomOffsets[index].baZhiHh + 'px', paddingLeft: randomOffsets[index].baZhiHh + 'px' }"
+                          class="new no-internal-borders"
+                      >{{ item.closeBaZhiH ? item.baZhiHh : '' }}
+                      </td>
                     </tr>
                     <tr>
-                      <td colspan="2" bgcolor="#FFFFFF"  class="new no-internal-borders">五行：</td>
-                      <td bgcolor="#FFFFFF" :style="{paddingBottom: randomOffsets[index].wuXinYear + 'px', paddingLeft: randomOffsets[index].wuXinYear + 'px' }"  class="new no-internal-borders">{{
+                      <td colspan="2" bgcolor="#FFFFFF" class="new no-internal-borders">五行：</td>
+                      <td bgcolor="#FFFFFF"
+                          :style="{paddingBottom: randomOffsets[index].wuXinYear + 'px', paddingLeft: randomOffsets[index].wuXinYear + 'px' }"
+                          class="new no-internal-borders"
+                      >{{
                           item.wuXinYear
                         }}
                       </td>
-                      <td bgcolor="#FFFFFF" :style="{paddingBottom: randomOffsets[index].wuXinMonth + 'px', paddingLeft: randomOffsets[index].wuXinMonth + 'px' }"  class="new no-internal-borders">{{
+                      <td bgcolor="#FFFFFF"
+                          :style="{paddingBottom: randomOffsets[index].wuXinMonth + 'px', paddingLeft: randomOffsets[index].wuXinMonth + 'px' }"
+                          class="new no-internal-borders"
+                      >{{
                           item.wuXinMonth
                         }}
                       </td>
-                      <td bgcolor="#FFFFFF" :style="{paddingBottom: randomOffsets[index].wuXinDay + 'px', paddingLeft: randomOffsets[index].wuXinDay + 'px' }" class="new no-internal-borders">{{
+                      <td bgcolor="#FFFFFF"
+                          :style="{paddingBottom: randomOffsets[index].wuXinDay + 'px', paddingLeft: randomOffsets[index].wuXinDay + 'px' }"
+                          class="new no-internal-borders"
+                      >{{
                           item.wuXinDay
                         }}
                       </td>
-                      <td bgcolor="#FFFFFF" :style="{paddingBottom: randomOffsets[index].wuXinHh + 'px', paddingLeft: randomOffsets[index].wuXinHh + 'px' }" class="new no-internal-borders">{{
+                      <td bgcolor="#FFFFFF"
+                          :style="{paddingBottom: randomOffsets[index].wuXinHh + 'px', paddingLeft: randomOffsets[index].wuXinHh + 'px' }"
+                          class="new no-internal-borders"
+                      >{{
                           item.closeWuXinH ? item.wuXinHh : ''
                         }}
                       </td>
                     </tr>
                     <tr>
-                      <td bgcolor="#ffffff"  class="new no-internal-borders" colspan="6"> {{
+                      <td bgcolor="#ffffff" class="new no-internal-borders" colspan="6"> {{
                           item.geShu ? item.geShu : '八字五行个数 :'
                         }}
                       </td>
@@ -778,7 +920,6 @@ import calendar from 'js-calendar-converter'
 import { postGuoxue } from '../../../api/customer_order_goods/customer'
 import { v4 as uuid } from 'uuid'
 import html2canvas from 'html2canvas'
-import item from '../../../layout/components/Sidebar/Item.vue'
 
 let tableDom = null
 export default {
@@ -786,6 +927,7 @@ export default {
   data() {
     return {
       isMobile: false,
+      isShiJi: false,
       btnLoad: false,
       imgUrl: null,
       html: null,
@@ -904,7 +1046,7 @@ export default {
       let arr = JSON.parse(JSON.stringify(this.lunarMonthArr))
       let monthArr = []
       const leapMonth = calendar.leapMonth(this.form.nian)
-      console.log(leapMonth)
+      // console.log(leapMonth)
       arr.map(item => {
         const obj = { ...item }
         if (leapMonth && item.value === leapMonth) {
@@ -923,22 +1065,23 @@ export default {
     },
     randomOffsets() {
       return this.tableVal.table.map((item) => {
-        let obj = {};
+        let obj = {}
         Object.keys(item).map(key => {
-          obj[key] = Math.floor(Math.random() * 7) + 1;
+          obj[key] = Math.floor(Math.random() * 7) + 1
         })
-        console.log("ssssssssssssssssssss",obj)
+        // console.log("ssssssssssssssssssss",obj)
         return obj
-      });
+      })
     }
   },
   created() {
+
     const tableListStr = this.$cache.local.get('table_list')
     // console.log(tableListStr)
     if (tableListStr) {
       const list = JSON.parse(tableListStr)
-      if (list.length > 100) {
-        list.splice(-100, 100)
+      if (list.length > 200) {
+        list.splice(200)
       }
       this.list.push(...list)
 
@@ -983,7 +1126,7 @@ export default {
           return '无特殊关系'
         }
       }
-      console.log(element1, element2)
+      // console.log(element1, element2)
       return checkRelationship(element1, element2)
     },
     hePan() {
@@ -1018,7 +1161,7 @@ export default {
         // 判断是否闰月
         if (form.isLeapMonth) {
           const leapMonth = calendar.leapMonth(form.nian)
-          console.log(monthDays)
+          // console.log(monthDays)
           if (!leapMonth) {
             this.$message('该年份没有闰月')
             return
@@ -1030,7 +1173,7 @@ export default {
         }
         // 判断该月天数
         const monthDays = calendar.monthDays(form.nian, form.yue)
-        console.log(monthDays)
+        // console.log(monthDays)
         if (this.form.ri > monthDays) {
           this.$message(`${this.form.yue}月只有${monthDays}天，请检查是否正确`)
           return
@@ -1089,7 +1232,7 @@ export default {
 
             const obj = this.initTableVal(table, tableGeShu)
 
-            console.log(obj)
+            // console.log(obj)
 
             // console.log(tdGaiYao)
             doc.body.removeChild(table)
@@ -1123,7 +1266,7 @@ export default {
             this.html = doc.body.outerHTML
             const table_name = /赵灵芝/g
             this.html = this.replacePattern(this.html, table_name, this.form.name)
-            console.log(this.$cache.local.get('29bf2d47-cc7d-4208-b561-40794d713451'))
+            // console.log(this.$cache.local.get('29bf2d47-cc7d-4208-b561-40794d713451'))
             // this.addLocalTable()
             this.resetHH()
           })
@@ -1140,12 +1283,12 @@ export default {
     }
     ,
     initGaiYao(tdGaiYaoStr, str) {
-      console.log(tdGaiYaoStr)
-      console.log(str)
+      // console.log(tdGaiYaoStr)
+      // console.log(str)
       const searchPattern = /日柱.*?命/g // 匹配以<b>赵开头，“<br /><br />”结尾的文本
       // this.html = this.replacePattern(this.html, searchPattern, str)
       tdGaiYaoStr = this.replacePattern(tdGaiYaoStr, searchPattern, str + '命')
-      console.log(tdGaiYaoStr)
+      // console.log(tdGaiYaoStr)
 
       const searchPattern2 = /季。.*?！/gs
       tdGaiYaoStr = this.replacePattern(tdGaiYaoStr, searchPattern2, '')
@@ -1156,11 +1299,11 @@ export default {
     initTableVal(table, geshuTable) {
       const tds = table.querySelectorAll('td')
       const geShuTds = geshuTable.querySelectorAll('td')
-      console.log(tds)
+      // console.log(tds)
       const name = this.form.name ? this.form.name : ''
       const naYinYear = tds[24].textContent
       const gaiYao = this.initGaiYao(tds[7].textContent, naYinYear)
-      console.log('naying', naYinYear)
+      // console.log('naying', naYinYear)
       // console.log("tds[24].textContent",tds[24].textContent)
       const form = JSON.parse(JSON.stringify(this.form))
       const obj = {
@@ -1208,13 +1351,14 @@ export default {
     }
     ,
     updateTableForm(index) {
-      console.log(index)
+      // console.log(index)
       this.updateTableIndex = index
       const updateTable = this.tableVal.table[index]
-      console.log(updateTable.form)
+      // console.log(updateTable.form)
       this.form = updateTable.form
     },
     delTable(table, index) {
+      this.delToUpdateForm(table[index].form)
       table.splice(index, 1)
 
       if (table.length === 0) {
@@ -1226,16 +1370,16 @@ export default {
     }
     ,
     repeatPostGuoxue(form) {
-      console.log(form)
+      // console.log(form)
       const loading = this.$loading({
         lock: true,
         text: 'Loading',
         spinner: 'el-icon-loading',
         background: 'rgba(0, 0, 0, 0.7)'
       })
-      console.log(this.checkForm)
+      // console.log(this.checkForm)
       const data = this.initData(form)
-      console.log('data', data)
+      // console.log('data', data)
       postGuoxue(data).then(res => {
         let html = res
         const k = html.indexOf('<\/TABLE>')
@@ -1263,17 +1407,17 @@ export default {
     }
     ,
     changeSearch() {
-      console.log(this.searchVal)
+      // console.log(this.searchVal)
       this.searchList = this.list.filter(obj => {
         // 使用 some() 方法检查每个对象的 "table" 属性中是否存在包含 "ab" 的名称
         return obj.table.some(item => item.name.includes(this.searchVal))
       })
-      console.log(this.searchList)
+      // console.log(this.searchList)
     }
     ,
     cardClick(item) {
       // this.tableVal =  JSON.parse(JSON.stringify(item));
-      console.log(item.key)
+      // console.log(item.key)
       this.tableKey = item.key
       this.$set(this.tableVal, 'table', item.table)
       this.$set(this.tableVal, 'text', item.text)
@@ -1286,12 +1430,23 @@ export default {
       const tableImg = this.$refs.imageTable
       tableImg.textContent = ''
     },
+    delToUpdateForm(form) {
+      this.$set(this.form, 'name', form.name)
+      this.$set(this.form, 'nian', form.nian)
+      this.$set(this.form, 'yue', form.yue)
+      this.$set(this.form, 'ri', form.ri)
+      const hh = form.hh !== null ? form.hh : null
+      this.$set(this.form, 'hh', hh)
+      this.$set(this.form, 'isSolar', form.isSolar)
+      this.$set(this.form, 'isLeapMonth', form.isLeapMonth)
+    },
     deleteList(key) {
       // console.log(item.key)
       this.list.forEach((i, index) => {
         if (i.key === key) {
           // console.log(i.key)
           // this.tableKey = i.key
+          // this.delToUpdateForm
           this.list.splice(index, 1)
           const listStr = JSON.stringify(this.list)
           this.$cache.local.set('table_list', listStr)
@@ -1311,7 +1466,7 @@ export default {
     addLocalTable(obj) {
       const list0name = this.list[0]?.table[0]?.form?.name
       if (this.list[0]?.table.length === 1 && this.form.name === list0name) {
-        console.log(this.form.name)
+        // console.log(this.form.name)
         this.list[0].table = this.tableVal.table
         const listStr = JSON.stringify(this.list)
         // console.log(listStr)
@@ -1330,12 +1485,12 @@ export default {
       for (let i = 0; i < this.list.length; i++) {
         let item = this.list[i]
         if (item.key === this.tableKey) {
-          console.log(this.tableKey)
+          // console.log(this.tableKey)
           // console.log(i.key)
           // this.tableKey = i.key
 
           this.list[i] = { key: this.tableKey, ...this.tableVal }
-          console.log(item)
+          // console.log(item)
 
         }
         const listStr = JSON.stringify(this.list)
@@ -1357,7 +1512,7 @@ export default {
     }
     ,
     tableIptBlur() {
-      console.log(this.tableVal)
+      // console.log(this.tableVal)
       this.updateLocalTable()
     }
     ,
@@ -1429,29 +1584,29 @@ export default {
           // document.body.appnedChild(canvas)
           // console.log(canvas)
 
-          const tableImg = that.$refs.imageTable
-          //
-          tableImg.append(canvas)
           that.btnLoad = false
           that.isTextarea = true
 
           if (that.isMobile) {
-            const tableImgUrl = window.document.querySelector('#image-png')
-            const downloadLink = document.createElement('a')
+            // const tableImgUrl = window.document.querySelector('#image-png')
+            // const downloadLink = document.createElement('a')
             // 将 Canvas 转为 Data URL
-            const dataUrl = canvas.toDataURL('image/png')
-            // console.log(dataUrl)
-            that.imgUrl = dataUrl
+
+            that.imgUrl = canvas.toDataURL('image/png')
             // 设置下载链接的 href 属性为 Data URL
-            downloadLink.href = dataUrl
-
-            // 设置文件名
-            downloadLink.download = 'screenshot.png'
-
-            // 模拟点击下载链接
-            document.body.appendChild(downloadLink)
-            downloadLink.click()
-            document.body.removeChild(downloadLink)
+            // downloadLink.href = dataUrl
+            //
+            // // 设置文件名
+            // downloadLink.download = 'screenshot.png'
+            //
+            // // 模拟点击下载链接
+            // document.body.appendChild(downloadLink)
+            // downloadLink.click()
+            // document.body.removeChild(downloadLink)
+          } else {
+            const tableImg = that.$refs.imageTable
+            //
+            tableImg.append(canvas)
           }
 
         })
@@ -1528,16 +1683,18 @@ export default {
     }
   }
 }
+
 .table-width {
   width: 760px;
   margin: auto;
 }
+
 .main::v-deep {
   .new {
 
     //PADDING-RIGHT: 10px;
     //PADDING-LEFT: 10px;
-    FONT-SIZE: 20px;
+    FONT-SIZE: 18px;
     PADDING-BOTTOM: 5px;
     LINE-HEIGHT: 2;
     PADDING-TOP: 5px;
@@ -1639,8 +1796,9 @@ export default {
   height: 480px; /* 设置容器高度 */
   overflow: auto; /* 设置溢出时显示滚动条 */
 }
+
 .mobile-action {
-  div{
+  div {
     padding: 5px 5px;
   }
 }
