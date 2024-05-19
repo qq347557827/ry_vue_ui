@@ -123,12 +123,15 @@
                       无
                       <el-empty description="无数据"></el-empty>
                     </div>
-                    <el-pagination
-                      layout="prev, pager, next"
-                      :total="total"
-                      :current-page="page"
-                      @current-change="currentChange">
-                    </el-pagination>
+                    <div>
+                      <el-pagination
+                        layout="prev, pager, next"
+                        :total="total"
+                        :current-page="page"
+                        @current-change="currentChange"
+                      >
+                      </el-pagination>
+                    </div>
 
                   </div>
 
@@ -390,7 +393,7 @@
             </table>
             <div>
 
-              <el-button v-show="tableArr.length > 0" type="primary" @click="test" :loading="btnLoad">生成图片
+              <el-button v-show="tableArr.length > 0" type="primary" @click="handleTableToImg" :loading="btnLoad">生成图片
               </el-button>
             </div>
             <div>
@@ -476,6 +479,7 @@
                 <!--              </template>-->
 
                 <el-button @click="reset">取消</el-button>
+                <!--                <el-button @click="test">test</el-button>-->
 
               </el-form-item>
             </el-col>
@@ -508,7 +512,7 @@
                     <!--                <el-button style="float: right; padding: 3px 0" type="text" @click="clearAllList">清空</el-button>-->
                   </div>
                   <template v-if="list.length >= 1">
-                    <div  v-for="(item, index) in list" :key="index" class="text item">
+                    <div v-for="(item, index) in list" :key="index" class="text item">
                       <div>
                         <el-link type="primary" @click="cardClick(item)">
                           <div v-for="(data, idx) in item.table">
@@ -537,14 +541,17 @@
                     <el-empty description="暂无数据"></el-empty>
 
                   </template>
-                  <el-pagination
-                    layout="prev, pager, next"
-                    :total="total"
-                  :current-page="page"
-                  @current-change="currentChange">
-                  </el-pagination>
-
-
+                  <div>
+                    <el-pagination
+                      small
+                      layout="prev, pager, next"
+                      :total="total"
+                      :page-size="limit"
+                      :current-page="page"
+                      @current-change="currentChange"
+                    >
+                    </el-pagination>
+                  </div>
                 </el-card>
               </div>
             </el-col>
@@ -782,7 +789,8 @@
                 </table>
                 <div>
 
-                  <el-button v-show="tableArr.length > 0" type="primary" @click="test" :loading="btnLoad">生成图片
+                  <el-button v-show="tableArr.length > 0" type="primary" @click="handleTableToImg" :loading="btnLoad">
+                    生成图片
                   </el-button>
                 </div>
                 <div>
@@ -813,7 +821,29 @@ import { postGuoxue } from '../../../api/customer_order_goods/customer'
 import { v4 as uuid } from 'uuid'
 import html2canvas from 'html2canvas'
 import db from '../../../plugins/db'
+
 // import { msgError, msg } from '../../../plugins/modal'
+function deepClone(obj) {
+  if (obj === null || typeof obj !== 'object') {
+    return obj
+  }
+
+  if (Array.isArray(obj)) {
+    const copy = []
+    for (let i = 0; i < obj.length; i++) {
+      copy[i] = deepClone(obj[i])
+    }
+    return copy
+  }
+
+  const copy = {}
+  for (const key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      copy[key] = deepClone(obj[key])
+    }
+  }
+  return copy
+}
 
 let tableDom = null
 export default {
@@ -833,8 +863,8 @@ export default {
       isTextarea: true,
       list: [],
       page: 1,
-      total: null,
-      limit: 10,
+      total: 1,
+      limit: 40,
       searchVal: '',
       searchList: [],
       tableKey: null,
@@ -933,17 +963,6 @@ export default {
     }
   },
   computed: {
-    // cardList() {
-    //   if (this.searchVal && this.searchList.length > 0) {
-    //     return this.searchList
-    //   } else {
-    //     this.searchList = []
-    //     return this.list
-    //   }
-    // },
-    // total() {
-    //   return this.list.length + 1
-    // },
     months() {
       let arr = JSON.parse(JSON.stringify(this.lunarMonthArr))
       let monthArr = []
@@ -978,28 +997,95 @@ export default {
     }
   },
   created() {
-
+    this.initLocationToIndexedDB()
     this.fetchList()
-    this.updateTotalCount()
+    // this.updateTotalCount()
   },
   mounted() {
     this.checkIfMobile()
   },
   methods: {
+    async initLocationToIndexedDB() {
+      const table_list = this.$cache.local.get('table_list')
+      if (table_list) {
+        const list = JSON.parse(table_list)
+        for (const item of list) {
+          const data = {
+            key: item.key,
+            table: item.table,
+            mingPanText: item.text
+          }
+          await db.data.add(data)
+        }
+        await this.fetchList()
+        this.$cache.local.remove("table_list")
+      }
+    },
+    test() {
+      const chineseCharacters = [
+        '你', '我', '他', '的', '是', '了', '在', '有', '和', '不', '就', '人', '都', '一', '上', '中', '大', '来', '说', '个',
+        '这', '们', '为', '子', '到', '地', '出', '道', '也', '时', '要', '下', '会', '里', '生', '着', '去', '样', '过', '看',
+        '好', '没', '那', '天', '还', '得', '着', '作', '对', '能', '而', '也', '后', '于', '小', '最', '说', '子', '多', '用'
+      ]
+
+      // 随机生成 1 到 3 之间的数量
+
+      for (let i = 0; i < 500; i++) {
+        const numCharacters = Math.floor(Math.random() * 3) + 1
+        let result = ''
+
+        for (let i = 0; i < numCharacters; i++) {
+          const randomIndex = Math.floor(Math.random() * chineseCharacters.length)
+          result += chineseCharacters[randomIndex]
+        }
+        const table = deepClone(this.list[0].table)
+
+        table[0].form.name = result
+
+        const key = uuid()
+        db.data.add({ key, table }).then(res => {
+          this.fetchList()
+          this.updateTotalCount()
+        })
+      }
+    },
     async fetchList() {
       // 按 id 倒序排序并获取前 20 条记录
-      const start = (this.page - 1) * this.limit;
-      this.list = await db?.data
-        .orderBy('id')
-        .reverse()
-        .offset(start)
-        .limit(this.limit)
-        .toArray()
+      let start = (this.page - 1) * this.limit
+      const value = this.searchVal.trim()
+      // console.log(value)
+      if (value) {
+        this.page = 1
+        start = 0
+        this.list = await db?.data
+          .filter(item => item.table.some(subItem => subItem.form.name && subItem.form.name.includes(value)
+          ))
+          .reverse()
+          .offset(start)
+          .limit(this.limit)
+          .toArray()
+
+        this.total = await db?.data
+          .filter(item => item.table.some(subItem => subItem.form && subItem.form.name && subItem.form.name.includes(value)
+          ))
+          .count()
+
+      } else {
+        this.list = await db?.data
+          .orderBy('id')
+          .reverse()
+          .offset(start)
+          .limit(this.limit)
+          .toArray()
+
+        this.total = await db.data.count()
+      }
       // 将记录按 id 升序排列
       // this.last20Items = items.reverse();
+      // console.log(this.list.length, this.total)
     },
     async updateTotalCount() {
-      this.total = await db.data.count();
+      this.total = await db.data.count()
     },
     changeYueSelect() {
 
@@ -1142,17 +1228,9 @@ export default {
 
             const obj = this.initTableVal(table, tableGeShu)
 
-            // console.log(obj)
-
-            // console.log(tdGaiYao)
             doc.body.removeChild(table)
             doc.body.removeChild(tableGeShu)
             // console.log(doc)
-
-            // if (this.form.hh === null || this.form.hh === undefined || this.form.hh === '') {
-            //   tds[6].textContent = ''
-            //   tds[12].textContent = ''
-            // }
 
             // 如果是增加一个命盘
             if (type === 'add') {
@@ -1161,8 +1239,7 @@ export default {
               this.tableArr.push(obj)
               this.updateLocalTable()
             } else {
-              // this.$set(this.tableVal, 'table', [obj])
-              // this.$set(this.tableVal, 'text', '')
+
               this.tableArr = []
               this.tableArr.push(obj)
               this.addLocalTable()
@@ -1170,15 +1247,10 @@ export default {
             tableDom = table
             this.tableHtml = table.outerHTML
 
-            // if (!this.form.hh) {
-            //   this.tableClear1()
-            //   this.tableClear2()
-            // }
             this.html = doc.body.outerHTML
             const table_name = /赵灵芝/g
             this.html = this.replacePattern(this.html, table_name, this.form.name)
-            // console.log(this.$cache.local.get('29bf2d47-cc7d-4208-b561-40794d713451'))
-            // this.addLocalTable()
+
             this.resetHH()
           })
             .catch(err => console.log(err))
@@ -1214,8 +1286,6 @@ export default {
       const name = this.form.name ? this.form.name : ''
       const naYinYear = tds[24].textContent
       const gaiYao = this.initGaiYao(tds[7].textContent, naYinYear)
-      // console.log('naying', naYinYear)
-      // console.log("tds[24].textContent",tds[24].textContent)
       const form = JSON.parse(JSON.stringify(this.form))
       const obj = {
         form,
@@ -1297,15 +1367,6 @@ export default {
         html = html.slice(k)
         const lastClosingTableTagPosition = html.lastIndexOf('<table')
         html = html.slice(0, lastClosingTableTagPosition)
-        // console.log(html)
-        // const naYingPattern = />纳音：.*?<\/tr>/gs
-        // const match = html.match(new RegExp(naYingPattern, 'g'))
-        //
-        // const geShuPattern = />八字五行个数.*?<\/tr>/gs
-        // // const match2 = html.match(new RegExp(geShuPattern, 'g'))
-        // html = this.replacePattern(html, geShuPattern, match[0])
-        // const table1_2Pattern = /<table.*?<\/TABLE>/s
-        // html = this.replacePattern(html, table1_2Pattern, '')
         const table_name = /赵灵芝/g
         html = this.replacePattern(html, table_name, form.name)
         // console.log(html)
@@ -1324,20 +1385,20 @@ export default {
       await this.fetchList()
     },
     async changeSearch() {
-      // console.log(this.searchVal)
-      const value = this.searchVal.trim()
-      console.log(value)
-      if (value) {
-        this.list = await db.data
-          .filter(item => item.table.some(subItem => subItem.form.name && subItem.form.name.includes(value)
-          ))
-          .toArray()
-        this.total = this.list.length + 1
-      } else  {
-        await this.fetchList()
-        await this.updateTotalCount()
-      }
-      // console.log(this.searchList)
+      await this.fetchList()
+      // const value = this.searchVal.trim()
+      // console.log(value)
+      // if (value) {
+      //   this.list = await db.data
+      //     .filter(item => item.table.some(subItem => subItem.form.name && subItem.form.name.includes(value)
+      //     ))
+      //     .toArray()
+      //   this.total = this.list.length + 1
+      // } else  {
+      //   await this.fetchList()
+      //   // await this.updateTotalCount()
+      // }
+      // // console.log(this.searchList)
     }
     ,
     async cardClick(item) {
@@ -1351,7 +1412,7 @@ export default {
       if (this.searchVal) {
         this.searchVal = ''
         await this.fetchList()
-        await this.updateTotalCount()
+        // await this.updateTotalCount()
       }
     },
     resetTableImg() {
@@ -1374,7 +1435,7 @@ export default {
         if (typeof key === 'string' || typeof key === 'number') {
           await db.data.where('key').equals(key).delete()
           await this.fetchList()
-          await this.updateTotalCount()
+          // await this.updateTotalCount()
 
           if (key === this.tableKey) {
             this.tableKey = ''
@@ -1395,6 +1456,7 @@ export default {
       //   this.$cache.local.remove(i.key)
       // })
       await db.data.clear()
+      await this.updateTotalCount()
       this.list = []
 
     }
@@ -1404,14 +1466,14 @@ export default {
       if (this.list[0]?.table.length === 1 && this.form.name === list0name) {
         await db.data.where('key').equals(this.tableKey).modify({ table: this.tableArr })
         await this.fetchList()
-        await this.updateTotalCount()
+        // await this.updateTotalCount()
       } else if (this.form.name) {
         this.tableKey = uuid()
         console.log(this.tableArr)
         const item = { key: this.tableKey, table: this.tableArr }
         db.data.add(item).then(res => {
           this.fetchList()
-          this.updateTotalCount()
+          // this.updateTotalCount()
         })
           .catch(() => this.$modal.msgError('添加到本地失败'))
 
@@ -1473,7 +1535,7 @@ export default {
       this.$set(this.form, 'mm', null)
     }
     ,
-    test() {
+    handleTableToImg() {
       // const
       // html2canvas(tableDom).then(function(canvas) {
       //   console.log(canvas)
