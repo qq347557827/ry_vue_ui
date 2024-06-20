@@ -387,17 +387,23 @@
               </table>
             </div>
             <table border="0" cellpadding="1" cellspacing="1"
-                   style="MARGIN-BOTTOM: 5px; table-layout:fixed;word-wrap:break-word;border: 1px solid #A3E7FA"
+                   style="width: 100%; MARGIN-BOTTOM: 5px; table-layout:fixed;word-wrap:break-word;border: 1px solid #A3E7FA"
                    v-show="tableArr.length > 0"
             >
+              <thead>
+              <tr>
+                <th colspan="2">年柱</th>
+                <th colspan="2">月柱</th>
+                <th colspan="2">日柱</th>
+                <th colspan="2">时柱</th>
+              </tr>
+              </thead>
               <tbody>
               <tr style=" border-bottom: 1px solid black; " v-for="(item, index) in tableArr" :key="index">
-                <td class="new" style="width: 190px">纳音</td>
-                <td class="new" style="width: 78px">{{ item.naYinYear }}</td>
-                <td class="new" style="width: 78px">{{ item.naYinMonth }}</td>
-                <td class="new" style="width: 94px">{{ item.naYinDay }}</td>
-                <td class="new">{{ item.naYinHh }}</td>
-                <td colspan="3" class="new"></td>
+                <td colspan="2" style="text-align: center;" class="new">{{ item.naYinYear }}</td>
+                <td colspan="2" style="text-align: center;" class="new">{{ item.naYinMonth }}</td>
+                <td colspan="2" style="text-align: center;" class="new">{{ item.naYinDay }}</td>
+                <td colspan="2" style="text-align: center;" class="new">{{ item.naYinHh }}</td>
               </tr>
               </tbody>
               <tbody v-if="hePanStr">
@@ -510,7 +516,7 @@
           <el-row>
             <el-col :xs="0" :span="6" v-if="!isMobile">
               <div>
-                <el-card class="box-card">
+                <el-card class="box-card cardW">
                   <div slot="header" class="clearfix">
                     <el-input v-model="searchVal" @change="changeSearch" clearable placeholder="搜索名字"
                               style="width: 260px"
@@ -755,10 +761,22 @@
                     <tbody>
                     <tr v-show="isTextarea">
                       <td style="vertical-align: top;text-align: center;">
-                        <el-link type="primary" style="font-size: 28px">
-                          <i class="el-icon-s-unfold"></i>
+<!--                        <el-popover-->
+<!--                          placement="right"-->
+<!--                          width="400"-->
+<!--                          trigger="click"-->
+<!--                        >-->
+<!--                          <div>-->
+<!--                            <Autocomplete></Autocomplete>-->
+<!--                          </div>-->
+<!--                          <template v-slot:reference>-->
+<!--                            <el-link type="primary" style="font-size: 28px">-->
+<!--                              <i class="el-icon-s-unfold"></i>-->
 
-                        </el-link>
+<!--                            </el-link>-->
+<!--                          </template>-->
+<!--                        </el-popover>-->
+
                       </td>
                       <td colspan="7" class="table-textarea">
                         <el-input type="textarea" :rows="2" size="medium" autosize placeholder="请输入内容"
@@ -786,6 +804,23 @@
                        v-show="tableArr.length > 0"
                 >
                   <tbody>
+                  <tr>
+                    <td class="new" style="width: 190px">五行</td>
+                    <td v-for="(wXItem,wXIdx) in this.baZhiTest.wuXin" :key="wXIdx">{{wXItem}}</td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td colspan="4">{{baZhiTest.geShuStr}}</td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td colspan="4">{{baZhiTest.wangQue}}</td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td v-for="(nYItem,nYIdx) in this.baZhiTest.naYin" :key="nYIdx">{{nYItem}}</td>
+                  </tr>
+
                   <tr style=" border-bottom: 1px solid black; " v-for="(item, index) in tableArr" :key="index">
                     <td class="new" style="width: 190px">纳音</td>
                     <td class="new" style="width: 78px">{{ item.naYinYear }}</td>
@@ -794,6 +829,7 @@
                     <td class="new">{{ item.naYinHh }}</td>
                     <td colspan="3" class="new"></td>
                   </tr>
+
                   </tbody>
                   <tbody v-if="hePanStr">
                   <tr>
@@ -823,7 +859,7 @@
 
         </div>
         <div>
-          <el-backtop ></el-backtop>
+          <el-backtop></el-backtop>
         </div>
       </template>
 
@@ -838,6 +874,9 @@ import { postGuoxue } from '../../../api/customer_order_goods/customer'
 import { v4 as uuid } from 'uuid'
 import html2canvas from 'html2canvas'
 import db from '../../../plugins/db'
+import Autocomplete from './Autocomplete.vue'
+import { Lunar, EightChar } from 'lunar-javascript'
+import { countWuXin } from '../../../utils'
 
 // import { msgError, msg } from '../../../plugins/modal'
 function deepClone(obj) {
@@ -865,6 +904,7 @@ function deepClone(obj) {
 let tableDom = null
 export default {
   name: 'GuoXue',
+  components: { Autocomplete },
   data() {
     return {
       isMobile: false,
@@ -889,6 +929,13 @@ export default {
       updateTableIndex: null,
       tableArr: [],
       mingPanText: '',
+      baZhiTest: {
+        wuXin: [],
+        naYin: [],
+        geShu: [],
+        wuXinWang: [],
+        wuXinQue: []
+      },
       tableVal: {
         table: [
           //   {
@@ -1023,6 +1070,30 @@ export default {
     this.checkIfMobile()
   },
   methods: {
+    LunarTest() {
+      const yue = this.form.isLeapMonth ? -this.form.yue : this.form.yue
+      // console.log(yue)
+      const d = Lunar.fromYmd(this.form.nian, yue, this.form.ri, this.form.hh);
+      const e = EightChar.fromLunar(d)
+      // console.log(EightChar)
+      // console.log("d", d);
+      const arr = []
+      arr.push(e.getYearWuXing(), e.getMonthWuXing(), e.getDayWuXing(), e.getTimeWuXing())
+      this.$set(this.baZhiTest, "wuXin", arr)
+      const naYinArr = []
+      naYinArr.push(e.getYearNaYin(), e.getMonthNaYin(), e.getDayNaYin(), e.getTimeNaYin())
+      console.log(arr)
+      this.$set(this.baZhiTest, "naYin", naYinArr)
+      console.log(naYinArr)
+      const r = countWuXin(arr)
+      console.log(r)
+      this.$set(this.baZhiTest, "geShu", r.counts)
+      this.$set(this.baZhiTest, "geShuStr", r.geShu)
+      this.$set(this.baZhiTest, "wuXinWang", r.wuXinWang)
+      this.$set(this.baZhiTest, "wuXinQue", r.wuXinQue)
+      this.$set(this.baZhiTest, "wangQue", r.wangQue)
+
+    },
     async initLocationToIndexedDB() {
       const table_list = this.$cache.local.get('table_list')
       if (table_list) {
@@ -1161,6 +1232,7 @@ export default {
     }
     ,
     initData(form) {
+      this.LunarTest()
       let data
 
       if (form.isSolar) {
@@ -1642,6 +1714,11 @@ export default {
 
 .item {
   //padding: 8px 0;
+}
+
+.cardW {
+  width: 320px;
+
 }
 
 .box-card {

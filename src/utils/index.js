@@ -4,7 +4,7 @@ import { parseTime } from './ruoyi'
  * 表格时间格式化
  */
 export function formatDate(cellValue) {
-  if (cellValue == null || cellValue == "") return "";
+  if (cellValue == null || cellValue == '') return ''
   var date = new Date(cellValue)
   var year = date.getFullYear()
   var month = date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1
@@ -26,18 +26,61 @@ export function formatDateStr() {
   // var seconds = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds()
   // console.log(year, month, day, hours, minutes, seconds)
   // return year + '' + month + '' + day + ' ' + hours + '' + minutes + '' + seconds
-  const currentDate = new Date();
-  const year = currentDate.getFullYear();
-  const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
-  const day = currentDate.getDate().toString().padStart(2, '0');
-  const hours = currentDate.getHours().toString().padStart(2, '0');
-  const minutes = currentDate.getMinutes().toString().padStart(2, '0');
-  const seconds = currentDate.getSeconds().toString().padStart(2, '0');
+  const currentDate = new Date()
+  const year = currentDate.getFullYear()
+  const month = (currentDate.getMonth() + 1).toString().padStart(2, '0')
+  const day = currentDate.getDate().toString().padStart(2, '0')
+  const hours = currentDate.getHours().toString().padStart(2, '0')
+  const minutes = currentDate.getMinutes().toString().padStart(2, '0')
+  const seconds = currentDate.getSeconds().toString().padStart(2, '0')
   const str = `${year}${month}${day}${hours}${minutes}${seconds}`
   console.log('str' + str)
   return str
 }
 
+export function countWuXin(arr) {
+  let countObj = {
+    '金': 0,
+    '木': 0,
+    '水': 0,
+    '火': 0,
+    '土': 0
+  }
+
+  arr.forEach(item => {
+    for (let char of item) {
+      if (countObj.hasOwnProperty(char)) {
+        countObj[char]++
+      }
+    }
+  })
+
+  let result = {
+    'counts': countObj,
+    'geShu': '',
+    'wuXinWang': [],
+    'wuXinQue': [],
+    'wangQue': ''
+  }
+
+  for (const key in countObj) {
+    result.geShu += countObj[key] + "个" + key + "，"
+  }
+
+  for (let key in countObj) {
+    if (countObj[key] >= 3) {
+      result.wuXinWang.push(key)
+      result.wangQue += key + '旺'
+    }
+    if (countObj[key] === 0) {
+      result.wuXinQue.push(key)
+      result.wangQue += '缺' + key
+    }
+  }
+
+
+  return result
+}
 
 /**
  * @param {number} time
@@ -110,8 +153,9 @@ export function byteLength(str) {
   let s = str.length
   for (var i = str.length - 1; i >= 0; i--) {
     const code = str.charCodeAt(i)
-    if (code > 0x7f && code <= 0x7ff) s++
-    else if (code > 0x7ff && code <= 0xffff) s += 2
+    if (code > 0x7f && code <= 0x7ff) {
+      s++
+    } else if (code > 0x7ff && code <= 0xffff) s += 2
     if (code >= 0xDC00 && code <= 0xDFFF) i--
   }
   return s
