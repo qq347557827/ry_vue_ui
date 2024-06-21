@@ -66,7 +66,7 @@ export function countWuXin(arr) {
   for (const key in countObj) {
     result.geShu += countObj[key] + "个" + key + "，"
   }
-
+  result.geShu = result.geShu.slice(0, -1);
   for (let key in countObj) {
     if (countObj[key] >= 3) {
       result.wuXinWang.push(key)
