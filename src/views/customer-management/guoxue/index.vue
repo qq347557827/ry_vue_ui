@@ -73,18 +73,14 @@
           <el-row>
             <el-col :span="4">
               <el-link type="primary" style="font-size:medium" @click="handleIsDrawer">列表<i
-                class="el-icon-s-unfold"
-              ></i></el-link>
+                  class="el-icon-s-unfold"></i></el-link>
               <el-drawer :visible.sync="isDrawer" direction="ltr" size="90%" :show-close="false">
                 <template v-slot:title>
                   <div class="clearfix">
                     <el-input v-model="searchVal" @change="changeSearch" clearable placeholder="搜索名字"
-                              style="width: 260px"
-                    />
-                    <el-popconfirm confirm-button-text="确认" cancel-button-text="不了" icon="el-icon-info"
-                                   icon-color="red"
-                                   title="确定清空吗？" @confirm="clearAllList"
-                    >
+                      style="width: 260px" />
+                    <el-popconfirm confirm-button-text="确认" cancel-button-text="不了" icon="el-icon-info" icon-color="red"
+                      title="确定清空吗？" @confirm="clearAllList">
                       <template slot="reference">
                         <el-link type="danger" style="float: right"><i class="el-icon-delete"></i></el-link>
                       </template>
@@ -114,8 +110,7 @@
                             <!--                    {{item.key}}-->
                           </el-link>
                           <el-popconfirm confirm-button-text="确认" cancel-button-text="不了" icon="el-icon-info"
-                                         icon-color="red" title="确定删除吗？" @confirm="deleteList(item.key)"
-                          >
+                            icon-color="red" title="确定删除吗？" @confirm="deleteList(item.key)">
                             <template slot="reference">
                               <el-link type="danger" style="float: right"><i class="el-icon-delete"></i></el-link>
                             </template>
@@ -133,8 +128,7 @@
                     </div>
                     <div>
                       <el-pagination small layout="prev, pager, next" :total="total" :page-size="limit"
-                                     :current-page="page" @current-change="currentChange"
-                      >
+                        :current-page="page" @current-change="currentChange">
                       </el-pagination>
                     </div>
 
@@ -163,29 +157,25 @@
                     <div class="">
                       <span>关闭时间</span>
                       <el-switch v-model="item.closeSolarH" @change="closeChange" active-color="#13ce66"
-                                 inactive-color="#ff4949"
-                      >
+                        inactive-color="#ff4949">
                       </el-switch>
                     </div>
                     <div>
                       <span>关闭时辰</span>
                       <el-switch v-model="item.closeLunarH" @change="closeChange" active-color="#13ce66"
-                                 inactive-color="#ff4949"
-                      >
+                        inactive-color="#ff4949">
                       </el-switch>
                     </div>
                     <div>
                       <span>最后八字</span>
                       <el-switch v-model="item.closeBaZhiH" @change="closeChange" active-color="#13ce66"
-                                 inactive-color="#ff4949"
-                      >
+                        inactive-color="#ff4949">
                       </el-switch>
                     </div>
                     <div>
                       <span>最后五行</span>
                       <el-switch v-model="item.closeWuXinH" @change="closeChange" active-color="#13ce66"
-                                 inactive-color="#ff4949"
-                      >
+                        inactive-color="#ff4949">
                       </el-switch>
                     </div>
                     <!--                  <div>-->
@@ -193,8 +183,7 @@
                     <!--                  </div>-->
                     <div>
                       <el-popconfirm confirm-button-text="确认" cancel-button-text="不了" icon="el-icon-info"
-                                     icon-color="red" title="确定删除吗？" @confirm="delTable(tableArr, index)"
-                      >
+                        icon-color="red" title="确定删除吗？" @confirm="delTable(tableArr, index)">
                         <template slot="reference">
                           <el-button size="mini" type="danger">删除</el-button>
                           <!--                        <el-link type="danger" style="float: right"><i class="el-icon-delete"></i></el-link>-->
@@ -221,195 +210,175 @@
             <div style="overflow-x: auto">
               <table class="heavier-text main" style="width: 760px;" id="table-val" v-show="tableArr.length > 0">
                 <tbody v-for="(item, index) in tableArr" :key="index" class="tbody-val">
-                <tr>
-                  <td width="7%" rowspan="5" bgcolor="#FFFFFF" class="new no-internal-borders vertical-text">
-                    <b v-if="item.name.length < 3">
-                      <template v-for="(str, idx) in item.name">
-                        {{ str }}<br><br v-if="idx < 1">
-                      </template>
-                    </b>
-                    <b v-else>
-                      <template v-for="(str, idx) in item.name">
-                        {{ str }}<br>
-                      </template>
-                    </b>
+                  <tr>
+                    <td width="7%" rowspan="5" bgcolor="#FFFFFF" class="new no-internal-borders vertical-text">
+                      <b v-if="item.name.length < 3">
+                        <template v-for="(str, idx) in item.name">
+                          {{ str }}<br><br v-if="idx < 1">
+                        </template>
+                      </b>
+                      <b v-else>
+                        <template v-for="(str, idx) in item.name">
+                          {{ str }}<br>
+                        </template>
+                      </b>
 
-                  </td>
-                  <td width="8%" rowspan="2" bgcolor="#FFFFFF" class="new no-internal-borders">
-                    出生<br>日期
-                  </td>
-                  <td width="10%" bgcolor="#FFFFFF" class="new no-internal-borders">
-                    公历
-                  </td>
-                  <td style="width:10%" bgcolor="#FFFFFF"
+                    </td>
+                    <td width="8%" rowspan="2" bgcolor="#FFFFFF" class="new no-internal-borders">
+                      出生<br>日期
+                    </td>
+                    <td width="10%" bgcolor="#FFFFFF" class="new no-internal-borders">
+                      公历
+                    </td>
+                    <td style="width:10%" bgcolor="#FFFFFF"
                       :style="{ paddingBottom: randomOffsets[index].solarYear + 'px', paddingLeft: randomOffsets[index].solarYear + 'px' }"
-                      class="new no-internal-borders"
-                  >{{ item.solarYear }}
-                  </td>
-                  <td style=" width:10%" bgcolor="#FFFFFF"
+                      class="new no-internal-borders">{{ item.solarYear }}
+                    </td>
+                    <td style=" width:10%" bgcolor="#FFFFFF"
                       :style="{ paddingBottom: randomOffsets[index].solarMonth + 'px', paddingLeft: randomOffsets[index].solarMonth + 'px' }"
-                      class="new no-internal-borders"
-                  >{{ item.solarMonth }}
-                  </td>
-                  <td style=" width:12%" bgcolor="#FFFFFF"
+                      class="new no-internal-borders">{{ item.solarMonth }}
+                    </td>
+                    <td style=" width:12%" bgcolor="#FFFFFF"
                       :style="{ paddingBottom: randomOffsets[index].solarDay + 'px', paddingLeft: randomOffsets[index].solarDay + 'px' }"
-                      class="new no-internal-borders"
-                  >{{ item.solarDay }}
-                  </td>
-                  <td style=" width:11%" bgcolor="#FFFFFF"
+                      class="new no-internal-borders">{{ item.solarDay }}
+                    </td>
+                    <td style=" width:11%" bgcolor="#FFFFFF"
                       :style="{ paddingBottom: randomOffsets[index].solarHh + 'px', paddingLeft: randomOffsets[index].solarHh + 'px' }"
-                      class="new no-internal-borders"
-                  >
-                    {{ item.closeSolarH ? item.solarHh : '' }}
-                  </td>
-                  <td style=" width:30%;padding-left:4px;padding-right:4px;" rowspan="5" bgcolor="#FFFFFF"
-                      class="new no-internal-borders"
-                  >
-                    {{ isShiJi ? item.gaiYao : item.gaiYao.slice(0, -5) }}
-                  </td>
-                </tr>
-                <tr>
-                  <td bgcolor="#FFFFFF" class="new no-internal-borders">农历</td>
-                  <td bgcolor="#FFFFFF"
+                      class="new no-internal-borders">
+                      {{ item.closeSolarH ? item.solarHh : '' }}
+                    </td>
+                    <td style=" width:30%;padding-left:4px;padding-right:4px;" rowspan="5" bgcolor="#FFFFFF"
+                      class="new no-internal-borders">
+                      {{ isShiJi ? item.gaiYao : item.gaiYao.slice(0, -5) }}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td bgcolor="#FFFFFF" class="new no-internal-borders">农历</td>
+                    <td bgcolor="#FFFFFF"
                       :style="{ paddingBottom: randomOffsets[index].lunarYear + 'px', paddingLeft: randomOffsets[index].lunarYear + 'px' }"
-                      class="new no-internal-borders"
-                  >{{ item.lunarYear }}
-                  </td>
-                  <td bgcolor="#FFFFFF"
+                      class="new no-internal-borders">{{ item.lunarYear }}
+                    </td>
+                    <td bgcolor="#FFFFFF"
                       :style="{ paddingBottom: randomOffsets[index].lunarMonth + 'px', paddingLeft: randomOffsets[index].lunarMonth + 'px' }"
-                      class="new no-internal-borders"
-                  >{{ item.lunarMonth }}
-                  </td>
-                  <td bgcolor="#FFFFFF"
+                      class="new no-internal-borders">{{ item.lunarMonth }}
+                    </td>
+                    <td bgcolor="#FFFFFF"
                       :style="{ paddingBottom: randomOffsets[index].lunarDay + 'px', paddingLeft: randomOffsets[index].lunarDay + 'px' }"
-                      class="new no-internal-borders"
-                  >{{ item.lunarDay }}
-                  </td>
-                  <td bgcolor="#FFFFFF"
+                      class="new no-internal-borders">{{ item.lunarDay }}
+                    </td>
+                    <td bgcolor="#FFFFFF"
                       :style="{ paddingBottom: randomOffsets[index].lunarHh + 'px', paddingLeft: randomOffsets[index].lunarHh + 'px' }"
-                      class="new no-internal-borders"
-                  >{{ item.closeLunarH ? item.lunarHh : '' }}
-                  </td>
-                </tr>
-                <tr>
-                  <td colspan="2" bgcolor="#FFFFFF" class="new no-internal-borders">八字：</td>
-                  <td bgcolor="#FFFFFF"
+                      class="new no-internal-borders">{{ item.closeLunarH ? item.lunarHh : '' }}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2" bgcolor="#FFFFFF" class="new no-internal-borders">八字：</td>
+                    <td bgcolor="#FFFFFF"
                       :style="{ paddingBottom: randomOffsets[index].baZhiYear + 'px', paddingLeft: randomOffsets[index].baZhiYear + 'px' }"
-                      class="new no-internal-borders"
-                  >{{ item.baZhiYear }}
-                  </td>
-                  <td bgcolor="#FFFFFF"
+                      class="new no-internal-borders">{{ item.baZhiYear }}
+                    </td>
+                    <td bgcolor="#FFFFFF"
                       :style="{ paddingBottom: randomOffsets[index].baZhiMonth + 'px', paddingLeft: randomOffsets[index].baZhiMonth + 'px' }"
-                      class="new no-internal-borders"
-                  >{{ item.baZhiMonth }}
-                  </td>
-                  <td bgcolor="#FFFFFF"
+                      class="new no-internal-borders">{{ item.baZhiMonth }}
+                    </td>
+                    <td bgcolor="#FFFFFF"
                       :style="{ paddingBottom: randomOffsets[index].baZhiDay + 'px', paddingLeft: randomOffsets[index].baZhiDay + 'px' }"
-                      class="new no-internal-borders"
-                  >{{ item.baZhiDay }}
-                  </td>
-                  <td bgcolor="#FFFFFF"
+                      class="new no-internal-borders">{{ item.baZhiDay }}
+                    </td>
+                    <td bgcolor="#FFFFFF"
                       :style="{ paddingBottom: randomOffsets[index].baZhiHh + 'px', paddingLeft: randomOffsets[index].baZhiHh + 'px' }"
-                      class="new no-internal-borders"
-                  >{{ item.closeBaZhiH ? item.baZhiHh : '' }}
-                  </td>
-                </tr>
-                <tr>
-                  <td colspan="2" bgcolor="#FFFFFF" class="new no-internal-borders">五行：</td>
-                  <td bgcolor="#FFFFFF"
+                      class="new no-internal-borders">{{ item.closeBaZhiH ? item.baZhiHh : '' }}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2" bgcolor="#FFFFFF" class="new no-internal-borders">五行：</td>
+                    <td bgcolor="#FFFFFF"
                       :style="{ paddingBottom: randomOffsets[index].wuXinYear + 'px', paddingLeft: randomOffsets[index].wuXinYear + 'px' }"
-                      class="new no-internal-borders"
-                  >{{
-                      item.wuXinYear
-                    }}
-                  </td>
-                  <td bgcolor="#FFFFFF"
+                      class="new no-internal-borders">{{
+                        item.wuXinYear
+                      }}
+                    </td>
+                    <td bgcolor="#FFFFFF"
                       :style="{ paddingBottom: randomOffsets[index].wuXinMonth + 'px', paddingLeft: randomOffsets[index].wuXinMonth + 'px' }"
-                      class="new no-internal-borders"
-                  >{{
-                      item.wuXinMonth
-                    }}
-                  </td>
-                  <td bgcolor="#FFFFFF"
+                      class="new no-internal-borders">{{
+                        item.wuXinMonth
+                      }}
+                    </td>
+                    <td bgcolor="#FFFFFF"
                       :style="{ paddingBottom: randomOffsets[index].wuXinDay + 'px', paddingLeft: randomOffsets[index].wuXinDay + 'px' }"
-                      class="new no-internal-borders"
-                  >{{
-                      item.wuXinDay
-                    }}
-                  </td>
-                  <td bgcolor="#FFFFFF"
+                      class="new no-internal-borders">{{
+                        item.wuXinDay
+                      }}
+                    </td>
+                    <td bgcolor="#FFFFFF"
                       :style="{ paddingBottom: randomOffsets[index].wuXinHh + 'px', paddingLeft: randomOffsets[index].wuXinHh + 'px' }"
-                      class="new no-internal-borders"
-                  >{{
-                      item.closeWuXinH ? item.wuXinHh : ''
+                      class="new no-internal-borders">{{
+                        item.closeWuXinH ? item.wuXinHh : ''
+                      }}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td bgcolor="#ffffff" class="new no-internal-borders" colspan="6"> {{
+                      '八字五行数 ：' + item.geShu
                     }}
-                  </td>
-                </tr>
-                <tr>
-                  <td bgcolor="#ffffff" class="new no-internal-borders" colspan="6"> {{
-                      item.geShu ? item.geShu : '八字五行个数 :'
-                    }}
-                  </td>
-                </tr>
+                    </td>
+                  </tr>
                 </tbody>
                 <tbody>
-                <tr>
-                  <td>
-                  </td>
-                  <!--                  <td colspan="7" class="table-textarea">-->
-                  <!--                    <el-input-->
-                  <!--                      type="textarea"-->
-                  <!--                      :rows="2"-->
-                  <!--                      autosize-->
-                  <!--                      placeholder="请输入内容"-->
-                  <!--                      v-model="textarea"-->
-                  <!--                    >-->
-                  <!--                    </el-input>-->
-                  <!--                  </td>-->
-                  <template v-if="isTextarea">
-                    <td colspan="7" class="table-textarea">
-                      <el-input type="textarea" :rows="2" size="medium" autosize placeholder="请输入内容"
-                                v-model="mingPanText" @blur="tableIptBlur"
-                      >
-                      </el-input>
+                  <tr>
+                    <td>
                     </td>
-                  </template>
-                  <template v-else>
-                    <td colspan="7" id="#pre-line" style="white-space: pre-line; padding-right: 10px"
-                        class="new no-internal-borders"
-                    >
-                      {{ mingPanText }}
-                    </td>
-                  </template>
+                    <!--                  <td colspan="7" class="table-textarea">-->
+                    <!--                    <el-input-->
+                    <!--                      type="textarea"-->
+                    <!--                      :rows="2"-->
+                    <!--                      autosize-->
+                    <!--                      placeholder="请输入内容"-->
+                    <!--                      v-model="textarea"-->
+                    <!--                    >-->
+                    <!--                    </el-input>-->
+                    <!--                  </td>-->
+                    <template v-if="isTextarea">
+                      <td colspan="7" class="table-textarea">
+                        <el-input type="textarea" :rows="2" size="medium" autosize placeholder="请输入内容"
+                          v-model="mingPanText" @blur="tableIptBlur">
+                        </el-input>
+                      </td>
+                    </template>
+                    <template v-else>
+                      <td colspan="7" id="#pre-line" style="white-space: pre-line; padding-right: 10px"
+                        class="new no-internal-borders">
+                        {{ mingPanText }}
+                      </td>
+                    </template>
 
-                </tr>
+                  </tr>
                 </tbody>
               </table>
             </div>
             <table border="0" cellpadding="1" cellspacing="1"
-                   style="width: 100%; MARGIN-BOTTOM: 5px; table-layout:fixed;word-wrap:break-word;border: 1px solid #A3E7FA"
-                   v-show="tableArr.length > 0"
-            >
+              style="width: 100%; MARGIN-BOTTOM: 5px; table-layout:fixed;word-wrap:break-word;border: 1px solid #A3E7FA"
+              v-show="tableArr.length > 0">
               <thead>
-              <tr>
-                <th colspan="2">年柱</th>
-                <th colspan="2">月柱</th>
-                <th colspan="2">日柱</th>
-                <th colspan="2">时柱</th>
-              </tr>
+                <tr>
+                  <th colspan="2">年柱</th>
+                  <th colspan="2">月柱</th>
+                  <th colspan="2">日柱</th>
+                  <th colspan="2">时柱</th>
+                </tr>
               </thead>
               <tbody>
-              <tr style=" border-bottom: 1px solid black; " v-for="(item, index) in tableArr" :key="index">
-                <td colspan="2" style="text-align: center;" class="new">{{ item.naYinYear }}</td>
-                <td colspan="2" style="text-align: center;" class="new">{{ item.naYinMonth }}</td>
-                <td colspan="2" style="text-align: center;" class="new">{{ item.naYinDay }}</td>
-                <td colspan="2" style="text-align: center;" class="new">{{ item.naYinHh }}</td>
-              </tr>
+                <tr style=" border-bottom: 1px solid black; " v-for="(item, index) in tableArr" :key="index">
+                  <td colspan="2" style="text-align: center;" class="new">{{ item.naYinYear }}</td>
+                  <td colspan="2" style="text-align: center;" class="new">{{ item.naYinMonth }}</td>
+                  <td colspan="2" style="text-align: center;" class="new">{{ item.naYinDay }}</td>
+                  <td colspan="2" style="text-align: center;" class="new">{{ item.naYinHh }}</td>
+                </tr>
               </tbody>
               <tbody v-if="hePanStr">
-              <tr>
-                <td colspan="8" class="new">{{ hePanStr }}</td>
-              </tr>
+                <tr>
+                  <td colspan="8" class="new">{{ hePanStr }}</td>
+                </tr>
               </tbody>
             </table>
             <div>
@@ -433,8 +402,7 @@
 
       <template v-else>
         <el-form :model="form" :rules="rules" ref="ruleForm" label-width="80px" labelPosition="top"
-                 class="demo-ruleForm"
-        >
+          class="demo-ruleForm">
           <el-row type="flex" class="row-bg" justify="center">
             <el-col :span="2">
               <el-form-item label="姓名">
@@ -518,12 +486,9 @@
                 <el-card class="box-card cardW">
                   <div slot="header" class="clearfix">
                     <el-input v-model="searchVal" @change="changeSearch" clearable placeholder="搜索名字"
-                              style="width: 260px"
-                    />
-                    <el-popconfirm confirm-button-text="确认" cancel-button-text="不了" icon="el-icon-info"
-                                   icon-color="red"
-                                   title="确定清空吗？" @confirm="clearAllList"
-                    >
+                      style="width: 260px" />
+                    <el-popconfirm confirm-button-text="确认" cancel-button-text="不了" icon="el-icon-info" icon-color="red"
+                      title="确定清空吗？" @confirm="clearAllList">
                       <template slot="reference">
                         <el-link type="danger" style="float: right"><i class="el-icon-delete"></i></el-link>
                       </template>
@@ -535,7 +500,7 @@
                     <div v-for="(item, index) in list" :key="index" class="text item">
                       <div>
                         <el-link type="primary" @click="cardClick(item)">
-                          <div v-for="(data, idx) in item.table">
+                          <div v-for="(data, idx) in item.table" :key="idx">
                             {{
                               data.form.name + '--' + (data.form.isSolar ? '公历' : '农历') + data.form.nian + '年' +
                               (data.form.isLeapMonth ? '闰' : '') + data.form.yue + '月' + data.form.ri + '日' +
@@ -546,8 +511,7 @@
                           </div>
                         </el-link>
                         <el-popconfirm confirm-button-text="确认" cancel-button-text="不了" icon="el-icon-info"
-                                       icon-color="red" title="确定删除吗？" @confirm="deleteList(item.key)"
-                        >
+                          icon-color="red" title="确定删除吗？" @confirm="deleteList(item.key)">
                           <template slot="reference">
                             <el-link type="danger" style="float: right"><i class="el-icon-delete"></i></el-link>
                           </template>
@@ -564,8 +528,7 @@
                   </template>
                   <div>
                     <el-pagination small layout="prev, pager, next" :total="total" :page-size="limit"
-                                   :current-page="page" @current-change="currentChange"
-                    >
+                      :current-page="page" @current-change="currentChange">
                     </el-pagination>
                   </div>
                 </el-card>
@@ -576,248 +539,205 @@
               <div class="main table-width">
                 <!--            <div v-html="tableHtml" id="table-html" style="background-color: red"></div>-->
                 <div>
-                  <div>{{ baZhiTest }}</div>
                   <table class="heavier-text" id="table-val">
                     <tbody v-for="(item, index) in tableArr" :key="index" class="tbody-val">
-                    <tr>
-                      <td width="7%" rowspan="5" bgcolor="#FFFFFF" class="new no-internal-borders vertical-text">
-                        <b v-if="item.name.length < 3">
-                          <template v-for="(str, idx) in item.name">
-                            {{ str }}<br><br v-if="idx < 1">
-                          </template>
-                        </b>
-                        <b v-else>
-                          <template v-for="(str, idx) in item.name">
-                            {{ str }}<br>
-                          </template>
-                        </b>
-
-                      </td>
-                      <td width="8%" rowspan="2" bgcolor="#FFFFFF" class="new no-internal-borders">
-                        出生<br>日期
-                      </td>
-                      <td width="10%" bgcolor="#FFFFFF" class="new no-internal-borders">
-                        公历
-                      </td>
-                      <td style="width:10%" bgcolor="#FFFFFF"
+                      <tr>
+                        <td width="7%" rowspan="5" bgcolor="#FFFFFF" class="new no-internal-borders vertical-text">
+                          <b v-if="item.name.length < 3">
+                            <template v-for="(str, idx) in item.name">
+                              {{ str }}<br><br v-if="idx < 1">
+                            </template>
+                          </b>
+                          <b v-else>
+                            <template v-for="(str, idx) in item.name">
+                              {{ str }}<br>
+                            </template>
+                          </b>
+                        </td>
+                        <td width="8%" rowspan="2" bgcolor="#FFFFFF" class="new no-internal-borders">
+                          出生<br>日期
+                        </td>
+                        <td width="10%" bgcolor="#FFFFFF" class="new no-internal-borders">
+                          公历
+                        </td>
+                        <td style="width:10%" bgcolor="#FFFFFF"
                           :style="{ paddingBottom: randomOffsets[index].solarYear + 'px', paddingLeft: randomOffsets[index].solarYear + 'px' }"
-                          class="new no-internal-borders"
-                      >{{ item.solarYear }}
-                      </td>
-                      <td style=" width:10%" bgcolor="#FFFFFF"
+                          class="new no-internal-borders">{{ item.solarYear }}
+                        </td>
+                        <td style=" width:10%" bgcolor="#FFFFFF"
                           :style="{ paddingBottom: randomOffsets[index].solarMonth + 'px', paddingLeft: randomOffsets[index].solarMonth + 'px' }"
-                          class="new no-internal-borders"
-                      >{{ item.solarMonth }}
-                      </td>
-                      <td style=" width:12%" bgcolor="#FFFFFF"
+                          class="new no-internal-borders">{{ item.solarMonth }}
+                        </td>
+                        <td style=" width:12%" bgcolor="#FFFFFF"
                           :style="{ paddingBottom: randomOffsets[index].solarDay + 'px', paddingLeft: randomOffsets[index].solarDay + 'px' }"
-                          class="new no-internal-borders"
-                      >{{ item.solarDay }}
-                      </td>
-                      <td style=" width:11%" bgcolor="#FFFFFF"
+                          class="new no-internal-borders">{{ item.solarDay }}
+                        </td>
+                        <td style=" width:11%" bgcolor="#FFFFFF"
                           :style="{ paddingBottom: randomOffsets[index].solarHh + 'px', paddingLeft: randomOffsets[index].solarHh + 'px' }"
-                          class="new no-internal-borders"
-                      >
-                        {{ item.closeSolarH ? item.solarHh : '' }}
-                      </td>
-                      <td style=" width:30%;padding-left:4px;padding-right:4px;" rowspan="5" bgcolor="#FFFFFF"
-                          class="new no-internal-borders"
-                      >
-                        {{ item.gaiYao }}
-                      </td>
-                    </tr>
-                    <tr>
-                      <td bgcolor="#FFFFFF" class="new no-internal-borders">农历</td>
-                      <td bgcolor="#FFFFFF"
+                          class="new no-internal-borders">
+                          {{ item.closeSolarH ? item.solarHh : '' }}
+                        </td>
+                        <td style=" width:30%;padding-left:4px;padding-right:4px;" rowspan="5" bgcolor="#FFFFFF"
+                          class="new no-internal-borders">
+                          {{ item.gaiYao }}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td bgcolor="#FFFFFF" class="new no-internal-borders">农历</td>
+                        <td bgcolor="#FFFFFF"
                           :style="{ paddingBottom: randomOffsets[index].lunarYear + 'px', paddingLeft: randomOffsets[index].lunarYear + 'px' }"
-                          class="new no-internal-borders"
-                      >{{ item.lunarYear }}
-                      </td>
-                      <td bgcolor="#FFFFFF"
+                          class="new no-internal-borders">{{ item.lunarYear }}
+                        </td>
+                        <td bgcolor="#FFFFFF"
                           :style="{ paddingBottom: randomOffsets[index].lunarMonth + 'px', paddingLeft: randomOffsets[index].lunarMonth + 'px' }"
-                          class="new no-internal-borders"
-                      >{{ item.lunarMonth }}
-                      </td>
-                      <td bgcolor="#FFFFFF"
+                          class="new no-internal-borders">{{ item.lunarMonth }}
+                        </td>
+                        <td bgcolor="#FFFFFF"
                           :style="{ paddingBottom: randomOffsets[index].lunarDay + 'px', paddingLeft: randomOffsets[index].lunarDay + 'px' }"
-                          class="new no-internal-borders"
-                      >{{ item.lunarDay }}
-                      </td>
-                      <td bgcolor="#FFFFFF"
+                          class="new no-internal-borders">{{ item.lunarDay }}
+                        </td>
+                        <td bgcolor="#FFFFFF"
                           :style="{ paddingBottom: randomOffsets[index].lunarHh + 'px', paddingLeft: randomOffsets[index].lunarHh + 'px' }"
-                          class="new no-internal-borders"
-                      >{{ item.closeLunarH ? item.lunarHh : '' }}
-                      </td>
-                    </tr>
-                    <tr>
-                      <td colspan="2" bgcolor="#FFFFFF" class="new no-internal-borders">八字：</td>
-                      <td bgcolor="#FFFFFF"
+                          class="new no-internal-borders">{{ item.closeLunarH ? item.lunarHh : '' }}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td colspan="2" bgcolor="#FFFFFF" class="new no-internal-borders">八字：</td>
+                        <td bgcolor="#FFFFFF"
                           :style="{ paddingBottom: randomOffsets[index].baZhiYear + 'px', paddingLeft: randomOffsets[index].baZhiYear + 'px' }"
-                          class="new no-internal-borders"
-                      >{{ item.baZhiYear }}
-                      </td>
-                      <td bgcolor="#FFFFFF"
+                          class="new no-internal-borders">{{ item.baZhiYear }}
+                        </td>
+                        <td bgcolor="#FFFFFF"
                           :style="{ paddingBottom: randomOffsets[index].baZhiMonth + 'px', paddingLeft: randomOffsets[index].baZhiMonth + 'px' }"
-                          class="new no-internal-borders"
-                      >{{ item.baZhiMonth }}
-                      </td>
-                      <td bgcolor="#FFFFFF"
+                          class="new no-internal-borders">{{ item.baZhiMonth }}
+                        </td>
+                        <td bgcolor="#FFFFFF"
                           :style="{ paddingBottom: randomOffsets[index].baZhiDay + 'px', paddingLeft: randomOffsets[index].baZhiDay + 'px' }"
-                          class="new no-internal-borders"
-                      >{{ item.baZhiDay }}
-                      </td>
-                      <td bgcolor="#FFFFFF"
+                          class="new no-internal-borders">{{ item.baZhiDay }}
+                        </td>
+                        <td bgcolor="#FFFFFF"
                           :style="{ paddingBottom: randomOffsets[index].baZhiHh + 'px', paddingLeft: randomOffsets[index].baZhiHh + 'px' }"
-                          class="new no-internal-borders"
-                      >{{ item.closeBaZhiH ? item.baZhiHh : '' }}
-                      </td>
-                    </tr>
-                    <tr>
-                      <td colspan="2" bgcolor="#FFFFFF" class="new no-internal-borders">五行：</td>
-                      <td bgcolor="#FFFFFF"
+                          class="new no-internal-borders">{{ item.closeBaZhiH ? item.baZhiHh : '' }}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td colspan="2" bgcolor="#FFFFFF" class="new no-internal-borders">五行：</td>
+                        <td bgcolor="#FFFFFF"
                           :style="{ paddingBottom: randomOffsets[index].wuXinYear + 'px', paddingLeft: randomOffsets[index].wuXinYear + 'px' }"
-                          class="new no-internal-borders"
-                      >{{
-                          item.wuXinYear
-                        }}
-                      </td>
-                      <td bgcolor="#FFFFFF"
+                          class="new no-internal-borders">{{
+                            item.wuXinYear
+                          }}
+                        </td>
+                        <td bgcolor="#FFFFFF"
                           :style="{ paddingBottom: randomOffsets[index].wuXinMonth + 'px', paddingLeft: randomOffsets[index].wuXinMonth + 'px' }"
-                          class="new no-internal-borders"
-                      >{{
-                          item.wuXinMonth
-                        }}
-                      </td>
-                      <td bgcolor="#FFFFFF"
+                          class="new no-internal-borders">{{
+                            item.wuXinMonth
+                          }}
+                        </td>
+                        <td bgcolor="#FFFFFF"
                           :style="{ paddingBottom: randomOffsets[index].wuXinDay + 'px', paddingLeft: randomOffsets[index].wuXinDay + 'px' }"
-                          class="new no-internal-borders"
-                      >{{
-                          item.wuXinDay
-                        }}
-                      </td>
-                      <td bgcolor="#FFFFFF"
+                          class="new no-internal-borders">{{
+                            item.wuXinDay
+                          }}
+                        </td>
+                        <td bgcolor="#FFFFFF"
                           :style="{ paddingBottom: randomOffsets[index].wuXinHh + 'px', paddingLeft: randomOffsets[index].wuXinHh + 'px' }"
-                          class="new no-internal-borders"
-                      >{{
-                          item.closeWuXinH ? item.wuXinHh : ''
+                          class="new no-internal-borders">{{
+                            item.closeWuXinH ? item.wuXinHh : ''
+                          }}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td bgcolor="#ffffff" class="new no-internal-borders" colspan="6"> {{
+                          '八字五行数 ：' + item.geShu
                         }}
-                      </td>
-                    </tr>
-                    <tr>
-                      <td bgcolor="#ffffff" class="new no-internal-borders" colspan="6"> {{
-                          item.geShu ? item.geShu : '八字五行个数 :'
-                        }}
-                      </td>
-                    </tr>
-                    <div class="tbody-val-action" v-if="!isMobile">
-                      <div class="">
-                        <span>关闭时间</span>
-                        <el-switch v-model="item.closeSolarH" @change="closeChange" active-color="#13ce66"
-                                   inactive-color="#ff4949"
-                        >
-                        </el-switch>
-                      </div>
-                      <div>
-                        <span>关闭时辰</span>
-                        <el-switch v-model="item.closeLunarH" @change="closeChange" active-color="#13ce66"
-                                   inactive-color="#ff4949"
-                        >
-                        </el-switch>
-                      </div>
-                      <div>
-                        <span>最后八字</span>
-                        <el-switch v-model="item.closeBaZhiH" @change="closeChange" active-color="#13ce66"
-                                   inactive-color="#ff4949"
-                        >
-                        </el-switch>
-                      </div>
-                      <div>
-                        <span>最后五行</span>
-                        <el-switch v-model="item.closeWuXinH" @change="closeChange" active-color="#13ce66"
-                                   inactive-color="#ff4949"
-                        >
-                        </el-switch>
-                      </div>
-                      <!--                  <div>-->
-                      <!--                    <el-button size="mini" type="primary" @click="updateTableForm(index)">修改</el-button>-->
-                      <!--                  </div>-->
-                      <div>
-                        <el-popconfirm confirm-button-text="确认" cancel-button-text="不了" icon="el-icon-info"
-                                       icon-color="red" title="确定清空吗？" @confirm="delTable(tableArr, index)"
-                        >
-                          <template slot="reference">
-                            <el-button size="mini" type="danger">删除</el-button>
-                            <!--                        <el-link type="danger" style="float: right"><i class="el-icon-delete"></i></el-link>-->
-                          </template>
+                        </td>
+                      </tr>
+                      <div class="tbody-val-action" v-if="!isMobile">
+                        <div class="">
+                          <span>关闭时间</span>
+                          <el-switch v-model="item.closeSolarH" @change="closeChange" active-color="#13ce66"
+                            inactive-color="#ff4949">
+                          </el-switch>
+                        </div>
+                        <div>
+                          <span>关闭时辰</span>
+                          <el-switch v-model="item.closeLunarH" @change="closeChange" active-color="#13ce66"
+                            inactive-color="#ff4949">
+                          </el-switch>
+                        </div>
+                        <div>
+                          <span>最后八字</span>
+                          <el-switch v-model="item.closeBaZhiH" @change="closeChange" active-color="#13ce66"
+                            inactive-color="#ff4949">
+                          </el-switch>
+                        </div>
+                        <div>
+                          <span>最后五行</span>
+                          <el-switch v-model="item.closeWuXinH" @change="closeChange" active-color="#13ce66"
+                            inactive-color="#ff4949">
+                          </el-switch>
+                        </div>
+                        <!--                  <div>-->
+                        <!--                    <el-button size="mini" type="primary" @click="updateTableForm(index)">修改</el-button>-->
+                        <!--                  </div>-->
+                        <div>
+                          <el-popconfirm confirm-button-text="确认" cancel-button-text="不了" icon="el-icon-info"
+                            icon-color="red" title="确定清空吗？" @confirm="delTable(tableArr, index)">
+                            <template slot="reference">
+                              <el-button size="mini" type="danger">删除</el-button>
+                              <!--                        <el-link type="danger" style="float: right"><i class="el-icon-delete"></i></el-link>-->
+                            </template>
 
-                        </el-popconfirm>
-                        <!--                    <el-button size="mini" type="danger" @click="delTable(tableArr, index)">删除</el-button>-->
+                          </el-popconfirm>
+                          <!--                    <el-button size="mini" type="danger" @click="delTable(tableArr, index)">删除</el-button>-->
+                        </div>
+                        <div>
+                          <el-button size="mini" type="primary" @click="repeatPostGuoxue(item)">查询</el-button>
+                        </div>
                       </div>
-                      <div>
-                        <el-button size="mini" type="primary" @click="repeatPostGuoxue(item)">查询</el-button>
-                      </div>
-                    </div>
                     </tbody>
-                    <tbody>
-                    <tr v-show="isTextarea">
-                      <td style="vertical-align: top;text-align: center;">
-                        <!--                        <el-popover-->
-                        <!--                          placement="right"-->
-                        <!--                          width="400"-->
-                        <!--                          trigger="click"-->
-                        <!--                        >-->
-                        <!--                          <div>-->
-                        <!--                            <Autocomplete></Autocomplete>-->
-                        <!--                          </div>-->
-                        <!--                          <template v-slot:reference>-->
-                        <!--                            <el-link type="primary" style="font-size: 28px">-->
-                        <!--                              <i class="el-icon-s-unfold"></i>-->
+                    <tbody v-show="tableArr.length > 0">
+                      <tr v-show="isTextarea">
+                        <td style="vertical-align: top;text-align: center;">
+                        </td>
+                        <td colspan="7" class="table-textarea">
+                          <el-input type="textarea" :rows="2" size="medium" autosize placeholder="请输入内容"
+                            v-model="mingPanText" @blur="tableIptBlur">
+                          </el-input>
+                        </td>
 
-                        <!--                            </el-link>-->
-                        <!--                          </template>-->
-                        <!--                        </el-popover>-->
-
-                      </td>
-                      <td colspan="7" class="table-textarea">
-                        <el-input type="textarea" :rows="2" size="medium" autosize placeholder="请输入内容"
-                                  v-model="mingPanText" @blur="tableIptBlur"
-                        >
-                        </el-input>
-                      </td>
-
-                    </tr>
-                    <tr v-show="!isTextarea">
-                      <td>
-                      </td>
-                      <td colspan="7" id="#pre-line" style="white-space: pre-line; padding-right: 10px"
-                          class="new no-internal-borders"
-                      >
-                        {{ mingPanText }}
-                      </td>
-                    </tr>
+                      </tr>
+                      <tr v-show="!isTextarea">
+                        <td>
+                        </td>
+                        <td colspan="7" id="#pre-line" style="white-space: pre-line; padding-right: 10px"
+                          class="new no-internal-borders">
+                          {{ mingPanText }}
+                        </td>
+                      </tr>
                     </tbody>
                   </table>
                 </div>
                 <table border="0" cellpadding="1" cellspacing="1"
-                       style="MARGIN-BOTTOM: 5px; table-layout:fixed;word-wrap:break-word;border: 1px solid #A3E7FA"
-                       v-show="tableArr.length > 0"
-                >
+                  style="MARGIN-BOTTOM: 5px; table-layout:fixed;word-wrap:break-word;border: 1px solid #A3E7FA"
+                  v-show="tableArr.length > 0">
 
                   <tbody>
-                  <tr style=" border-bottom: 1px solid black; " v-for="(item, index) in tableArr" :key="index">
-                    <td class="new" style="width: 190px">纳音</td>
-                    <td class="new" style="width: 78px">{{ item.naYinYear }}</td>
-                    <td class="new" style="width: 78px">{{ item.naYinMonth }}</td>
-                    <td class="new" style="width: 94px">{{ item.naYinDay }}</td>
-                    <td class="new">{{ item.naYinHh }}</td>
-                    <td colspan="3" class="new"></td>
-                  </tr>
+                    <tr style=" border-bottom: 1px solid black; " v-for="(item, index) in tableArr" :key="index">
+                      <td class="new" style="width: 190px">纳音</td>
+                      <td class="new" style="width: 78px">{{ item.naYinYear }}</td>
+                      <td class="new" style="width: 78px">{{ item.naYinMonth }}</td>
+                      <td class="new" style="width: 94px">{{ item.naYinDay }}</td>
+                      <td class="new">{{ item.naYinHh }}</td>
+                      <td colspan="3" class="new"></td>
+                    </tr>
 
                   </tbody>
                   <tbody v-if="hePanStr">
-                  <tr>
-                    <td colspan="8" class="new">{{ hePanStr }}</td>
-                  </tr>
+                    <tr>
+                      <td colspan="8" class="new">{{ hePanStr }}</td>
+                    </tr>
                   </tbody>
                 </table>
                 <div>
@@ -862,7 +782,7 @@ import { Lunar, EightChar, SolarUtil, LunarUtil, Solar, LunarMonth, LunarYear } 
 import { countWuXin } from '../../../utils'
 
 // import { msgError, msg } from '../../../plugins/modal'
-function deepClone(obj) {
+function deepClone (obj) {
   if (obj === null || typeof obj !== 'object') {
     return obj
   }
@@ -888,7 +808,7 @@ let tableDom = null
 export default {
   name: 'GuoXue',
   components: { Autocomplete },
-  data() {
+  data () {
     return {
       isMobile: false,
       isShiJi: false,
@@ -969,7 +889,7 @@ export default {
     }
   },
   computed: {
-    months() {
+    months () {
       let arr = JSON.parse(JSON.stringify(this.lunarMonthArr))
       let monthArr = []
       const leapMonth = calendar.leapMonth(this.form.nian)
@@ -984,14 +904,14 @@ export default {
       return monthArr
     },
     // 合年柱月柱日柱
-    hePanStr() {
+    hePanStr () {
       if (this.tableArr.length === 2) {
         return this.hePan()
       } else {
         return ''
       }
     },
-    randomOffsets() {
+    randomOffsets () {
       return this.tableArr.map((item) => {
         let obj = {}
         Object.keys(item).map(key => {
@@ -1002,16 +922,16 @@ export default {
       })
     }
   },
-  created() {
+  created () {
     this.initLocationToIndexedDB()
     this.fetchList()
     // this.updateTotalCount()
   },
-  mounted() {
+  mounted () {
     this.checkIfMobile()
   },
   methods: {
-    LunarTest() {
+    LunarTest () {
       const yue = this.form.isLeapMonth ? -this.form.yue : this.form.yue
       console.log('this.form.hh', this.form.hh)
       const d = Lunar.fromYmdHms(this.form.nian, yue, this.form.ri, this.form.hh, 0, 0)
@@ -1042,7 +962,7 @@ export default {
       this.$set(this.baZhiTest, 'wangQue', r.wangQue)
 
     },
-    async initLocationToIndexedDB() {
+    async initLocationToIndexedDB () {
       const table_list = this.$cache.local.get('table_list')
       if (table_list) {
         const list = JSON.parse(table_list)
@@ -1058,7 +978,7 @@ export default {
         this.$cache.local.remove('table_list')
       }
     },
-    test() {
+    test () {
       const chineseCharacters = [
         '你', '我', '他', '的', '是', '了', '在', '有', '和', '不', '就', '人', '都', '一', '上', '中', '大', '来', '说', '个',
         '这', '们', '为', '子', '到', '地', '出', '道', '也', '时', '要', '下', '会', '里', '生', '着', '去', '样', '过', '看',
@@ -1086,7 +1006,7 @@ export default {
         })
       }
     },
-    async fetchList() {
+    async fetchList () {
       // 按 id 倒序排序并获取前 20 条记录
       let start = (this.page - 1) * this.limit
       const value = this.searchVal.trim()
@@ -1121,13 +1041,13 @@ export default {
       // this.last20Items = items.reverse();
       // console.log(this.list.length, this.total)
     },
-    async updateTotalCount() {
+    async updateTotalCount () {
       this.total = await db.data.count()
     },
-    changeYueSelect() {
+    changeYueSelect () {
 
     },
-    judgeRelationship(element1, element2) {
+    judgeRelationship (element1, element2) {
       const generateCycle = {
         木: '火',
         火: '土',
@@ -1162,7 +1082,7 @@ export default {
       // console.log(element1, element2)
       return checkRelationship(element1, element2)
     },
-    hePan() {
+    hePan () {
       const naYinYear0 = this.tableArr[0].naYinYear
       const naYinYear1 = this.tableArr[1].naYinYear
       const nian = this.judgeRelationship(naYinYear0[2], naYinYear1[2])
@@ -1174,12 +1094,12 @@ export default {
       const day = this.judgeRelationship(naYinDay0[2], naYinDay1[2])
       return `从双方命格上来看，一方为${naYinYear0}命、一方为${naYinYear1}命，${nian}。从双方月柱上来看，一方为${naYinMonth0[2]}、一方为${naYinMonth1[2]}，${month}。从双方日柱上来看，一方为${naYinDay0[2]}、一方为${naYinDay1[2]}，${day}`
     },
-    checkIfMobile() {
+    checkIfMobile () {
       this.isMobile = /iphone|ipad|ipod|android|blackberry|mini|windows\sce|palm/i.test(navigator.userAgent.toLowerCase())
       // console.log(this.isMobile)
     }
     ,
-    validateForm() {
+    validateForm () {
       try {
         if (this.form.isSolar) {
           const daysOfMonth = SolarUtil.getDaysOfMonth(this.form.nian, this.form.yue)
@@ -1219,17 +1139,16 @@ export default {
 
     ,
 
-    onSubmit(type) {
+    onSubmit (type) {
       this.$refs['ruleForm'].validate((valid) => {
         if (valid) {
-            this.lastFlg = {}
-            // this.reset()
-            this.resetTableImg()
-          this.html = ''
           const flg = this.validateForm()
-          console.log("🚀 ~ file:index method: line:1287 -----flg", flg)
-
           if (!flg) return;
+          // this.lastFlg = {}
+          // this.reset()
+          this.resetTableImg()
+          this.html = ''
+
           const obj = this.initTableObj()
           console.log("🚀 ~ file:index method: line:1295 -----obj", obj)
 
@@ -1246,8 +1165,8 @@ export default {
             console.log("🚀 ~ file:index method: line:1309 -----this.tableArr", this.tableArr)
 
             this.addLocalTable()
-             this.resetHH()
           }
+          this.resetHH()
         } else {
           console.log('error submit!!')
           return false
@@ -1256,7 +1175,7 @@ export default {
 
     }
     ,
-    initGaiYao(tdGaiYaoStr, str) {
+    initGaiYao (tdGaiYaoStr, str) {
       // console.log(tdGaiYaoStr)
       // console.log(str)
       const searchPattern = /日柱.*?命/g // 匹配以<b>赵开头，“<br /><br />”结尾的文本
@@ -1271,7 +1190,7 @@ export default {
     }
     ,
 
-    initTableObj() {
+    initTableObj () {
       const year = this.form.nian
       const month = this.form.isLeapMonth ? -this.form.yue : this.form.yue
       const day = this.form.ri
@@ -1315,7 +1234,7 @@ export default {
         lunarYear: lunarObj.getYearInGanZhi() + '年',
         lunarMonth: lunarObj.getMonthInChinese() + '月',
         lunarDay: lunarObj.getDayInChinese() + '日',
-        lunarHh: LunarUtil.convertTime(time)+'时',
+        lunarHh: lunarObj.getTimeZhi() + '时',
 
         baZhiYear: e.getYear(),
         baZhiMonth: e.getMonth(),
@@ -1347,17 +1266,17 @@ export default {
       return obj
     }
     ,
-    updateTableForm(index) {
+    updateTableForm (index) {
       // console.log(index)
       this.updateTableIndex = index
       const updateTable = this.tableArr[index]
       // console.log(updateTable.form)
       this.form = updateTable.form
     },
-    async closeChange() {
+    async closeChange () {
       await this.updateLocalTable()
     },
-    delTable(table, index) {
+    delTable (table, index) {
       this.delToUpdateForm(table[index].form)
       table.splice(index, 1)
 
@@ -1369,7 +1288,7 @@ export default {
 
     }
     ,
-    repeatPostGuoxue(item) {
+    repeatPostGuoxue (item) {
       // console.log(form)
       const loading = this.$loading({
         lock: true,
@@ -1379,10 +1298,11 @@ export default {
       })
       // console.log(this.checkForm)
       const data = {
-        nian: item.solarYear.slice(0, -1),
-        yue: item.solarMonth.slice(0, -1),
-        ri: item.solarDay.slice(0, -1),
-        hh: item.solarHh.slice(0, -1)
+        nian: item.solarYear.slice(0, -1) - 0,
+        yue: item.solarMonth.slice(0, -1) - 0,
+        ri: item.solarDay.slice(0, -1) - 0,
+        hh: item.solarHh.slice(0, -1) - 0,
+        mm: 0
       }
       console.log('data', data)
       postGuoxue(data).then(res => {
@@ -1393,7 +1313,7 @@ export default {
         html = html.slice(0, lastClosingTableTagPosition)
         const table_name = /赵灵芝/g
         html = this.replacePattern(html, table_name, item.name)
-        console.log(html)
+        // console.log(html)
         this.html = html
       })
         .catch(err => console.log(err))
@@ -1401,16 +1321,16 @@ export default {
           loading.close()
         })
     },
-    handleIsDrawer() {
+    handleIsDrawer () {
       this.isDrawer = true
     },
-    async currentChange(page) {
+    async currentChange (page) {
       console.log(page)
       console.log(this.page)
       this.page = page
       await this.fetchList()
     },
-    async changeSearch() {
+    async changeSearch () {
       await this.fetchList()
       // const value = this.searchVal.trim()
       // console.log(value)
@@ -1427,7 +1347,7 @@ export default {
       // // console.log(this.searchList)
     }
     ,
-    async cardClick(item) {
+    async cardClick (item) {
       console.log('item.key', item.key)
       this.tableKey = item.key
       this.mingPanText = item.mingPanText
@@ -1442,11 +1362,11 @@ export default {
       }
       this.isMobile && (this.isDrawer = false)
     },
-    resetTableImg() {
+    resetTableImg () {
       const tableImg = this.$refs.imageTable
       tableImg.textContent = ''
     },
-    delToUpdateForm(form) {
+    delToUpdateForm (form) {
       this.$set(this.form, 'name', form.name)
       this.$set(this.form, 'nian', form.nian)
       this.$set(this.form, 'yue', form.yue)
@@ -1457,7 +1377,7 @@ export default {
       this.$set(this.form, 'isLeapMonth', form.isLeapMonth)
     },
     // 列表删除按钮
-    async deleteList(key) {
+    async deleteList (key) {
       if (key) {
         if (typeof key === 'string' || typeof key === 'number') {
           await db.data.where('key').equals(key).delete()
@@ -1478,7 +1398,7 @@ export default {
     }
     ,
     // 列表清空按钮
-    async clearAllList() {
+    async clearAllList () {
       // this.list.forEach((i) => {
       //   this.$cache.local.remove(i.key)
       // })
@@ -1488,7 +1408,7 @@ export default {
 
     }
     ,
-    async addLocalTable(obj) {
+    async addLocalTable (obj) {
       const list0name = this.list[0]?.table[0]?.form?.name
       console.log("🚀 ~ file:index method:addLocalTable line:1674 -----this.list[0]", this.list[0])
 
@@ -1512,7 +1432,7 @@ export default {
       }
     }
     ,
-    async updateLocalTable() {
+    async updateLocalTable () {
       await db.data.where('key').equals(this.tableKey).modify({ table: this.tableArr })
       await this.fetchList()
       // for (let i = 0; i < this.list.length; i++) {
@@ -1544,27 +1464,27 @@ export default {
       // })
     }
     ,
-    async tableIptBlur() {
+    async tableIptBlur () {
       // console.log(this.tableVal)
 
       db.data.where('key').equals(this.tableKey).modify({ mingPanText: this.mingPanText })
       await this.fetchList()
       // this.updateLocalTable()
     },
-    replacePattern(html, searchPattern, replaceText) {
+    replacePattern (html, searchPattern, replaceText) {
       // const regex = new RegExp(searchPattern, 'g')
       const regex = new RegExp(searchPattern)
       return html.replace(regex, replaceText)
     }
     ,
-    resetHH() {
+    resetHH () {
       this.$set(this.form, 'isSolar', false)
       this.$set(this.form, 'isLeapMonth', false)
       this.$set(this.form, 'hh', null)
       this.$set(this.form, 'mm', null)
     }
     ,
-    handleTableToImg() {
+    handleTableToImg () {
       // const
       // html2canvas(tableDom).then(function(canvas) {
       //   console.log(canvas)
@@ -1575,13 +1495,13 @@ export default {
       this.resetTableImg()
       this.btnLoad = true
       const that = this
-      this.$nextTick(function() {
+      this.$nextTick(function () {
         html2canvas(table, {
           letterRendering: true,
           // scale: window.devicePixelRatio
           scale: 2
           // width: 760
-        }).then(function(canvas) {
+        }).then(function (canvas) {
           // console.log(canvas)
           // document.body.appnedChild(canvas)
           // console.log(canvas)
@@ -1620,7 +1540,7 @@ export default {
 
     }
     ,
-    reset() {
+    reset () {
       this.$refs['ruleForm'].resetFields()
       // this.updateTableIndex = null
       this.form = {
@@ -1668,14 +1588,14 @@ export default {
 
   .action,
   {
-    position: absolute;
-    top: 0;
-    right: -120px;
+  position: absolute;
+  top: 0;
+  right: -120px;
 
-    div {
-      height: 46px;
-    }
+  div {
+    height: 46px;
   }
+}
 }
 
 .tbody-val {
@@ -1683,14 +1603,14 @@ export default {
 
   .tbody-val-action,
   {
-    position: absolute;
-    top: 0;
-    right: -120px;
+  position: absolute;
+  top: 0;
+  right: -120px;
 
-    div {
-      padding: 5px 5px;
-    }
+  div {
+    padding: 5px 5px;
   }
+}
 }
 
 .table-width {
