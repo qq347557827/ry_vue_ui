@@ -778,7 +778,7 @@ import { v4 as uuid } from 'uuid'
 import html2canvas from 'html2canvas'
 import db from '../../../plugins/db'
 import Autocomplete from './Autocomplete.vue'
-import { Lunar, EightChar, SolarUtil, LunarUtil, Solar, LunarMonth, LunarYear } from 'lunar-javascript'
+import { Lunar, EightChar, SolarUtil, LunarUtil, Solar, LunarMonth, LunarYear } from 'lunar-typescript'
 import { countWuXin } from '../../../utils'
 
 // import { msgError, msg } from '../../../plugins/modal'
