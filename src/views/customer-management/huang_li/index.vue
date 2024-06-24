@@ -357,18 +357,18 @@ export default {
                 <div>{{ dayNaYin }}</div>
               </div>
               <div class="row col bg border-bottom">
-                <div>节气{{ prevJq }}</div>
+                <div class="ml10">节气{{ prevJq }}</div>
               </div>
               <div class="yj-container border-bottom">
                 <div class="yj yi">宜</div>
-                <ul>
+                <ul class="ml10">
                   <li v-for="(o, index) in dayYi" :key="index">{{ o }}</li>
                 </ul>
               </div>
               <div class="border-bottom js">
                 <div>
                   <div class="label">吉神宜趋</div>
-                  <ul>
+                  <ul class="ml10">
                     <li v-for="o in dayJiShen">{{ o }}</li>
                   </ul>
                 </div>
@@ -535,18 +535,18 @@ export default {
                 <div> {{ dayTianShen }}</div>
               </div>
               <div class="row col bg border-bottom">
-                <div>节气</div>
+                <div class="ml10">节气{{ nextJq }}</div>
               </div>
               <div class="yj-container border-bottom">
                 <div class="yj ji">忌</div>
-                <ul>
+                <ul class="ml10">
                   <li v-for="o in dayJi">{{ o }}</li>
                 </ul>
               </div>
               <div class="border-bottom js">
                 <div>
                   <div class="label">凶煞宜忌</div>
-                  <ul>
+                  <ul class="ml10">
                     <li v-for="o in dayXiongSha">{{ o }}</li>
                   </ul>
                 </div>
@@ -630,6 +630,10 @@ export default {
 
   .mr5 {
     margin-right: 5px;
+  }
+
+  .ml10 {
+    margin-left: 10px;
   }
 
   margin: 0;
@@ -745,6 +749,10 @@ export default {
         color: #000000;
       }
     }
+  }
+
+  .jq {
+    margin-left: 6px;
   }
 
   .yj-container {
