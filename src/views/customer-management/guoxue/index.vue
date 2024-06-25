@@ -772,13 +772,13 @@
 </template>
 
 <script>
-import calendar from 'js-calendar-converter'
+// import calendar from 'js-calendar-converter'
 import { postGuoxue } from '../../../api/customer_order_goods/customer'
 import { v4 as uuid } from 'uuid'
 import html2canvas from 'html2canvas'
 import db from '../../../plugins/db'
-import Autocomplete from './Autocomplete.vue'
-import { Lunar, EightChar, SolarUtil, LunarUtil, Solar, LunarMonth, LunarYear } from 'lunar-typescript'
+// import Autocomplete from './Autocomplete.vue'
+import { Lunar,  SolarUtil,  Solar, LunarMonth, LunarYear } from 'lunar-typescript'
 import { countWuXin } from '../../../utils'
 
 // import { msgError, msg } from '../../../plugins/modal'
@@ -807,7 +807,7 @@ function deepClone (obj) {
 let tableDom = null
 export default {
   name: 'GuoXue',
-  components: { Autocomplete },
+  // components: { Autocomplete },
   data () {
     return {
       isMobile: false,
@@ -892,7 +892,7 @@ export default {
     months () {
       let arr = JSON.parse(JSON.stringify(this.lunarMonthArr))
       let monthArr = []
-      const leapMonth = calendar.leapMonth(this.form.nian)
+      const leapMonth = LunarYear.fromYear(this.form.nian).getLeapMonth();
       // console.log(leapMonth)
       arr.map(item => {
         const obj = { ...item }
@@ -1158,6 +1158,7 @@ export default {
             this.tableArr.push(obj)
             this.updateLocalTable()
           } else {
+            this.tableKey = ""
             this.mingPanText = ''
             this.tableArr = []
             this.tableArr.push(obj)
@@ -1274,7 +1275,7 @@ export default {
       this.form = updateTable.form
     },
     async closeChange () {
-      await this.updateLocalTable()
+      this.tableKey && (await this.updateLocalTable())
     },
     delTable (table, index) {
       this.delToUpdateForm(table[index].form)
@@ -1433,6 +1434,7 @@ export default {
     }
     ,
     async updateLocalTable () {
+      if (this.tableKey) {}
       await db.data.where('key').equals(this.tableKey).modify({ table: this.tableArr })
       await this.fetchList()
       // for (let i = 0; i < this.list.length; i++) {
