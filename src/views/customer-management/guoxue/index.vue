@@ -211,7 +211,8 @@
               <table class="heavier-text main" style="width: 760px;" id="table-val" v-show="tableArr.length > 0">
                 <tbody v-for="(item, index) in tableArr" :key="index" class="tbody-val">
                   <tr>
-                    <td width="7%" rowspan="5" bgcolor="#FFFFFF" class="new no-internal-borders vertical-text">
+                    <td width="7%" rowspan="5" :style="{ 'line-height': item.name.length > 4 ? 1.5 : 2 }"
+                      bgcolor="#FFFFFF" class="new no-internal-borders vertical-text">
                       <b v-if="item.name.length < 3">
                         <template v-for="(str, idx) in item.name">
                           {{ str }}<br><br v-if="idx < 1">
@@ -542,7 +543,9 @@
                   <table class="heavier-text" id="table-val">
                     <tbody v-for="(item, index) in tableArr" :key="index" class="tbody-val">
                       <tr>
-                        <td width="7%" rowspan="5" bgcolor="#FFFFFF" class="new no-internal-borders vertical-text">
+                        <td width="7%" rowspan="5" bgcolor="#FFFFFF"
+                          :style="{ 'line-height': item.name.length > 4 ? 1.5 : 2 }" class=" new no-internal-borders
+                          vertical-text">
                           <b v-if="item.name.length < 3">
                             <template v-for="(str, idx) in item.name">
                               {{ str }}<br><br v-if="idx < 1">
@@ -778,7 +781,7 @@ import { v4 as uuid } from 'uuid'
 import html2canvas from 'html2canvas'
 import db from '../../../plugins/db'
 // import Autocomplete from './Autocomplete.vue'
-import { Lunar,  SolarUtil,  Solar, LunarMonth, LunarYear } from 'lunar-typescript'
+import { Lunar, SolarUtil, Solar, LunarMonth, LunarYear } from 'lunar-typescript'
 import { countWuXin } from '../../../utils'
 
 // import { msgError, msg } from '../../../plugins/modal'
@@ -1410,11 +1413,14 @@ export default {
     }
     ,
     async addLocalTable (obj) {
-      const list0name = this.list[0]?.table[0]?.form?.name
-      console.log("🚀 ~ file:index method:addLocalTable line:1674 -----this.list[0]", this.list[0])
+      const list0name = this.list[0]?.table[0]?.form?.name //获取列表第一条的名字
+      // console.log("🚀 ~ file:index method:addLocalTable line:1674 -----this.list[0]", this.list[0])
 
       if (this.list[0]?.table.length === 1 && this.form.name === list0name) {
-        await db.data.where('key').equals(this.tableKey).modify({ table: this.tableArr })
+        const list0TableKey = this.list[0]?.key //获取列表第一条的key
+        console.log('list0TableKey: ', list0TableKey);
+        this.tableKey = list0TableKey
+        await db.data.where('key').equals(list0TableKey).modify({ table: this.tableArr })
         await this.fetchList()
         // await this.updateTotalCount()
       } else if (this.form.name) {
@@ -1434,7 +1440,7 @@ export default {
     }
     ,
     async updateLocalTable () {
-      if (this.tableKey) {}
+      if (this.tableKey) { }
       await db.data.where('key').equals(this.tableKey).modify({ table: this.tableArr })
       await this.fetchList()
       // for (let i = 0; i < this.list.length; i++) {
