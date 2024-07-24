@@ -219,7 +219,7 @@
                         </template>
                       </b>
                       <b v-else>
-                        <template v-for="(str, idx) in item.name">
+                        <template v-for="(str) in item.name">
                           {{ str }}<br>
                         </template>
                       </b>
@@ -552,7 +552,7 @@
                             </template>
                           </b>
                           <b v-else>
-                            <template v-for="(str, idx) in item.name">
+                            <template v-for="(str) in item.name">
                               {{ str }}<br>
                             </template>
                           </b>
@@ -1003,7 +1003,7 @@ export default {
         table[0].form.name = result
 
         const key = uuid()
-        db.data.add({ key, table }).then(res => {
+        db.data.add({ key, table }).then(() => {
           this.fetchList()
           this.updateTotalCount()
         })
@@ -1321,7 +1321,7 @@ export default {
         this.html = html
       })
         .catch(err => console.log(err))
-        .finally(res => {
+        .finally(() => {
           loading.close()
         })
     },
@@ -1412,7 +1412,7 @@ export default {
 
     }
     ,
-    async addLocalTable (obj) {
+    async addLocalTable () {
       const list0name = this.list[0]?.table[0]?.form?.name //获取列表第一条的名字
       // console.log("🚀 ~ file:index method:addLocalTable line:1674 -----this.list[0]", this.list[0])
 
@@ -1427,7 +1427,7 @@ export default {
         this.tableKey = uuid()
         console.log(this.tableArr)
         const item = { key: this.tableKey, table: this.tableArr }
-        db.data.add(item).then(res => {
+        db.data.add(item).then(() => {
           this.fetchList()
           // this.updateTotalCount()
         })
@@ -1567,6 +1567,49 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+/* 针对移动设备 */
+@media only screen and (max-width: 768px) {
+  .table-textarea::v-deep {
+    textarea {
+      //font-family: '楷体', sans-serif;
+      font-family: 'FangZKaiTi', sans-serif;
+    }
+  }
+  .no-internal-borders {
+    //font-family: '楷体', sans-serif;
+    font-family: 'FangZKaiTi', sans-serif;
+  }
+}
+
+/* 针对平板设备 */
+@media only screen and (min-width: 768px) and (max-width: 1024px) {
+
+  .table-textarea::v-deep {
+    textarea {
+      //font-family: '楷体', sans-serif;
+      font-family: 'FangZKaiTi', sans-serif;
+    }
+  }
+  .no-internal-borders {
+    //font-family: '楷体', sans-serif;
+    font-family: 'FangZKaiTi', sans-serif;
+  }
+}
+
+/* 针对电脑（桌面）设备 */
+@media only screen and (min-width: 1024px) {
+  .table-textarea::v-deep {
+    textarea {
+      font-family: '楷体', sans-serif;
+      //font-family: 'FangZKaiTi', sans-serif;
+    }
+  }
+  .no-internal-borders {
+    font-family: '楷体', sans-serif;
+    //font-family: 'FangZKaiTi', sans-serif;
+  }
+}
+
 .text {
   font-size: 14px;
 }
@@ -1640,7 +1683,7 @@ export default {
   .no-internal-borders {
 
     //font-family: '楷体', sans-serif;
-    font-family: 'FangZKaiTi', sans-serif;
+    //font-family: 'FangZKaiTi', sans-serif;
     //border: none;
     //border-collapse: collapse;
     //background-color: red;
