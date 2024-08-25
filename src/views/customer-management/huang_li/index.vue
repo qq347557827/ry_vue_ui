@@ -2,16 +2,16 @@
 import { Solar, LunarYear, Lunar, LunarMonth, SolarUtil, Foto } from 'lunar-typescript'
 import I18n from './config';
 
-const now = new Date()
+// const now = new Date()
 export default {
   name: "index",
-  data () {
+  data() {
     return {
       dayNum: 30,
       lang: I18n.getLanguage(),
-      year: now.getFullYear(),
-      month: now.getMonth() + 1,
-      day: now.getDate(),
+      year: null,
+      month: null,
+      day: null,
       yearGanZhi: '',
       yearShengXiao: '',
       yearNaYin: '',
@@ -63,25 +63,26 @@ export default {
       modelMonth: '',
       modelDay: '',
       timesList: [],
-      festivals: {
-
-      }
+      festivals: {}
     }
   },
-  created () {
-    console.log("🚀 ~ file:index method:created line:914 -----I18n", I18n.getLanguage())
-
+  created() {
+    const now = new Date();
+    // console.log(now)
+    this.year = now.getFullYear()
+    this.month = now.getMonth() + 1
+    this.day = now.getDate()
   },
   computed: {
     model: {
-      get () {
+      get() {
         return {
           year: this.modelYear,
           month: this.modelMonth,
           day: this.modelDay
         }
       },
-      set (value) {
+      set(value) {
         this.modelYear = value.year
         this.modelMonth = value.month
         this.modelDay = value.day
@@ -89,25 +90,25 @@ export default {
     }
   },
   watch: {
-    year (val) {
+    year(val) {
       this.dayNum = SolarUtil.getDaysOfMonth(val, this.month)
-      console.log('lunarMonth: ', this.dayNum);
+      // console.log('lunarMonth: ', this.dayNum);
       if (this.day > this.dayNum) {
         this.day = this.dayNum
       }
       this.render()
     },
-    month (val) {
+    month(val) {
       this.dayNum = SolarUtil.getDaysOfMonth(this.year, val)
-      console.log('lunarMonth: ', this.dayNum);
+      // console.log('lunarMonth: ', this.dayNum);
       if (this.day > this.dayNum) {
         this.day = this.dayNum
       }
       this.render()
     },
-    day () {
+    day() {
       this.render()
-    },
+    }
 
     // modelYear (val) {
     //   const year = parseInt(val, 10)
@@ -132,7 +133,7 @@ export default {
     // }
   },
   methods: {
-    render () {
+    render() {
       this.model.year = this.year + ''
       this.model.month = this.month + ''
       this.model.day = this.day + ''
@@ -211,11 +212,11 @@ export default {
       this.initTimesList(Times)
       // console.log("🚀 ~ file:index method:render line:1035 -----this.initTimesList", this.timesList)
       this.initFestivals()
-      console.log('this.festivals: ', this.festivals);
+      // console.log('this.festivals: ', this.festivals);
       // log
 
     },
-    initTimesList (Times) {
+    initTimesList(Times) {
       this.timesList = []
       for (const time of Times) {
         const obj = {}
@@ -235,13 +236,13 @@ export default {
         this.timesList.push(obj)
       }
     },
-    initFestivals () {
+    initFestivals() {
       const d = Foto.fromLunar(Solar.fromYmd(this.year, this.month, this.day).getLunar());
-      console.log('d: ', d);
+      // console.log('d: ', d);
       const festivals = d.getOtherFestivals();
       const isTodayZhaiTen = d.isDayZhaiTen();
       const isTodayZhaiGuanYin = d.isDayZhaiGuanYin();
-      console.log('isTodayZhaiGuanYin: ', isTodayZhaiGuanYin);
+      // console.log('isTodayZhaiGuanYin: ', isTodayZhaiGuanYin);
 
       if (isTodayZhaiTen || isTodayZhaiGuanYin || festivals.length > 0) {
         this.updateFestivals(0, festivals, isTodayZhaiTen, isTodayZhaiGuanYin);
@@ -261,7 +262,7 @@ export default {
       }
     },
 
-    updateFestivals (daysSince, festivals, isZhaiTen, isDayZhaiGuanYin) {
+    updateFestivals(daysSince, festivals, isZhaiTen, isDayZhaiGuanYin) {
       this.$set(this.festivals, 'daysSince', daysSince);
       this.$set(this.festivals, 'arr', [...festivals, ...(isZhaiTen ? ['十斋日'] : []), ...(isDayZhaiGuanYin ? ['观音斋'] : [])]);
     }
@@ -307,27 +308,27 @@ export default {
     //     }
     //   }
     // },
-    nextDay () {
+    nextDay() {
       const solar = Solar.fromYmd(this.year, this.month, this.day).next(1)
       this.year = solar.getYear()
       this.month = solar.getMonth()
       this.day = solar.getDay()
       this.render()
     },
-    prevDay () {
+    prevDay() {
       const solar = Solar.fromYmd(this.year, this.month, this.day).next(-1)
       this.year = solar.getYear()
       this.month = solar.getMonth()
       this.day = solar.getDay()
       this.render()
     },
-    setLang (lang) {
+    setLang(lang) {
       this.lang = lang
       I18n.setLanguage(lang)
       this.render()
     }
   },
-  mounted () {
+  mounted() {
     this.render()
   }
 }
@@ -401,19 +402,22 @@ export default {
                     <el-select v-model="year" placeholder="请选择" class="el-select-year">
                       <el-option v-for="item in 50" :key="item" :label="item + 1980" :value="item + 1980">
                       </el-option>
-                    </el-select>年
+                    </el-select>
+                    年
                   </div>
                   <div>
                     <el-select v-model="month" placeholder="请选择" class="el-select-year">
                       <el-option v-for="item in 12" :key="item" :label="item" :value="item">
                       </el-option>
-                    </el-select>月
+                    </el-select>
+                    月
                   </div>
                   <div>
                     <el-select v-model="day" placeholder="请选择" class="el-select-year">
                       <el-option v-for="item in dayNum" :key="item" :label="item" :value="item">
                       </el-option>
-                    </el-select>日
+                    </el-select>
+                    日
                   </div>
                   <!-- <div>
                     <input v-model="model.year">年
@@ -437,8 +441,8 @@ export default {
                   </div>
                   <div class="lunar">
                     <div class="pl20 ">农历 {{ lunarYearInChinese }}年 {{ lunarMonthInChinese }}月{{
-                      lunarDayInChinese
-                    }}
+                        lunarDayInChinese
+                      }}
                     </div>
                     <div class="pl20" :style="{ 'color': festivals.daysSince ? '#C0C4CC' : '' }" v-if="festivals.arr">
                       <span class="daysSince mr5" v-if="festivals.daysSince">({{ festivals.daysSince }}天后)</span>
@@ -585,7 +589,9 @@ export default {
               <span data-v-739fc6a6="" class="red">冲{{ time.shengXiao }} 煞{{ time.sha }}</span>
               <span data-v-739fc6a6="" class="red">{{ time.minHh }} - {{ time.maxHh }}</span>
             </div>
-            <div class="caixi">喜神{{ time.positionXiDesc }} 财神{{ time.positionCaiDesc }} 福神{{ time.positionFuDesc }}
+            <div class="caixi">喜神{{ time.positionXiDesc }} 财神{{ time.positionCaiDesc }} 福神{{
+                time.positionFuDesc
+              }}
             </div>
             <div class="yiJi">
               <div class="yj yi">
@@ -646,7 +652,7 @@ export default {
   display: flex;
   flex-direction: row;
 
-  >div {
+  > div {
     flex: 1;
     overflow: hidden;
   }
@@ -690,7 +696,8 @@ export default {
     height: 60px;
     line-height: 60px;
 
-    .daysSince {}
+    .daysSince {
+    }
   }
 
 
@@ -701,7 +708,7 @@ export default {
     align-items: center;
     justify-content: space-between;
 
-    >div {
+    > div {
       flex: 1;
     }
   }
@@ -735,11 +742,11 @@ export default {
       align-items: center;
       justify-content: space-between;
 
-      >div {
+      > div {
         flex: auto;
       }
 
-      >div.bar {
+      > div.bar {
         flex: none;
         width: 30px;
         margin-left: 20px;
