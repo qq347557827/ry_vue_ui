@@ -250,7 +250,8 @@
                     </td>
                     <td style=" width:30%;padding-left:4px;padding-right:4px;" rowspan="5" bgcolor="#FFFFFF"
                       class="new no-internal-borders">
-                      {{ isShiJi ? item.gaiYao : item.gaiYao.slice(0, -5) }}
+<!--                      {{ isShiJi ? item.gaiYao : item.gaiYao.slice(0, -5) }}-->
+                      {{  item.gaiYao }}
                     </td>
                   </tr>
                   <tr>
