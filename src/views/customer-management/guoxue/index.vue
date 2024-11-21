@@ -139,7 +139,7 @@
               </el-drawer>
             </el-col>
             <el-col :span="5">
-              <el-button type="primary" @click="onSubmit">查询</el-button>
+              <el-button type="primary" @click="onSubmit">新增</el-button>
             </el-col>
             <el-col :span="5">
               <el-button type="primary" @click="onSubmit('add')" :disabled="tableArr.length < 1">增加
@@ -403,87 +403,99 @@
 
 
       <template v-else>
-        <div>
-          <BaZhiFanTui></BaZhiFanTui>
+        <div v-if="isFanTui">
+          <BaZhiFanTui @toForm="nZFTToForm" @addForm="nZFTAddForm" :is-fan-tui="isFanTui" @switchChange="v => isFanTui = v"></BaZhiFanTui>
         </div>
-        <el-form :model="form" :rules="rules" ref="ruleForm" label-width="80px" labelPosition="top"
-          class="demo-ruleForm">
-          <el-row type="flex" class="row-bg" justify="center">
-            <el-col :span="2">
-              <el-form-item label="姓名">
-                <el-input v-model.trim="form.name" clearable></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="1">
-              <el-form-item label="是否公历">
-                <el-switch v-model="form.isSolar"></el-switch>
-              </el-form-item>
-            </el-col>
-            <!--          <el-col :span="4">-->
-            <!--            <el-form-item label="性别">-->
-            <!--              <el-radio-group v-model="form.sex">-->
-            <!--                <el-radio label="男"></el-radio>-->
-            <!--                <el-radio label="女"></el-radio>-->
-            <!--              </el-radio-group>-->
-            <!--            </el-form-item>-->
-            <!--          </el-col>-->
-            <el-col :span="2">
-              <el-form-item label="年份" prop="nian">
-                <el-select v-model="form.nian" filterable placeholder="年" @change="changeYueSelect">
-                  <el-option v-for="item in 120" :key="item" :label="toYear - item" :value="toYear - item">
-                  </el-option>
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="1">
-              <el-form-item label="月" prop="yue">
-                <el-select v-model="form.yue" placeholder="月">
-                  <el-option v-for="item in months" :key="item.value" :label="item.lable" :value="item.value">
-                  </el-option>
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="1">
-              <el-form-item label="是否闰月">
-                <el-switch v-model="form.isLeapMonth"></el-switch>
-              </el-form-item>
-            </el-col>
-            <el-col :span="1">
-              <el-form-item label="日" prop="ri">
-                <el-select v-model="form.ri" filterable placeholder="日">
-                  <el-option v-for="item in 31" :key="item" :label="item" :value="item">
-                  </el-option>
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="2">
-              <el-form-item label="时">
-                <el-select v-model="form.hh" placeholder="几点" clearable>
-                  <el-option v-for="item in timeArr" :key="item.time" :label="item.timeStr" :value="item.time">
-                  </el-option>
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="4">
-              <el-form-item label="操作栏">
+        <div v-show="!isFanTui">
+          <el-form :model="form" :rules="rules" ref="ruleForm" label-width="80px" labelPosition="top"
+                   class="demo-ruleForm">
+            <el-row type="flex" class="row-bg" justify="center">
+              <el-col :span="5" style="display: flex;align-content: center;justify-content: center;font-size: 18px">
+                <el-form-item label="八字反推">
+                  <el-switch
+                    v-model="isFanTui"
+                    active-color="#13ce66"
+                    inactive-color="#ff4949">
+                  </el-switch>
+                </el-form-item>
+              </el-col>
+              <el-col :span="2">
+                <el-form-item label="姓名">
+                  <el-input v-model.trim="form.name" clearable></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="1">
+                <el-form-item label="公历">
+                  <el-switch v-model="form.isSolar"></el-switch>
+                </el-form-item>
+              </el-col>
+              <!--          <el-col :span="4">-->
+              <!--            <el-form-item label="性别">-->
+              <!--              <el-radio-group v-model="form.sex">-->
+              <!--                <el-radio label="男"></el-radio>-->
+              <!--                <el-radio label="女"></el-radio>-->
+              <!--              </el-radio-group>-->
+              <!--            </el-form-item>-->
+              <!--          </el-col>-->
+              <el-col :span="2">
+                <el-form-item label="年份" prop="nian">
+                  <el-select v-model="form.nian" filterable placeholder="年" @change="changeYueSelect">
+                    <el-option v-for="item in 120" :key="item" :label="toYear - item" :value="toYear - item">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="1">
+                <el-form-item label="月" prop="yue">
+                  <el-select v-model="form.yue" placeholder="月">
+                    <el-option v-for="item in months" :key="item.value" :label="item.lable" :value="item.value">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="1">
+                <el-form-item label="闰月">
+                  <el-switch v-model="form.isLeapMonth"></el-switch>
+                </el-form-item>
+              </el-col>
+              <el-col :span="1">
+                <el-form-item label="日" prop="ri">
+                  <el-select v-model="form.ri" filterable placeholder="日">
+                    <el-option v-for="item in 31" :key="item" :label="item" :value="item">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="2">
+                <el-form-item label="时">
+                  <el-select v-model="form.hh" placeholder="几点" clearable>
+                    <el-option v-for="item in timeArr" :key="item.time" :label="item.timeStr" :value="item.time">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="9">
+                <el-form-item label="操作栏">
 
-                <el-button type="primary" @click="onSubmit">查询</el-button>
-                <el-button type="primary" @click="onSubmit('add')" :disabled="tableArr.length < 1">增加</el-button>
+                  <el-button type="primary" @click="onSubmit">新增</el-button>
+                  <el-button type="primary" @click="onSubmit('add')" :disabled="tableArr.length < 1">增加</el-button>
 
 
-                <el-button @click="reset">取消</el-button>
-                <!--                <el-button @click="test">test</el-button>-->
+                  <el-button @click="reset">取消</el-button>
+                  <!--                <el-button @click="test">test</el-button>-->
 
-              </el-form-item>
-            </el-col>
-            <el-col :span="2">
-              <el-form-item label="显示四季">
-                <el-switch v-model="isShiJi" active-color="#13ce66" inactive-color="#ff4949">
-                </el-switch>
-              </el-form-item>
-            </el-col>
-          </el-row>
-        </el-form>
+                </el-form-item>
+              </el-col>
+<!--              <el-col :span="4"></el-col>-->
+              <!--            <el-col :span="2">-->
+              <!--              <el-form-item label="显示四季">-->
+              <!--                <el-switch v-model="isShiJi" active-color="#13ce66" inactive-color="#ff4949">-->
+              <!--                </el-switch>-->
+              <!--              </el-form-item>-->
+              <!--            </el-col>-->
+            </el-row>
+          </el-form>
+        </div>
         <div>
           <el-row>
             <el-col :xs="0" :span="6" v-if="!isMobile">
@@ -819,6 +831,7 @@ export default {
   data () {
     return {
       toYear: new Date().getFullYear(),
+      isFanTui: false,
       isMobile: false,
       isShiJi: false,
       btnLoad: false,
@@ -1145,9 +1158,40 @@ export default {
 
       }
     }
-
     ,
+    nZFTIntoForm(form) {
+      this.$set(this.form, 'name', form.name)
+      this.$set(this.form, 'nian', form.lunar._year)
+      this.$set(this.form, 'ri', form.lunar._day)
+      const hh = form.lunar._hour > 0 ? form.lunar._hour : null
+      this.$set(this.form, 'hh', hh)
+      this.$set(this.form, 'isSolar', false)
 
+      if (form.lunar._month < 0) {
+        const yue = 0 - form.lunar._month
+        this.$set(this.form, 'yue', yue)
+        this.$set(this.form, 'isLeapMonth', true)
+      } else {
+        this.$set(this.form, 'yue', form.lunar._month)
+        this.$set(this.form, 'isLeapMonth', false)
+      }
+    },
+    nZFTToForm(form) {
+      console.log("🚀 ~ file:form method:nZFTToForm line:1190 -----", form)
+      this.nZFTIntoForm(form)
+      this.onSubmit()
+    },
+    nZFTAddForm(form) {
+      console.log("🚀 ~ file:form method:nZFTToForm line:1190 -----", form)
+      this.nZFTIntoForm(form)
+      this.onSubmit('add')
+      // this.resetTableImg()
+      // this.html = ''
+      //
+      // const obj = this.initTableObj()
+      // this.tableArr.push(obj)
+      // this.updateLocalTable()
+    },
     onSubmit (type) {
       // const eightChar = new EightChar("丁丑", "癸卯", "癸丑", "辛酉");
       // const solar = Solar.fromBaZi("丁丑", "癸卯", "癸丑", "壬子")
@@ -1161,7 +1205,8 @@ export default {
           this.html = ''
 
           const obj = this.initTableObj()
-          console.log("🚀 ~ file:index method: line:1295 -----obj", obj)
+          // console.log("🚀 ~ file:index method: line:1295 -----obj", obj)
+          console.log("🚀 ~ file:type method: line:1190 -----", type)
 
           // 如果是增加一个命盘
           if (type === 'add') {
@@ -1186,6 +1231,7 @@ export default {
 
     }
     ,
+
     initGaiYao (tdGaiYaoStr, str) {
       // console.log(tdGaiYaoStr)
       // console.log(str)
