@@ -1,47 +1,40 @@
 <template>
   <div class="ba-zhi-fan-tui">
     <el-form :model="form" :rules="baZhirules" ref="baZhirules" label-width="80px" labelPosition="top"
-             class="demo-ruleForm"
-    >
+      class="demo-ruleForm">
       <el-row type="flex" class="row-bg" justify="center">
-        <el-col :span="5" style="display: flex;align-content: center;justify-content: center;font-size: 18px">
+        <el-col :lg="5" :sm="3" :xs="3"
+          style="display: flex;align-content: center;justify-content: center;font-size: 18px">
           <el-form-item label="八字反推">
-            <el-switch
-              :value="isFanTui"
-              @change="switchChange"
-              active-color="#13ce66"
-              inactive-color="#ff4949">
+            <el-switch :value="isFanTui" @change="switchChange" active-color="#13ce66" inactive-color="#ff4949">
             </el-switch>
           </el-form-item>
         </el-col>
-        <el-col :span="3">
+        <el-col :lg="3" :sm="3" :xs="3">
           <el-form-item label="姓名">
             <el-input v-model="form.name"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="2">
+        <el-col :lg="2" :sm="3" :xs="3">
           <el-form-item label="年柱" prop="nian">
             <el-cascader v-model="form.nian" :options="options" :props="{ expandTrigger: 'hover' }"
-                         :show-all-levels="false" popper-class="ba-zhi-fan-tui-popper" filterable
-            ></el-cascader>
+              :show-all-levels="false" popper-class="ba-zhi-fan-tui-popper" filterable></el-cascader>
           </el-form-item>
         </el-col>
-        <el-col :span="2">
+        <el-col :lg="2" :sm="3" :xs="3">
           <el-form-item label="月柱" prop="yue">
             <el-cascader v-model="form.yue" :options="options" :props="{ expandTrigger: 'hover' }"
-                         :show-all-levels="false" popper-class="ba-zhi-fan-tui-popper" filterable
-            ></el-cascader>
+              :show-all-levels="false" popper-class="ba-zhi-fan-tui-popper" filterable></el-cascader>
           </el-form-item>
         </el-col>
-        <el-col :span="2">
+        <el-col :lg="2" :sm="3" :xs="3">
           <el-form-item label="日柱" prop="ri">
             <el-cascader v-model="form.ri" :options="options" :props="{ expandTrigger: 'hover' }"
-                         popper-class="ba-zhi-fan-tui-popper" :show-all-levels="false" @change="changeRiGan"
-                         filterable
-            ></el-cascader>
+              popper-class="ba-zhi-fan-tui-popper" :show-all-levels="false" @change="changeRiGan"
+              filterable></el-cascader>
           </el-form-item>
         </el-col>
-        <el-col :span="2">
+        <el-col :lg="2" :sm="3" :xs="2">
           <el-form-item label="时柱">
             <el-select v-model="form.hh" placeholder="时柱" clearable>
               <el-option v-for="(item, index) in hourOptions" :key="index" :label="item" :value="item" filterable>
@@ -49,7 +42,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :lg="8" :sm="6" :xs="7">
           <el-form-item label="操作栏">
             <el-button type="primary" @click="onSubmit">查询</el-button>
             <el-button @click="switchChange(false)">关闭</el-button>
@@ -57,32 +50,36 @@
         </el-col>
       </el-row>
     </el-form>
-    <div v-for="(item,index) in calendarArr" :key="index">
-      <el-divider v-if="index > 0"></el-divider>
-      <el-row type="flex" class="row-bg" justify="center"
-
-      >
-        <el-col :span="3" style="display: flex;justify-content: flex-end;align-content: center; flex-wrap: wrap; padding-right:10px ">
-          <span style="font-size: 20px">{{form.name}}</span>
+    <div v-for="(item, index) in calendarArr" :key="index">
+      <el-row type="flex" class="row-bg" justify="center">
+        <el-col :span="12">
+          <el-divider v-if="index > 0"></el-divider>
         </el-col>
-        <el-col :span="5">
+
+      </el-row>
+      <el-row type="flex" class="row-bg" justify="center" align="middle">
+        <el-col :lg="8" :xs="6"
+          style="display: flex;justify-content: flex-end;align-content: center; flex-wrap: wrap; padding-right:10px ">
+          <span style="font-size: 20px">{{ form.name }}</span>
+        </el-col>
+        <el-col :lg="5" :xs="9">
 
           <div>
-            <span>公历   </span>
+            <span>公历 </span>
             <span>{{ item.solar._year }}年</span>
             <span>{{ item.solar._month }}月</span>
             <span>{{ item.solar._day }}日</span>
             <span>{{ item.solar._hour }}点</span>
           </div>
           <div>
-            <span>农历   </span>
+            <span>农历 </span>
             <span>{{ item.lunar.toString() }}</span>
             <span>{{ item.lunar.getTimeZhi() }}时</span>
           </div>
 
 
         </el-col>
-        <el-col :span="3">
+        <el-col :lg="9" :xs="9">
           <el-button type="primary" @click="toMinPan(item)" title="新增一个命盘">新增</el-button>
           <el-button type="primary" @click="addMinPan(item)" title="添加到当前命盘">增加</el-button>
         </el-col>
@@ -97,7 +94,7 @@ import { Solar } from 'lunar-typescript'
 export default {
   name: 'BaZhiFanTui',
   props: ['isFanTui'],
-  data() {
+  data () {
     return {
       calendarArr: [],
       form: {
@@ -122,12 +119,12 @@ export default {
       hourOptions: []
     }
   },
-  created() {
+  created () {
     this.ganZhiOptions()
     // this.generateTimeGanZhiOptions()
   },
   methods: {
-    clearForm() {
+    clearForm () {
       this.form = {
         name: '',
         nian: '',
@@ -137,7 +134,7 @@ export default {
       }
       this.calendarArr = []
     },
-    ganZhiOptions() {
+    ganZhiOptions () {
       const tiangan = ["甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸"];
       const dizhi = ["子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"];
 
@@ -152,7 +149,7 @@ export default {
       this.options.push(...options)
       console.log(this.options)
     },
-    generateTimeGanZhiOptions(dayGan) {
+    generateTimeGanZhiOptions (dayGan) {
       if (dayGan) {
         const tiangan = ["甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸"];
         const dizhi = ["子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"];
@@ -195,11 +192,11 @@ export default {
       }
 
     },
-    changeRiGan(value) {
+    changeRiGan (value) {
       console.log(value)
       this.generateTimeGanZhiOptions(value[0])
     },
-    onSubmit() {
+    onSubmit () {
       this.$refs['baZhirules'].validate((valid) => {
         if (valid) {
           console.log(this.form);
@@ -235,17 +232,17 @@ export default {
         }
       })
     },
-    switchChange(v) {
+    switchChange (v) {
       console.log(v)
       this.$emit("switchChange", v)
     },
-    toMinPan(value) {
+    toMinPan (value) {
       console.log("🚀 ~ file:value method:toMinPan line:227 -----", value)
-      this.$emit("toForm", {solar: value.solar, lunar: value.lunar, name:this.form.name})
+      this.$emit("toForm", { solar: value.solar, lunar: value.lunar, name: this.form.name })
     },
-    addMinPan(value) {
+    addMinPan (value) {
       console.log("🚀 ~ file:value method:toMinPan line:227 -----", value)
-      this.$emit("addForm", {solar: value.solar, lunar: value.lunar, name:this.form.name})
+      this.$emit("addForm", { solar: value.solar, lunar: value.lunar, name: this.form.name })
 
     }
   }

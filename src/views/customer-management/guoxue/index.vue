@@ -401,43 +401,34 @@
         </el-col>
       </template>
 
-
+      <!-- -------------电脑端页面----------- -->
       <template v-else>
         <div v-if="isFanTui">
-          <BaZhiFanTui @toForm="nZFTToForm" @addForm="nZFTAddForm" :is-fan-tui="isFanTui" @switchChange="v => isFanTui = v"></BaZhiFanTui>
+          <BaZhiFanTui @toForm="nZFTToForm" @addForm="nZFTAddForm" :is-fan-tui="isFanTui"
+            @switchChange="v => isFanTui = v"></BaZhiFanTui>
         </div>
         <div v-show="!isFanTui">
           <el-form :model="form" :rules="rules" ref="ruleForm" label-width="80px" labelPosition="top"
-                   class="demo-ruleForm">
+            class="demo-ruleForm">
             <el-row type="flex" class="row-bg" justify="center">
-              <el-col :span="5" style="display: flex;align-content: center;justify-content: center;font-size: 18px">
+              <el-col :lg="5" :md="4" :sm="4" :xs="2"
+                style="display: flex;align-content: center;justify-content: center;font-size: 18px">
                 <el-form-item label="八字反推">
-                  <el-switch
-                    v-model="isFanTui"
-                    active-color="#13ce66"
-                    inactive-color="#ff4949">
+                  <el-switch v-model="isFanTui" active-color="#13ce66" inactive-color="#ff4949">
                   </el-switch>
                 </el-form-item>
               </el-col>
-              <el-col :span="2">
+              <el-col :lg="2" :md="3" :sm="3" :xs="3">
                 <el-form-item label="姓名">
                   <el-input v-model.trim="form.name" clearable></el-input>
                 </el-form-item>
               </el-col>
-              <el-col :span="1">
+              <el-col :lg="1" :md="1" :sm="1" :xs="1">
                 <el-form-item label="公历">
                   <el-switch v-model="form.isSolar"></el-switch>
                 </el-form-item>
               </el-col>
-              <!--          <el-col :span="4">-->
-              <!--            <el-form-item label="性别">-->
-              <!--              <el-radio-group v-model="form.sex">-->
-              <!--                <el-radio label="男"></el-radio>-->
-              <!--                <el-radio label="女"></el-radio>-->
-              <!--              </el-radio-group>-->
-              <!--            </el-form-item>-->
-              <!--          </el-col>-->
-              <el-col :span="2">
+              <el-col :lg="2" :md="2" :sm="2" :xs="2">
                 <el-form-item label="年份" prop="nian">
                   <el-select v-model="form.nian" filterable placeholder="年" @change="changeYueSelect">
                     <el-option v-for="item in 120" :key="item" :label="toYear - item" :value="toYear - item">
@@ -445,7 +436,7 @@
                   </el-select>
                 </el-form-item>
               </el-col>
-              <el-col :span="1">
+              <el-col :lg="1" :md="2" :sm="2" :xs="2">
                 <el-form-item label="月" prop="yue">
                   <el-select v-model="form.yue" placeholder="月">
                     <el-option v-for="item in months" :key="item.value" :label="item.lable" :value="item.value">
@@ -453,12 +444,12 @@
                   </el-select>
                 </el-form-item>
               </el-col>
-              <el-col :span="1">
+              <el-col :lg="1" :md="1" :sm="1" :xs="1">
                 <el-form-item label="闰月">
                   <el-switch v-model="form.isLeapMonth"></el-switch>
                 </el-form-item>
               </el-col>
-              <el-col :span="1">
+              <el-col :lg="1" :md="2" :sm="2" :xs="2">
                 <el-form-item label="日" prop="ri">
                   <el-select v-model="form.ri" filterable placeholder="日">
                     <el-option v-for="item in 31" :key="item" :label="item" :value="item">
@@ -466,7 +457,7 @@
                   </el-select>
                 </el-form-item>
               </el-col>
-              <el-col :span="2">
+              <el-col :lg="2" :md="2" :sm="2" :xs="2">
                 <el-form-item label="时">
                   <el-select v-model="form.hh" placeholder="几点" clearable>
                     <el-option v-for="item in timeArr" :key="item.time" :label="item.timeStr" :value="item.time">
@@ -474,7 +465,7 @@
                   </el-select>
                 </el-form-item>
               </el-col>
-              <el-col :span="9">
+              <el-col :lg="9" :md="7" :sm="7" :xs="8">
                 <el-form-item label="操作栏">
 
                   <el-button type="primary" @click="onSubmit">新增</el-button>
@@ -486,7 +477,7 @@
 
                 </el-form-item>
               </el-col>
-<!--              <el-col :span="4"></el-col>-->
+              <!--              <el-col :span="4"></el-col>-->
               <!--            <el-col :span="2">-->
               <!--              <el-form-item label="显示四季">-->
               <!--                <el-switch v-model="isShiJi" active-color="#13ce66" inactive-color="#ff4949">-->
@@ -939,7 +930,6 @@ export default {
         Object.keys(item).map(key => {
           obj[key] = Math.floor(Math.random() * 7) + 1
         })
-        console.log("ssssssssssssssssssss", obj)
         return obj
       })
     }
@@ -1159,7 +1149,7 @@ export default {
       }
     }
     ,
-    nZFTIntoForm(form) {
+    nZFTIntoForm (form) {
       this.$set(this.form, 'name', form.name)
       this.$set(this.form, 'nian', form.lunar._year)
       this.$set(this.form, 'ri', form.lunar._day)
@@ -1176,12 +1166,12 @@ export default {
         this.$set(this.form, 'isLeapMonth', false)
       }
     },
-    nZFTToForm(form) {
+    nZFTToForm (form) {
       console.log("🚀 ~ file:form method:nZFTToForm line:1190 -----", form)
       this.nZFTIntoForm(form)
       this.onSubmit()
     },
-    nZFTAddForm(form) {
+    nZFTAddForm (form) {
       console.log("🚀 ~ file:form method:nZFTToForm line:1190 -----", form)
       this.nZFTIntoForm(form)
       this.onSubmit('add')
