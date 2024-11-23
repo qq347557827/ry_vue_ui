@@ -1166,15 +1166,17 @@ export default {
         this.$set(this.form, 'isLeapMonth', false)
       }
     },
-    nZFTToForm (form) {
+    nZFTToForm (form, clearCalendarArr) {
       console.log("🚀 ~ file:form method:nZFTToForm line:1190 -----", form)
       this.nZFTIntoForm(form)
       this.onSubmit()
+      clearCalendarArr()
     },
-    nZFTAddForm (form) {
+    nZFTAddForm (form, clearCalendarArr) {
       console.log("🚀 ~ file:form method:nZFTToForm line:1190 -----", form)
       this.nZFTIntoForm(form)
       this.onSubmit('add')
+      clearCalendarArr()
       // this.resetTableImg()
       // this.html = ''
       //

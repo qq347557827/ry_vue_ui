@@ -12,7 +12,7 @@
         </el-col>
         <el-col :lg="3" :sm="3" :xs="3">
           <el-form-item label="姓名">
-            <el-input v-model="form.name"></el-input>
+            <el-input v-model.trim="form.name"></el-input>
           </el-form-item>
         </el-col>
         <el-col :lg="2" :sm="3" :xs="3">
@@ -134,6 +134,9 @@ export default {
       }
       this.calendarArr = []
     },
+    clearCalendarArr() {
+      this.calendarArr = []
+    },
     ganZhiOptions () {
       const tiangan = ["甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸"];
       const dizhi = ["子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"];
@@ -238,11 +241,11 @@ export default {
     },
     toMinPan (value) {
       console.log("🚀 ~ file:value method:toMinPan line:227 -----", value)
-      this.$emit("toForm", { solar: value.solar, lunar: value.lunar, name: this.form.name })
+      this.$emit("toForm", { solar: value.solar, lunar: value.lunar, name: this.form.name }, this.clearCalendarArr)
     },
     addMinPan (value) {
       console.log("🚀 ~ file:value method:toMinPan line:227 -----", value)
-      this.$emit("addForm", { solar: value.solar, lunar: value.lunar, name: this.form.name })
+      this.$emit("addForm", { solar: value.solar, lunar: value.lunar, name: this.form.name }, this.clearCalendarArr)
 
     }
   }
