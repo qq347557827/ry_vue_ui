@@ -84,3 +84,5 @@ new Vue({
   store,
   render: h => h(App)
 })
+
+window.Vue = Vue;

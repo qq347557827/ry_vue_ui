@@ -1,68 +1,147 @@
 <template>
   <div class="ba-zhi-fan-tui">
-    <el-form :model="form" :rules="baZhirules" ref="baZhirules" label-width="80px" labelPosition="top"
-      class="demo-ruleForm">
-      <el-row type="flex" class="row-bg" justify="center">
-        <el-col :lg="5" :sm="3" :xs="3"
-          style="display: flex;align-content: center;justify-content: center;font-size: 18px">
-          <el-form-item label="八字反推">
-            <el-switch :value="isFanTui" @change="switchChange" active-color="#13ce66" inactive-color="#ff4949">
-            </el-switch>
-          </el-form-item>
-        </el-col>
-        <el-col :lg="3" :sm="3" :xs="3">
-          <el-form-item label="姓名">
-            <el-input v-model.trim="form.name"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :lg="2" :sm="3" :xs="3">
-          <el-form-item label="年柱" prop="nian">
-            <el-cascader v-model="form.nian" :options="options" :props="{ expandTrigger: 'hover' }"
-              :show-all-levels="false" popper-class="ba-zhi-fan-tui-popper" filterable></el-cascader>
-          </el-form-item>
-        </el-col>
-        <el-col :lg="2" :sm="3" :xs="3">
-          <el-form-item label="月柱" prop="yue">
-            <el-cascader v-model="form.yue" :options="options" :props="{ expandTrigger: 'hover' }"
-              :show-all-levels="false" popper-class="ba-zhi-fan-tui-popper" filterable></el-cascader>
-          </el-form-item>
-        </el-col>
-        <el-col :lg="2" :sm="3" :xs="3">
-          <el-form-item label="日柱" prop="ri">
-            <el-cascader v-model="form.ri" :options="options" :props="{ expandTrigger: 'hover' }"
-              popper-class="ba-zhi-fan-tui-popper" :show-all-levels="false" @change="changeRiGan"
-              filterable></el-cascader>
-          </el-form-item>
-        </el-col>
-        <el-col :lg="2" :sm="3" :xs="2">
-          <el-form-item label="时柱">
-            <el-select v-model="form.hh" placeholder="时柱" clearable>
-              <el-option v-for="(item, index) in hourOptions" :key="index" :label="item" :value="item" filterable>
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :lg="8" :sm="6" :xs="7">
-          <el-form-item label="操作栏">
-            <el-button type="primary" @click="onSubmit">查询</el-button>
-            <el-button @click="switchChange(false)">关闭</el-button>
-          </el-form-item>
-        </el-col>
-      </el-row>
-    </el-form>
+    <!--    <baZhiFanTuiMoblie v-if="isMobile"-->
+    <!--                       :form="form"-->
+    <!--                       :baZhirules="baZhirules"-->
+    <!--                       :options="options"-->
+    <!--                       :hourOptions="hourOptions"-->
+    <!--                       :isFanTui="isFanTui"-->
+    <!--                       @switchChange="switchChange"-->
+    <!--                       @onSubmit="onSubmit"-->
+    <!--                       :changeRiGan="changeRiGan"-->
+    <!--    />-->
+    <div v-if="isMobile">
+      <el-form  :model="form" :rules="baZhirules" ref="baZhirules" labelPosition="left">
+        <el-row type="flex" justify="center" class="mobile-row">
+          <el-col :span="6" class="form-column">
+            <el-form-item label="生辰" label-width="42px">
+              <el-switch :value="isFanTui" @change="switchChange" active-color="#13ce66" inactive-color="#ff4949"
+              ></el-switch>
+            </el-form-item>
+          </el-col>
+          <el-col :span="18" class="form-column">
+            <el-form-item label="姓名" label-width="42px">
+              <el-input v-model.trim="form.name"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row>
+          <el-col :span="6" class="form-column">
+            <el-form-item prop="nian">
+              <el-cascader v-model="form.nian" :options="options" :props="{ expandTrigger: 'hover' }"
+                           :show-all-levels="false" popper-class="ba-zhi-fan-tui-popper" filterable
+              ></el-cascader>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="6" class="form-column">
+            <el-form-item prop="yue">
+              <el-cascader v-model="form.yue" :options="options" :props="{ expandTrigger: 'hover' }"
+                           :show-all-levels="false" popper-class="ba-zhi-fan-tui-popper" filterable
+              ></el-cascader>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="6" class="form-column">
+            <el-form-item prop="ri">
+              <el-cascader v-model="form.ri" :options="options" :props="{ expandTrigger: 'hover' }"
+                           popper-class="ba-zhi-fan-tui-popper" :show-all-levels="false" @change="changeRiGan" filterable
+              ></el-cascader>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="6" class="form-column">
+            <el-form-item>
+              <el-select v-model="form.hh" placeholder="时柱" clearable>
+                <el-option v-for="(item, index) in hourOptions" :key="index" :label="item" :value="item" filterable
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row type="flex" justify="center" class="mobile-row">
+          <el-col :span="24" class="form-column">
+            <el-form-item style="display: flex; justify-content: center;">
+              <el-button type="primary" @click="onSubmit">查询</el-button>
+              <el-button @click="switchChange(false)">关闭</el-button>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+    </div>
+    <div v-else>
+      <el-form :model="form" :rules="baZhirules" ref="baZhirules" label-width="80px" labelPosition="top"
+               class="demo-ruleForm"
+      >
+        <el-row type="flex" class="row-bg" justify="center">
+          <el-col :lg="5" :sm="3" :xs="3"
+                  style="display: flex;align-content: center;justify-content: center;font-size: 18px"
+          >
+            <el-form-item label="生辰">
+              <el-switch :value="isFanTui" @change="switchChange" active-color="#13ce66" inactive-color="#ff4949">
+              </el-switch>
+            </el-form-item>
+          </el-col>
+          <el-col :lg="3" :sm="3" :xs="3">
+            <el-form-item label="姓名">
+              <el-input v-model.trim="form.name"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :lg="2" :sm="3" :xs="3">
+            <el-form-item label="年柱" prop="nian">
+              <el-cascader v-model="form.nian" :options="options" :props="{ expandTrigger: 'hover' }"
+                           :show-all-levels="false" popper-class="ba-zhi-fan-tui-popper" filterable
+              ></el-cascader>
+            </el-form-item>
+          </el-col>
+          <el-col :lg="2" :sm="3" :xs="3">
+            <el-form-item label="月柱" prop="yue">
+              <el-cascader v-model="form.yue" :options="options" :props="{ expandTrigger: 'hover' }"
+                           :show-all-levels="false" popper-class="ba-zhi-fan-tui-popper" filterable
+              ></el-cascader>
+            </el-form-item>
+          </el-col>
+          <el-col :lg="2" :sm="3" :xs="3">
+            <el-form-item label="日柱" prop="ri">
+              <el-cascader v-model="form.ri" :options="options" :props="{ expandTrigger: 'hover' }"
+                           popper-class="ba-zhi-fan-tui-popper" :show-all-levels="false" @change="changeRiGan"
+                           filterable
+              ></el-cascader>
+            </el-form-item>
+          </el-col>
+          <el-col :lg="2" :sm="3" :xs="2">
+            <el-form-item label="时柱">
+              <el-select v-model="form.hh" placeholder="时柱" clearable>
+                <el-option v-for="(item, index) in hourOptions" :key="index" :label="item" :value="item" filterable>
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :lg="8" :sm="6" :xs="7">
+            <el-form-item label="操作栏">
+              <el-button type="primary" @click="onSubmit">查询</el-button>
+              <el-button @click="switchChange(false)">关闭</el-button>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+    </div>
     <div v-for="(item, index) in calendarArr" :key="index">
       <el-row type="flex" class="row-bg" justify="center">
-        <el-col :span="12">
+        <el-col :span="20">
           <el-divider v-if="index > 0"></el-divider>
         </el-col>
 
       </el-row>
       <el-row type="flex" class="row-bg" justify="center" align="middle">
-        <el-col :lg="8" :xs="6"
-          style="display: flex;justify-content: flex-end;align-content: center; flex-wrap: wrap; padding-right:10px ">
+        <el-col :lg="8" :xs="isMobile ? 5 : 6"
+                style="display: flex;justify-content: flex-end;align-content: center; flex-wrap: wrap; padding-right:10px "
+        >
           <span style="font-size: 20px">{{ form.name }}</span>
         </el-col>
-        <el-col :lg="5" :xs="9">
+        <el-col :lg="5" :xs="isMobile ? 15 : 9">
 
           <div>
             <span>公历 </span>
@@ -79,7 +158,7 @@
 
 
         </el-col>
-        <el-col :lg="9" :xs="9">
+        <el-col :lg="9" :xs="isMobile ? 4 : 9">
           <el-button type="primary" @click="toMinPan(item)" title="新增一个命盘">新增</el-button>
           <el-button type="primary" @click="addMinPan(item)" title="添加到当前命盘">增加</el-button>
         </el-col>
@@ -89,12 +168,17 @@
   </div>
 </template>
 <script>
+import 'element-ui/lib/theme-chalk/display.css';
 import { Solar } from 'lunar-typescript'
+import BaZhiFanTuiMoblie from './baZhiFanTuiMoblie.vue'
+import { mapState } from 'vuex';
 
 export default {
   name: 'BaZhiFanTui',
+  components: { BaZhiFanTuiMoblie },
+
   props: ['isFanTui'],
-  data () {
+  data() {
     return {
       calendarArr: [],
       form: {
@@ -119,12 +203,18 @@ export default {
       hourOptions: []
     }
   },
-  created () {
+  created() {
     this.ganZhiOptions()
     // this.generateTimeGanZhiOptions()
   },
+  computed: {
+    ...mapState({
+      isMobile: state => state.app.isMobile
+
+    })
+  },
   methods: {
-    clearForm () {
+    clearForm() {
       this.form = {
         name: '',
         nian: '',
@@ -137,7 +227,7 @@ export default {
     clearCalendarArr() {
       this.calendarArr = []
     },
-    ganZhiOptions () {
+    ganZhiOptions() {
       const tiangan = ["甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸"];
       const dizhi = ["子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"];
 
@@ -152,7 +242,7 @@ export default {
       this.options.push(...options)
       console.log(this.options)
     },
-    generateTimeGanZhiOptions (dayGan) {
+    generateTimeGanZhiOptions(dayGan) {
       if (dayGan) {
         const tiangan = ["甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸"];
         const dizhi = ["子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"];
@@ -195,11 +285,11 @@ export default {
       }
 
     },
-    changeRiGan (value) {
+    changeRiGan(value) {
       console.log(value)
       this.generateTimeGanZhiOptions(value[0])
     },
-    onSubmit () {
+    onSubmit() {
       this.$refs['baZhirules'].validate((valid) => {
         if (valid) {
           console.log(this.form);
@@ -235,15 +325,15 @@ export default {
         }
       })
     },
-    switchChange (v) {
+    switchChange(v) {
       console.log(v)
       this.$emit("switchChange", v)
     },
-    toMinPan (value) {
-      console.log("🚀 ~ file:value method:toMinPan line:227 -----", value)
+    toMinPan(value) {
+      console.log("🚀 ~ file:value method:toMinPan line:227 -----", value,value.solar,  value.lunar,  this.form.name)
       this.$emit("toForm", { solar: value.solar, lunar: value.lunar, name: this.form.name }, this.clearCalendarArr)
     },
-    addMinPan (value) {
+    addMinPan(value) {
       console.log("🚀 ~ file:value method:toMinPan line:227 -----", value)
       this.$emit("addForm", { solar: value.solar, lunar: value.lunar, name: this.form.name }, this.clearCalendarArr)
 
@@ -268,4 +358,4 @@ export default {
 
 }
 </style>
-</style>
+

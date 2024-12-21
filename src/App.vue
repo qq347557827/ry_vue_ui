@@ -8,10 +8,15 @@
 <script>
 import ThemePicker from "@/components/ThemePicker";
 import './assets/fonts/fonts.css';
+import VueInfiniteScroll from 'vue-infinite-scroll'
+import Vue from 'vue'
 
+
+// Vue.use(VueInfiniteScroll);
 export default {
   name: "App",
   components: { ThemePicker },
+
     metaInfo() {
         return {
             title: this.$store.state.settings.dynamicTitle && this.$store.state.settings.title,

@@ -7,10 +7,14 @@ const state = {
     hide: false
   },
   device: 'desktop',
-  size: Cookies.get('size') || 'medium'
+  size: Cookies.get('size') || 'medium',
+  isMobile: window.innerWidth <= 768
 }
 
 const mutations = {
+  setIsMobile(state, value) {
+    state.isMobile = value;
+  },
   TOGGLE_SIDEBAR: state => {
     if (state.sidebar.hide) {
       return false;

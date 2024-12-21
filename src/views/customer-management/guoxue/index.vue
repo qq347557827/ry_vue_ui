@@ -2,221 +2,229 @@
   <div class="guoxue">
     <div class="search">
       <template v-if="isMobile">
-        <el-form :model="form" :rules="rules" ref="ruleForm" class="demo-ruleForm">
-          <el-row type="flex" class="row-bg">
-            <el-col :span="11">
-              <el-form-item label="姓名" label-width="42px">
-                <el-input v-model.trim="form.name" clearable></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="公历" label-width="42px">
-                <el-switch v-model="form.isSolar"></el-switch>
-              </el-form-item>
-            </el-col>
-            <el-col :span="5">
-              <el-form-item label="四季" label-width="42px">
-                <el-switch v-model="isShiJi" active-color="#13ce66" inactive-color="#ff4949">
-                </el-switch>
-              </el-form-item>
-            </el-col>
-
-            <!--          <el-col :span="4">-->
-            <!--            <el-form-item label="性别">-->
-            <!--              <el-radio-group v-model="form.sex">-->
-            <!--                <el-radio label="男"></el-radio>-->
-            <!--                <el-radio label="女"></el-radio>-->
-            <!--              </el-radio-group>-->
-            <!--            </el-form-item>-->
-            <!--          </el-col>-->
-          </el-row>
-          <el-row class="row-bg">
-            <el-col :span="6">
-              <el-form-item prop="nian">
-                <el-select v-model="form.nian" filterable placeholder="年" @change="changeYueSelect">
-                  <el-option v-for="item in 120" :key="item" :label="toYear - item" :value="toYear - item">
-                  </el-option>
-                </el-select>
-              </el-form-item>
-            </el-col>
-
-            <el-col :span="4">
-              <el-form-item prop="yue">
-                <el-select v-model="form.yue" placeholder="月">
-                  <el-option v-for="item in months" :key="item.value" :label="item.lable" :value="item.value">
-                  </el-option>
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="4">
-              <el-form-item label="闰" label-width="18px">
-                <el-switch v-model="form.isLeapMonth"></el-switch>
-              </el-form-item>
-            </el-col>
-            <el-col :span="4">
-              <el-form-item prop="ri">
-                <el-select v-model="form.ri" placeholder="日">
-                  <el-option v-for="item in 31" :key="item" :label="item" :value="item">
-                  </el-option>
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item>
-                <el-select v-model="form.hh" placeholder="时" clearable>
-                  <el-option v-for="item in timeArr" :key="item.time" :label="item.timeStr" :value="item.time">
-                  </el-option>
-                </el-select>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="4">
-              <el-link type="primary" style="font-size:medium" @click="handleIsDrawer">列表<i
-                class="el-icon-s-unfold"
-              ></i></el-link>
-              <el-drawer :visible.sync="isDrawer" direction="ltr" size="90%" :show-close="false">
-                <template v-slot:title>
-                  <div class="clearfix">
-                    <el-input v-model="searchVal" @change="changeSearch" clearable placeholder="搜索名字"
-                              style="width: 260px"
-                    />
-                    <el-popconfirm confirm-button-text="确认" cancel-button-text="不了" icon="el-icon-info"
-                                   icon-color="red"
-                                   title="确定清空吗？" @confirm="clearAllList"
-                    >
-                      <template slot="reference">
-                        <el-link type="danger" style="float: right"><i class="el-icon-delete"></i></el-link>
-                      </template>
-
-                    </el-popconfirm>
-                  </div>
-                </template>
-                <el-card class="box-card">
-                  <!-- <div slot="header" class="clearfix"> -->
-
-                  <!--                <el-button style="float: right; padding: 3px 0" type="text" @click="clearAllList">清空</el-button>-->
-                  <!-- </div> -->
-                  <div>
-                    <template v-if="list.length > 0">
-                      <div v-for="(item, index) in list" :key="index" class="text item">
-                        <div>
-                          <el-link type="primary" @click="cardClick(item)">
-                            <div v-for="(data, idx) in item.table" :key="idx">
-                              {{
-                                data.form.name + '--' + (data.form.isSolar ? '公历' : '农历') + data.form.nian + '年' +
-                                (data.form.isLeapMonth ? '闰' : '') + data.form.yue + '月' + data.form.ri + '日' +
-                                (data.form.hh
-                                  ? data.form.hh : '')
-                              }}
-                              <!--                      {{data}}-->
-                            </div>
-                            <!--                    {{item.key}}-->
-                          </el-link>
-                          <el-popconfirm confirm-button-text="确认" cancel-button-text="不了" icon="el-icon-info"
-                                         icon-color="red" title="确定删除吗？" @confirm="deleteList(item.key)"
-                          >
-                            <template slot="reference">
-                              <el-link type="danger" style="float: right"><i class="el-icon-delete"></i></el-link>
-                            </template>
-
-                          </el-popconfirm>
+        <div v-if="isFanTui">
+          <BaZhiFanTui @toForm="nZFTToForm" @addForm="nZFTAddForm" :is-fan-tui="isFanTui"
+                       @switchChange="v => isFanTui = v"
+          ></BaZhiFanTui>
+        </div>
+        <div v-show="!isFanTui">
+          <el-form :model="form" :rules="rules" ref="ruleForm">
+            <el-row type="flex" class="row-bg">
+              <el-col :span="6">
+                <el-form-item label="八字" label-width="42px">
+                  <el-switch v-model="isFanTui" active-color="#13ce66" inactive-color="#ff4949">
+                  </el-switch>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="姓名" label-width="42px">
+                  <el-input v-model.trim="form.name" clearable></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="公历" label-width="42px">
+                  <el-switch v-model="form.isSolar"></el-switch>
+                </el-form-item>
+              </el-col>
 
 
+              <!--          <el-col :span="4">-->
+              <!--            <el-form-item label="性别">-->
+              <!--              <el-radio-group v-model="form.sex">-->
+              <!--                <el-radio label="男"></el-radio>-->
+              <!--                <el-radio label="女"></el-radio>-->
+              <!--              </el-radio-group>-->
+              <!--            </el-form-item>-->
+              <!--          </el-col>-->
+            </el-row>
+            <el-row class="row-bg">
+              <el-col :span="6">
+                <el-form-item prop="nian">
+                  <el-select v-model="form.nian" filterable placeholder="年" @change="changeYueSelect">
+                    <el-option v-for="item in 120" :key="item" :label="toYear - item" :value="toYear - item">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+
+              <el-col :span="4">
+                <el-form-item prop="yue">
+                  <el-select v-model="form.yue" placeholder="月">
+                    <el-option v-for="item in months" :key="item.value" :label="item.lable" :value="item.value">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="4">
+                <el-form-item label="闰" label-width="18px">
+                  <el-switch v-model="form.isLeapMonth"></el-switch>
+                </el-form-item>
+              </el-col>
+              <el-col :span="4">
+                <el-form-item prop="ri">
+                  <el-select v-model="form.ri" placeholder="日">
+                    <el-option v-for="item in 31" :key="item" :label="item" :value="item">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item>
+                  <el-select v-model="form.hh" placeholder="时" clearable>
+                    <el-option v-for="item in timeArr" :key="item.time" :label="item.timeStr" :value="item.time">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="4">
+                <el-link type="primary" style="font-size:medium" @click="handleIsDrawer">列表<i
+                  class="el-icon-s-unfold"
+                ></i></el-link>
+                <el-drawer :visible.sync="isDrawer" direction="ltr" size="90%">
+                  <template v-slot:title>
+                    <div class="clearfix">
+                      <el-input v-model="searchVal" @change="changeSearch" clearable placeholder="搜索名字"
+                                style="width: 260px"
+                      />
+                      <!--                      <el-popconfirm confirm-button-text="确认" cancel-button-text="不了" icon="el-icon-info"-->
+                      <!--                                     icon-color="red"-->
+                      <!--                                     title="确定清空吗？" @confirm="clearAllList"-->
+                      <!--                      >-->
+                      <!--                        <template slot="reference">-->
+                      <!--                          <el-link type="danger" style="float: right"><i class="el-icon-delete"></i></el-link>-->
+                      <!--                        </template>-->
+
+                      <!--                      </el-popconfirm>-->
+                    </div>
+                  </template>
+                  <el-card class="box-card">
+                    <!-- <div slot="header" class="clearfix"> -->
+
+                    <!--                <el-button style="float: right; padding: 3px 0" type="text" @click="clearAllList">清空</el-button>-->
+                    <!-- </div> -->
+                    <div>
+                      <template v-if="list.length > 0">
+                        <div v-for="(item, index) in list" :key="index" class="text item">
+                          <div>
+                            <el-link type="primary" @click="cardClick(item)">
+                              <div v-for="(data, idx) in item.table" :key="idx">
+                                {{
+                                  data.form.name + '--' + (data.form.isSolar ? '公历' : '农历') + data.form.nian + '年' +
+                                  (data.form.isLeapMonth ? '闰' : '') + data.form.yue + '月' + data.form.ri + '日' +
+                                  (data.form.hh
+                                    ? data.form.hh : '')
+                                }}
+                                <!--                      {{data}}-->
+                              </div>
+                              <!--                    {{item.key}}-->
+                            </el-link>
+                            <el-popconfirm confirm-button-text="确认" cancel-button-text="不了" icon="el-icon-info"
+                                           icon-color="red" title="确定删除吗？" @confirm="deleteList(item.key)"
+                            >
+                              <template slot="reference">
+                                <el-link type="danger" style="float: right"><i class="el-icon-delete"></i></el-link>
+                              </template>
+
+                            </el-popconfirm>
+
+
+                          </div>
+                          <el-divider></el-divider>
                         </div>
-                        <el-divider></el-divider>
+                      </template>
+                      <div v-else>
+                        无
+                        <el-empty description="无数据"></el-empty>
                       </div>
-                    </template>
-                    <div v-else>
-                      无
-                      <el-empty description="无数据"></el-empty>
-                    </div>
-                    <div>
-                      <el-pagination small layout="prev, pager, next" :total="total" :page-size="limit"
-                                     :current-page="page" @current-change="currentChange"
-                      >
-                      </el-pagination>
+                      <div>
+                        <el-pagination small layout="prev, pager, next" :total="total" :page-size="limit"
+                                       :current-page="page" @current-change="currentChange"
+                        >
+                        </el-pagination>
+                      </div>
+
                     </div>
 
-                  </div>
+                  </el-card>
+                  <el-button slot="reference">列表</el-button>
+                </el-drawer>
+              </el-col>
+              <el-col :span="5">
+                <el-button type="primary" @click="onSubmit">新增</el-button>
+              </el-col>
+              <el-col :span="5">
+                <el-button type="primary" @click="onSubmit('add')" :disabled="tableArr.length < 1">增加
+                </el-button>
+              </el-col>
+              <el-col :span="5">
+                                <el-button @click="reset">取消</el-button>
+<!--                <el-button @click="LunarTest">test</el-button>-->
 
-                </el-card>
-                <el-button slot="reference">列表</el-button>
-              </el-drawer>
-            </el-col>
-            <el-col :span="5">
-              <el-button type="primary" @click="onSubmit">新增</el-button>
-            </el-col>
-            <el-col :span="5">
-              <el-button type="primary" @click="onSubmit('add')" :disabled="tableArr.length < 1">增加
-              </el-button>
-            </el-col>
-            <el-col :span="5">
-              <el-button @click="reset">取消</el-button>
-              <!-- <el-button @click="test">test</el-button> -->
+              </el-col>
+              <el-col :span="4">
+                <el-popover placement="bottom" width="120">
+                  <div v-for="(item, index) in tableArr" :key="index" style="margin-bottom: 12px">
+                    <div class="mobile-action">
+                      <div class="">
+                        <span>关闭时间</span>
+                        <el-switch v-model="item.closeSolarH" @change="closeChange" active-color="#13ce66"
+                                   inactive-color="#ff4949"
+                        >
+                        </el-switch>
+                      </div>
+                      <div>
+                        <span>关闭时辰</span>
+                        <el-switch v-model="item.closeLunarH" @change="closeChange" active-color="#13ce66"
+                                   inactive-color="#ff4949"
+                        >
+                        </el-switch>
+                      </div>
+                      <div>
+                        <span>最后八字</span>
+                        <el-switch v-model="item.closeBaZhiH" @change="closeChange" active-color="#13ce66"
+                                   inactive-color="#ff4949"
+                        >
+                        </el-switch>
+                      </div>
+                      <div>
+                        <span>最后五行</span>
+                        <el-switch v-model="item.closeWuXinH" @change="closeChange" active-color="#13ce66"
+                                   inactive-color="#ff4949"
+                        >
+                        </el-switch>
+                      </div>
+                      <!--                  <div>-->
+                      <!--                    <el-button size="mini" type="primary" @click="updateTableForm(index)">修改</el-button>-->
+                      <!--                  </div>-->
+                      <div>
+                        <el-popconfirm confirm-button-text="确认" cancel-button-text="不了" icon="el-icon-info"
+                                       icon-color="red" title="确定删除吗？" @confirm="delTable(tableArr, index)"
+                        >
+                          <template slot="reference">
+                            <el-button size="mini" type="danger">删除</el-button>
+                            <!--                        <el-link type="danger" style="float: right"><i class="el-icon-delete"></i></el-link>-->
+                          </template>
 
-            </el-col>
-            <el-col :span="4">
-              <el-popover placement="bottom" width="120">
-                <div v-for="(item, index) in tableArr" :key="index" style="margin-bottom: 12px">
-                  <div class="mobile-action">
-                    <div class="">
-                      <span>关闭时间</span>
-                      <el-switch v-model="item.closeSolarH" @change="closeChange" active-color="#13ce66"
-                                 inactive-color="#ff4949"
-                      >
-                      </el-switch>
-                    </div>
-                    <div>
-                      <span>关闭时辰</span>
-                      <el-switch v-model="item.closeLunarH" @change="closeChange" active-color="#13ce66"
-                                 inactive-color="#ff4949"
-                      >
-                      </el-switch>
-                    </div>
-                    <div>
-                      <span>最后八字</span>
-                      <el-switch v-model="item.closeBaZhiH" @change="closeChange" active-color="#13ce66"
-                                 inactive-color="#ff4949"
-                      >
-                      </el-switch>
-                    </div>
-                    <div>
-                      <span>最后五行</span>
-                      <el-switch v-model="item.closeWuXinH" @change="closeChange" active-color="#13ce66"
-                                 inactive-color="#ff4949"
-                      >
-                      </el-switch>
-                    </div>
-                    <!--                  <div>-->
-                    <!--                    <el-button size="mini" type="primary" @click="updateTableForm(index)">修改</el-button>-->
-                    <!--                  </div>-->
-                    <div>
-                      <el-popconfirm confirm-button-text="确认" cancel-button-text="不了" icon="el-icon-info"
-                                     icon-color="red" title="确定删除吗？" @confirm="delTable(tableArr, index)"
-                      >
-                        <template slot="reference">
-                          <el-button size="mini" type="danger">删除</el-button>
-                          <!--                        <el-link type="danger" style="float: right"><i class="el-icon-delete"></i></el-link>-->
-                        </template>
-
-                      </el-popconfirm>
-                      <!--                    <el-button size="mini" type="danger" @click="delTable(tableArr, index)">删除</el-button>-->
-                    </div>
-                    <div>
-                      <el-button size="mini" type="primary" @click="repeatPostGuoxue(item)">查询</el-button>
+                        </el-popconfirm>
+                        <!--                    <el-button size="mini" type="danger" @click="delTable(tableArr, index)">删除</el-button>-->
+                      </div>
+                      <div>
+                        <el-button size="mini" type="primary" @click="repeatPostGuoxue(item)">查询</el-button>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <el-button slot="reference">操作</el-button>
-              </el-popover>
-            </el-col>
+                  <el-button slot="reference">操作</el-button>
+                </el-popover>
+              </el-col>
 
-          </el-row>
+            </el-row>
 
-        </el-form>
+          </el-form>
+        </div>
         <el-col :span="24">
-          <div style="width: 100%">
+          <div class="main-mobile" style="width: 100%">
             <!--            <div v-html="tableHtml" id="table-html" style="background-color: red"></div>-->
             <div style="overflow-x: auto">
               <table class="heavier-text main" style="width: 760px;" id="table-val" v-show="tableArr.length > 0">
@@ -274,12 +282,12 @@
                 <tr>
                   <td bgcolor="#FFFFFF" class="new no-internal-borders">农历</td>
                   <td bgcolor="#FFFFFF"
-                      :style="{ paddingBottom: randomOffsets[index].lunarYear + 'px', paddingLeft: randomOffsets[index].lunarYear + 'px' }"
+                      :style="paddingStyle(index, 'lunarYear')"
                       class="new no-internal-borders"
                   >{{ item.lunarYear }}
                   </td>
                   <td bgcolor="#FFFFFF"
-                      :style="{ paddingBottom: randomOffsets[index].lunarMonth + 'px', paddingLeft: randomOffsets[index].lunarMonth + 'px' }"
+                      :style="paddingStyle(index, 'lunarMonth')"
                       class="new no-internal-borders"
                   >{{ item.lunarMonth }}
                   </td>
@@ -289,7 +297,7 @@
                   >{{ item.lunarDay }}
                   </td>
                   <td bgcolor="#FFFFFF"
-                      :style="{ paddingBottom: randomOffsets[index].lunarHh + 'px', paddingLeft: randomOffsets[index].lunarHh + 'px' }"
+                      :style="paddingStyle(index, 'lunarHh')"
                       class="new no-internal-borders"
                   >{{ item.closeLunarH ? item.lunarHh : '' }}
                   </td>
@@ -356,7 +364,7 @@
                 </tr>
                 </tbody>
                 <tbody>
-                <tr>
+                <tr v-show="!isTextarea">
                   <td>
                   </td>
                   <!--                  <td colspan="7" class="table-textarea">-->
@@ -369,25 +377,64 @@
                   <!--                    >-->
                   <!--                    </el-input>-->
                   <!--                  </td>-->
-                  <template v-if="isTextarea">
-                    <td colspan="7" class="table-textarea">
-                      <el-input type="textarea" :rows="2" size="medium" autosize placeholder="请输入内容"
-                                v-model="mingPanText" @blur="tableIptBlur"
-                      >
-                      </el-input>
-                    </td>
-                  </template>
-                  <template v-else>
-                    <td colspan="7" id="#pre-line" style="white-space: pre-line; padding-right: 10px"
-                        class="new no-internal-borders"
-                    >
-                      {{ mingPanText }}
-                    </td>
-                  </template>
-
+                  <!--                  <template v-if="isTextarea">-->
+                  <!--                    <td colspan="7" class="table-textarea">-->
+                  <!--                      <el-input type="textarea" :rows="2" size="medium" autosize placeholder="请输入内容"-->
+                  <!--                                v-model="mingPanText" @blur="tableIptBlur"-->
+                  <!--                      >-->
+                  <!--                      </el-input>-->
+                  <!--                    </td>-->
+                  <!--                  </template>-->
+                  <!--                  <template v-else>-->
+                  <!--                    <td colspan="7" id="#pre-line" style="white-space: pre-line; padding-right: 10px"-->
+                  <!--                        class="new no-internal-borders"-->
+                  <!--                    >-->
+                  <!--                      {{ mingPanText }}-->
+                  <!--                    </td>-->
+                  <!--                  </template>-->
+                  <td colspan="7" id="#pre-line" style="white-space: pre-line; padding-right: 10px"
+                      class="new no-internal-borders"
+                  >
+                    {{ mingPanText }}
+                  </td>
                 </tr>
                 </tbody>
               </table>
+            </div>
+            <div v-show="tableArr.length > 0 && isTextarea">
+              <el-input type="textarea" :rows="2" size="medium" autosize placeholder="请输入内容"
+                        v-model="mingPanText" @blur="tableIptBlur"
+              >
+              </el-input>
+              <div class="ming-pan-input-action">
+                <div @click="onHistoryList">
+                  <el-link type="primary" disabled>
+                    <span>历史解批<i class="el-icon-folder-opened"></i></span>
+                  </el-link>
+                </div>
+
+                <el-button size="mini" type="primary" @click="handleTableToImg" :loading="btnLoad">
+                  生成图片
+                </el-button>
+              </div>
+
+              <historical-unraveling-list :is-history-list.sync="isHistoryList" @closeDrawer="() => isHistoryList = false" @addPiJie="addPiJie"/>
+              <!--                  <div v-infinite-scroll="historyListLoad" style="overflow:auto;height: 100%;" :infinite-scroll-disabled="historyListLoading"-->
+              <!--                       :infinite-scroll-distance="historyListDistance" :infinite-scroll-immediate="false"-->
+              <!--                  >-->
+              <!--                    <ul>-->
+              <!--                      <template v-for="(item, index) in historyList">-->
+              <!--                        <li :key="index"-->
+              <!--                            style="word-wrap: break-word;"-->
+              <!--                        >-->
+              <!--                          <div>{{ item }}-->
+              <!--                            <el-divider></el-divider>-->
+              <!--                          </div>-->
+              <!--                        </li>-->
+              <!--                      </template>-->
+
+              <!--                    </ul>-->
+              <!--                  </div>-->
             </div>
             <table border="0" cellpadding="1" cellspacing="1"
                    style="width: 100%; MARGIN-BOTTOM: 5px; table-layout:fixed;word-wrap:break-word;border: 1px solid #A3E7FA"
@@ -415,15 +462,10 @@
               </tr>
               </tbody>
             </table>
-            <div>
 
-              <el-button v-show="tableArr.length > 0" type="primary" @click="handleTableToImg" :loading="btnLoad">
-                生成图片
-              </el-button>
-            </div>
-            <div>
+            <div v-show="imgUrl">
               <div ref="imageTable"></div>
-              <el-image v-if="isMobile" style="width: 100%; height: 100%" :src="imgUrl"></el-image>
+              <el-image style="width: 100%; height: 100%" :src="imgUrl"></el-image>
             </div>
 
             <template v-if="this.html">
@@ -433,7 +475,7 @@
         </el-col>
       </template>
 
-      <!-- -------------电脑端页面----------- -->
+      <!-- -------------电脑端pc端页面----------- -->
       <template v-else>
         <div v-if="isFanTui">
           <BaZhiFanTui @toForm="nZFTToForm" @addForm="nZFTAddForm" :is-fan-tui="isFanTui"
@@ -442,7 +484,6 @@
         </div>
         <div v-show="!isFanTui">
           <el-form :model="form" :rules="rules" ref="ruleForm" label-width="80px" labelPosition="top"
-                   class="demo-ruleForm"
           >
             <el-row type="flex" class="row-bg" justify="center">
               <el-col :lg="5" :md="4" :sm="4" :xs="2"
@@ -606,27 +647,27 @@
                             </template>
                           </b>
                         </td>
-<!--                        <td width="8%" rowspan="1" bgcolor="#FFFFFF" class="new no-internal-borders">-->
-<!--                          &lt;!&ndash;                          生辰&ndash;&gt;-->
-<!--                        </td>-->
+                        <!--                        <td width="8%" rowspan="1" bgcolor="#FFFFFF" class="new no-internal-borders">-->
+                        <!--                          &lt;!&ndash;                          生辰&ndash;&gt;-->
+                        <!--                        </td>-->
                         <td bgcolor="#FFFFFF" class="new no-internal-borders" colspan="2">农历生辰</td>
                         <td bgcolor="#FFFFFF"
-                            :style="{ paddingBottom: randomOffsets[index].lunarYear + 'px', paddingLeft: randomOffsets[index].lunarYear + 'px' }"
+                            :style="paddingStyle(index, 'lunarYear')"
                             class="new no-internal-borders"
                         >{{ item.lunarYear }}
                         </td>
                         <td bgcolor="#FFFFFF"
-                            :style="{ paddingBottom: randomOffsets[index].lunarMonth + 'px', paddingLeft: randomOffsets[index].lunarMonth + 'px' }"
+                            :style="paddingStyle(index, 'lunarMonth')"
                             class="new no-internal-borders"
                         >{{ item.lunarMonth }}
                         </td>
                         <td bgcolor="#FFFFFF"
-                            :style="{ paddingBottom: randomOffsets[index].lunarDay + 'px', paddingLeft: randomOffsets[index].lunarDay + 'px' }"
+                            :style="paddingStyle(index, 'lunarDay')"
                             class="new no-internal-borders"
                         >{{ item.lunarDay }}
                         </td>
                         <td bgcolor="#FFFFFF"
-                            :style="{ paddingBottom: randomOffsets[index].lunarHh + 'px', paddingLeft: randomOffsets[index].lunarHh + 'px' }"
+                            :style="paddingStyle(index, 'lunarHh')"
                             class="new no-internal-borders"
                         >{{ item.closeLunarH ? item.lunarHh : '' }}
                         </td>
@@ -690,22 +731,22 @@
                       <tr>
                         <td bgcolor="#FFFFFF" class="new no-internal-borders">农历</td>
                         <td bgcolor="#FFFFFF"
-                            :style="{ paddingBottom: randomOffsets[index].lunarYear + 'px', paddingLeft: randomOffsets[index].lunarYear + 'px' }"
+                            :style="paddingStyle(index, 'lunarYear')"
                             class="new no-internal-borders"
                         >{{ item.lunarYear }}
                         </td>
                         <td bgcolor="#FFFFFF"
-                            :style="{ paddingBottom: randomOffsets[index].lunarMonth + 'px', paddingLeft: randomOffsets[index].lunarMonth + 'px' }"
+                            :style="paddingStyle(index, 'lunarMonth')"
                             class="new no-internal-borders"
                         >{{ item.lunarMonth }}
                         </td>
                         <td bgcolor="#FFFFFF"
-                            :style="{ paddingBottom: randomOffsets[index].lunarDay + 'px', paddingLeft: randomOffsets[index].lunarDay + 'px' }"
+                            :style="paddingStyle(index, 'lunarDay')"
                             class="new no-internal-borders"
                         >{{ item.lunarDay }}
                         </td>
                         <td bgcolor="#FFFFFF"
-                            :style="{ paddingBottom: randomOffsets[index].lunarHh + 'px', paddingLeft: randomOffsets[index].lunarHh + 'px' }"
+                            :style="paddingStyle(index, 'lunarHh')"
                             class="new no-internal-borders"
                         >{{ item.closeLunarH ? item.lunarHh : '' }}
                         </td>
@@ -923,6 +964,7 @@ import { Lunar, SolarUtil, Solar, LunarMonth, LunarYear, EightChar } from 'lunar
 import { countWuXin } from '../../../utils'
 import BaZhiFanTui from './baZhiFanTui.vue'
 import ShowLunarAndSolar from './closeLunarOrSolar/showLunarAndSolar.vue'
+import HistoricalUnravelingList from './HistoricalUnravelingList.vue'
 
 // import { msgError, msg } from '../../../plugins/modal'
 function deepClone(obj) {
@@ -950,13 +992,14 @@ function deepClone(obj) {
 let tableDom = null
 export default {
   name: 'GuoXue',
-  components: { ShowLunarAndSolar, BaZhiFanTui },
+  components: { HistoricalUnravelingList, ShowLunarAndSolar, BaZhiFanTui },
   data() {
     return {
       toYear: new Date().getFullYear(),
       isFanTui: false,
       isMobile: false,
       isShiJi: false,
+      isHistoryList: false,
       btnLoad: false,
       isDrawer: false,
       imgUrl: null,
@@ -974,6 +1017,9 @@ export default {
       limit: 40,
       searchVal: '',
       searchList: [],
+      historyList: [],
+      historyListLoading: false,
+      historyListDistance: 50,
       tableKey: null,
       updateTableIndex: null,
       tableArr: [],
@@ -1075,35 +1121,61 @@ export default {
     this.checkIfMobile()
   },
   methods: {
+    // css样式
+    paddingStyle(index, property) {
+      return {
+        paddingBottom: this.randomOffsets[index][property] + 'px',
+        paddingLeft: this.randomOffsets[index][property] + 'px'
+      };
+    },
     LunarTest() {
-      const yue = this.form.isLeapMonth ? -this.form.yue : this.form.yue
-      console.log('this.form.hh', this.form.hh)
-      const d = Lunar.fromYmdHms(this.form.nian, yue, this.form.ri, this.form.hh, 0, 0)
-      console.log(d.toFullString())
-      console.log(d.getTimeZhi() + '时')
-      // const e = EightChar.fromLunar(d)
-      const e = d.getEightChar()
-      // e.setSect(1)
-      console.log(e.getSect())
-      const arr = []
-      arr.push(e.getYearWuXing(), e.getMonthWuXing(), e.getDayWuXing(), e.getTimeWuXing())
-      this.$set(this.baZhiTest, 'wuXin', arr)
-      const baZhiArr = []
-      this.$set(this.baZhiTest, 'baZhiArr', baZhiArr)
-      baZhiArr.push(e.getYear(), e.getMonth(), e.getDay(), e.getTime())
-      const naYinArr = []
+      const nian = 2000
+      const yue = 1
+      let ri = 1
 
-      naYinArr.push(e.getYearNaYin(), e.getMonthNaYin(), e.getDayNaYin(), e.getTimeNaYin())
-      console.log(arr)
-      this.$set(this.baZhiTest, 'naYin', naYinArr)
-      console.log(naYinArr)
-      const r = countWuXin(arr)
-      console.log(r)
-      this.$set(this.baZhiTest, 'geShu', r.counts)
-      this.$set(this.baZhiTest, 'geShuStr', r.geShu)
-      this.$set(this.baZhiTest, 'wuXinWang', r.wuXinWang)
-      this.$set(this.baZhiTest, 'wuXinQue', r.wuXinQue)
-      this.$set(this.baZhiTest, 'wangQue', r.wangQue)
+
+      for (let i = 0; i < 30; i++) {
+
+        setTimeout(() => {
+          ri += 1
+          this.$set(this.form, 'nian', nian)
+          this.$set(this.form, 'yue', yue)
+          this.$set(this.form, 'ri', ri)
+          this.$set(this.form, 'name', '测试用户' + ri)
+          this.onSubmit()
+          this.mingPanText = '测试批解测试批解测试批解测试批解测试批解测试批解测试批解测试批解测试批解测试批解测试批解测试批解测试批解测试批解测试批解' + ri
+          this.tableIptBlur()
+        }, 500)
+      }
+
+      // const yue = this.form.isLeapMonth ? -this.form.yue : this.form.yue
+      // console.log('this.form.hh', this.form.hh)
+      // const d = Lunar.fromYmdHms(this.form.nian, yue, this.form.ri, this.form.hh, 0, 0)
+      // console.log(d.toFullString())
+      // console.log(d.getTimeZhi() + '时')
+      // // const e = EightChar.fromLunar(d)
+      // const e = d.getEightChar()
+      // // e.setSect(1)
+      // console.log(e.getSect())
+      // const arr = []
+      // arr.push(e.getYearWuXing(), e.getMonthWuXing(), e.getDayWuXing(), e.getTimeWuXing())
+      // this.$set(this.baZhiTest, 'wuXin', arr)
+      // const baZhiArr = []
+      // this.$set(this.baZhiTest, 'baZhiArr', baZhiArr)
+      // baZhiArr.push(e.getYear(), e.getMonth(), e.getDay(), e.getTime())
+      // const naYinArr = []
+      //
+      // naYinArr.push(e.getYearNaYin(), e.getMonthNaYin(), e.getDayNaYin(), e.getTimeNaYin())
+      // console.log(arr)
+      // this.$set(this.baZhiTest, 'naYin', naYinArr)
+      // console.log(naYinArr)
+      // const r = countWuXin(arr)
+      // console.log(r)
+      // this.$set(this.baZhiTest, 'geShu', r.counts)
+      // this.$set(this.baZhiTest, 'geShuStr', r.geShu)
+      // this.$set(this.baZhiTest, 'wuXinWang', r.wuXinWang)
+      // this.$set(this.baZhiTest, 'wuXinQue', r.wuXinQue)
+      // this.$set(this.baZhiTest, 'wangQue', r.wangQue)
 
     },
     async initLocationToIndexedDB() {
@@ -1301,7 +1373,11 @@ export default {
     nZFTToForm(form, clearCalendarArr) {
       console.log("🚀 ~ file:form method:nZFTToForm line:1190 -----", form)
       this.nZFTIntoForm(form)
+      console.log("🚀 ~ file:index method:nZFTToForm line:1318 -----", this.form)
+
       this.onSubmit()
+      console.log("🚀 ~ file:index method:nZFTToForm line:1319 -----", "this.onSubmit()chengong")
+
       clearCalendarArr()
     },
     nZFTAddForm(form, clearCalendarArr) {
@@ -1512,6 +1588,14 @@ export default {
     handleIsDrawer() {
       this.isDrawer = true
     },
+    addPiJie(v, fn) {
+      console.log("🚀 ~ file:index method:addPiJie line:1592 -----", v)
+      this.mingPanText += v
+      // this.updateLocalTable()
+      this.tableIptBlur()
+      fn()
+      this.isHistoryList = false
+    },
     async currentChange(page) {
       console.log(page)
       console.log(this.page)
@@ -1675,8 +1759,28 @@ export default {
       this.$set(this.form, 'isLeapMonth', false)
       this.$set(this.form, 'hh', null)
       this.$set(this.form, 'mm', null)
+    },
+    initHistoryList() {
+      // this.
+    },
+    onHistoryList() {
+      console.log("🚀 ~ file:onHistoryList method:onHistoryList line:1730 -----", 'onHistoryList')
+      this.historyList = []
+      this.isHistoryList = true
+
     }
     ,
+    historyListLoad() {
+      console.log("🚀 ~ file:index method:historyListLoad line:1738 -----", '+++++++++++++++++++++')
+      if (this.historyListLoading) return;
+      this.historyListLoading = true;
+      setTimeout(() => {
+        const moreItems = (this.historyList.length + 1) + 'Item '
+        this.historyList.push(moreItems);
+        this.historyListLoading = false;
+      }, 1000);
+
+    },
     handleTableToImg() {
       // const
       // html2canvas(tableDom).then(function(canvas) {
@@ -1798,6 +1902,7 @@ export default {
   }
 }
 
+
 .text {
   font-size: 14px;
 }
@@ -1846,6 +1951,7 @@ export default {
     top: 0;
     right: -235px;
     display: flex;
+
     div {
       padding: 4px 2px;
     }
@@ -1979,5 +2085,10 @@ export default {
 .heavier-text {
   color: #131313;
   font-weight: 600;
+}
+
+.ming-pan-input-action {
+  display: flex;
+  justify-content: space-between;
 }
 </style>
