@@ -7,15 +7,13 @@
             <el-tab-pane label="收藏批解" name="collect">
               <div class="clearfix">
                 <el-input v-model="searchVal" clearable placeholder="搜索关键字" style="width: 300px"
-                          @change="changeSearch"
-                />
+                  @change="changeSearch" />
               </div>
             </el-tab-pane>
             <el-tab-pane label="历史批解" name="history">
               <div class="clearfix">
                 <el-input v-model="searchVal" clearable placeholder="搜索关键字" style="width: 300px"
-                          @change="changeSearch"
-                />
+                  @change="changeSearch" />
               </div>
             </el-tab-pane>
           </el-tabs>
@@ -23,36 +21,63 @@
         </div>
 
       </template>
-      <div v-infinite-scroll="historyListLoad" :infinite-scroll-disabled="historyListLoading"
-           :infinite-scroll-distance="historyListDistance"
-           :infinite-scroll-immediate="false" style="overflow:auto;height: 100%;"
-      >
-        <ul>
-          <template v-for="(item, index) in historyList">
-            <li :key="index"
-                style="word-wrap: break-word;"
-            >
+      <div style="height: 100%; position: relative;">
+        <div v-infinite-scroll="historyListLoad" :infinite-scroll-disabled="historyListLoading"
+          :infinite-scroll-distance="historyListDistance" :infinite-scroll-immediate="false"
+          style="overflow:auto;height: 100%;">
+          <ul>
+            <li v-for="(item, index) in historyList" :key="index" style="word-wrap: break-word;">
               <div>{{ item }}
               </div>
               <div style="display: flex;justify-content: space-between;margin-top: 10px">
                 <span>
                   <el-link type="primary">
-                  <i class="el-icon-star-off"></i>
-                  收藏</el-link>
-                  </span>
+                    <i class="el-icon-star-off"></i>
+                    收藏</el-link>
+                </span>
                 <span @click="addPiJie(item)">
-                <el-link type="primary">
-                  <i class="el-icon-edit-outline"></i>加入批解</el-link>
+                  <el-link type="primary">
+                    <i class="el-icon-edit-outline"></i>加入批解</el-link>
                 </span>
 
 
               </div>
               <el-divider></el-divider>
             </li>
-          </template>
-        </ul>
-        <div v-loading="total > historyList.length"></div>
+          </ul>
+          <div v-loading="total > historyList.length"></div>
+        </div>
+
+        <div v-if="activeName !== 'collect'" class="collect-box">
+          <div v-infinite-scroll="historyListLoad" :infinite-scroll-disabled="historyListLoading"
+            :infinite-scroll-distance="historyListDistance" :infinite-scroll-immediate="false"
+            style="overflow:auto; height: 100%;">
+            <ul>
+              <li v-for="(item, index) in historyList" :key="index" style="word-wrap: break-word;">
+                <div>{{ item }}
+                </div>
+                <div style="display: flex;justify-content: space-between;margin-top: 10px">
+                  <span>
+                    <el-link type="primary">
+                      <i class="el-icon-star-off"></i>
+                      收藏</el-link>
+                  </span>
+                  <span @click="addPiJie(item)">
+                    <el-link type="primary">
+                      <i class="el-icon-edit-outline"></i>加入批解</el-link>
+                  </span>
+
+
+                </div>
+                <el-divider></el-divider>
+              </li>
+            </ul>
+            <div v-loading="total > historyList.length"></div>
+          </div>
+        </div>
       </div>
+
+
     </el-drawer>
   </div>
 
@@ -65,12 +90,13 @@ export default {
   props: {
     isHistoryList: Boolean
   },
-  data() {
+  data () {
     return {
       activeName: 'collect',
       page: 0,
       limit: 20,
       historyList: [],
+      collectList: [],
       total: '',
       historyListLoading: false,
       historyListDistance: 20,
@@ -78,29 +104,29 @@ export default {
     }
   },
   methods: {
-    clearPageList() {
+    clearPageList () {
       this.page = 0
       this.historyListLoading = false
       this.historyList = []
 
     },
-    closeDrawer() {
+    closeDrawer () {
       console.log("🚀 ~ file:HistoricalUnravelingList method:closeDrawer line:75 -----", 'closeDrawer')
 
       this.$emit('closeDrawer')
     },
-    changeSearch() {
+    changeSearch () {
       console.log("🚀 ~ file:HistoricalUnravelingList method:changeSearch line:80 -----", 'changeSearch')
 
       this.clearPageList()
       this.historyListLoad()
     },
-    handleClickTab() {
+    handleClickTab () {
       this.searchVal = ''
       this.clearPageList()
       this.historyListLoad()
     },
-    async historyListLoad() {
+    async historyListLoad () {
       console.log("🚀 ~ file:index method:historyListLoad line:1738 -----", '+++++++++++++++++++++')
       if (this.historyListLoading) return;
       this.historyListLoading = true;
@@ -113,10 +139,10 @@ export default {
         this.total > this.historyList.length && (this.historyListLoading = false);
       }
     },
-    addPiJie(v) {
+    addPiJie (v) {
       this.$emit('addPiJie', v, this.handleClickTab)
     },
-    async fetchList() {
+    async fetchList () {
       // 按 id 倒序排序并获取前 20 条记录
       let start = this.page * this.limit
       const value = this.searchVal.trim()
@@ -184,6 +210,16 @@ ul {
 
   ::v-deep .el-divider--horizontal {
     margin-top: 0;
+  }
+
+  .collect-box {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 999;
+    background-color: aliceblue;
   }
 }
 </style>
