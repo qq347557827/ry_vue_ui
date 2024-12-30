@@ -1,14 +1,18 @@
 import { login, logout, getInfo } from '@/api/login'
 import { getToken, setToken, removeToken } from '@/utils/auth'
+import { getTags } from '../../api/customer_order_goods/customer'
+import Vue from 'vue'
 
 const user = {
+  // namespaced: true, // 启用命名空间
   state: {
     token: getToken(),
     id: '',
     name: '',
     avatar: '',
     roles: [],
-    permissions: []
+    permissions: [],
+    collectionTags: []
   },
 
   mutations: {
@@ -29,6 +33,18 @@ const user = {
     },
     SET_PERMISSIONS: (state, permissions) => {
       state.permissions = permissions
+    },
+    SET_COLLECTION_TAGS: (state, list) => {
+      state.collectionTags = list
+    },
+    TOGGLE_TAG_SELECTION(state, tagId) {
+      const tagIndex = state.collectionTags.findIndex(item => item.id === tagId);
+      if (tagIndex !== -1) {
+        const tag = state.collectionTags[tagIndex];
+        // 确保 selected 属性存在并是响应式的
+        const newTag = { ...tag, selected: !tag.selected };
+        Vue.set(state.collectionTags, tagIndex, newTag);
+      }
     }
   },
 
@@ -94,7 +110,23 @@ const user = {
         removeToken()
         resolve()
       })
-    }
+    },
+
+    async fetchCollectionTags({ commit }) {
+      try {
+        // 调用 API 并传递 state.id
+        const response = await getTags();
+
+        if (response && response.data) {
+          // 假设 API 返回的 tags 数据在 response.data 中
+          commit('SET_COLLECTION_TAGS', response.data);
+        } else {
+          console.error('API 返回的数据格式不正确', response);
+        }
+      } catch (error) {
+        console.error('获取集合标签失败：', error);
+      }
+    },
   }
 }
 

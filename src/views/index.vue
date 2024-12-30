@@ -7,7 +7,7 @@
             <el-statistic
               group-separator=","
               :precision="2"
-              :value="orderStatistics.monthStatistics.totalAmountSum"
+              :value="orderStatistics.monthStatistics && orderStatistics.monthStatistics.totalAmountSum"
               title="本月总业绩"
             />
           </div>
@@ -18,7 +18,7 @@
           <div>
             <el-statistic
               group-separator=","
-              :value="Number(orderStatistics.monthStatistics.orderCount)"
+              :value="Number(orderStatistics.monthStatistics && orderStatistics.monthStatistics.orderCount)"
 
               title="本月总单量"
             />
@@ -33,7 +33,7 @@
             <el-statistic
               group-separator=","
               :precision="2"
-              :value="orderStatistics.monthStatistics.depositSum"
+              :value="orderStatistics.monthStatistics && orderStatistics.monthStatistics.depositSum"
               title="本月定金总额"
             />
           </div>
@@ -46,7 +46,7 @@
             <el-statistic
               group-separator=","
               :precision="2"
-              :value="orderStatistics.monthStatistics.collectAmountSum"
+              :value="orderStatistics.monthStatistics && orderStatistics.monthStatistics.collectAmountSum"
               title="本月代收总额"
             />
           </div>
@@ -84,7 +84,7 @@
             <el-statistic
               group-separator=","
               :precision="2"
-              :value="orderStatistics.lastMonthStatistics.totalAmountSum"
+              :value="orderStatistics.lastMonthStatistics && orderStatistics.lastMonthStatistics.totalAmountSum"
               title="上月总业绩"
             />
           </div>
@@ -95,7 +95,7 @@
           <div>
             <el-statistic
               group-separator=","
-              :value="Number(orderStatistics.lastMonthStatistics.orderCount)"
+              :value="Number(orderStatistics.lastMonthStatistics && orderStatistics.lastMonthStatistics.orderCount)"
 
               title="上月总单量"
             />
@@ -110,7 +110,7 @@
             <el-statistic
               group-separator=","
               :precision="2"
-              :value="orderStatistics.lastMonthStatistics.depositSum"
+              :value="orderStatistics.lastMonthStatistics && orderStatistics.lastMonthStatistics.depositSum"
               title="上月定金总额"
             />
           </div>
@@ -123,7 +123,7 @@
             <el-statistic
               group-separator=","
               :precision="2"
-              :value="orderStatistics.lastMonthStatistics.collectAmountSum"
+              :value="orderStatistics.lastMonthStatistics && orderStatistics.lastMonthStatistics.collectAmountSum"
               title="上月代收总额"
             />
           </div>
@@ -161,7 +161,7 @@
             <el-statistic
               group-separator=","
               :precision="2"
-              :value="orderStatistics.todayStatistics.totalAmountSum"
+              :value="orderStatistics.todayStatistics && orderStatistics.todayStatistics.totalAmountSum"
               title="当天业绩"
             ></el-statistic>
           </div>
@@ -172,7 +172,7 @@
           <div>
             <el-statistic
               group-separator=","
-              :value="orderStatistics.todayStatistics.orderCount"
+              :value="orderStatistics.todayStatistics && orderStatistics.todayStatistics.orderCount"
               title="当天单量"
             ></el-statistic>
           </div>
@@ -186,7 +186,7 @@
             <el-statistic
               group-separator=","
               :precision="2"
-              :value="orderStatistics.yesterdayStatistics.totalAmountSum"
+              :value="orderStatistics.yesterdayStatistics && orderStatistics.yesterdayStatistics.totalAmountSum"
 
               title="昨天业绩"
             ></el-statistic>
@@ -199,7 +199,7 @@
           <div>
             <el-statistic
               group-separator=","
-              :value="orderStatistics.yesterdayStatistics.orderCount"
+              :value="orderStatistics.yesterdayStatistics && orderStatistics.yesterdayStatistics.orderCount"
               title="昨天单量"
             ></el-statistic>
           </div>
@@ -213,7 +213,7 @@
             <div>
               <el-statistic
                 group-separator=","
-                :value="orderStatistics.yesterdayStatistics.orderCount"
+                :value="orderStatistics.yesterdayStatistics && orderStatistics.yesterdayStatistics.orderCount"
                 title="总排名"
               ></el-statistic>
             </div>

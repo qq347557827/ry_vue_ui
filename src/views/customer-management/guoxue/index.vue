@@ -26,16 +26,6 @@
                   <el-switch v-model="form.isSolar"></el-switch>
                 </el-form-item>
               </el-col>
-
-
-              <!--          <el-col :span="4">-->
-              <!--            <el-form-item label="性别">-->
-              <!--              <el-radio-group v-model="form.sex">-->
-              <!--                <el-radio label="男"></el-radio>-->
-              <!--                <el-radio label="女"></el-radio>-->
-              <!--              </el-radio-group>-->
-              <!--            </el-form-item>-->
-              <!--          </el-col>-->
             </el-row>
             <el-row class="row-bg">
               <el-col :span="6">
@@ -88,15 +78,6 @@
                       <el-input v-model="searchVal" @change="changeSearch" clearable placeholder="搜索名字"
                                 style="width: 260px"
                       />
-                      <!--                      <el-popconfirm confirm-button-text="确认" cancel-button-text="不了" icon="el-icon-info"-->
-                      <!--                                     icon-color="red"-->
-                      <!--                                     title="确定清空吗？" @confirm="clearAllList"-->
-                      <!--                      >-->
-                      <!--                        <template slot="reference">-->
-                      <!--                          <el-link type="danger" style="float: right"><i class="el-icon-delete"></i></el-link>-->
-                      <!--                        </template>-->
-
-                      <!--                      </el-popconfirm>-->
                     </div>
                   </template>
                   <el-card class="box-card">
@@ -408,33 +389,19 @@
               </el-input>
               <div class="ming-pan-input-action">
                 <div @click="onHistoryList">
-                  <el-link type="primary" disabled>
-                    <span>历史解批<i class="el-icon-folder-opened"></i></span>
-                  </el-link>
-                </div>
+                  <el-tooltip class="item" effect="dark" content="批解的收藏夹和历史批解内容" placement="top">
+                    <el-link type="primary">
+                      <span>解批收藏夹<i class="el-icon-folder-opened"></i></span>
+                    </el-link>
+                  </el-tooltip>
 
+                </div>
+                <collection-btn @submitCollection="submitCollection"/>
                 <el-button size="mini" type="primary" @click="handleTableToImg" :loading="btnLoad">
                   生成图片
                 </el-button>
               </div>
-
-              <historical-unraveling-list :is-history-list.sync="isHistoryList" @closeDrawer="() => isHistoryList = false" @addPiJie="addPiJie"/>
-              <!--                  <div v-infinite-scroll="historyListLoad" style="overflow:auto;height: 100%;" :infinite-scroll-disabled="historyListLoading"-->
-              <!--                       :infinite-scroll-distance="historyListDistance" :infinite-scroll-immediate="false"-->
-              <!--                  >-->
-              <!--                    <ul>-->
-              <!--                      <template v-for="(item, index) in historyList">-->
-              <!--                        <li :key="index"-->
-              <!--                            style="word-wrap: break-word;"-->
-              <!--                        >-->
-              <!--                          <div>{{ item }}-->
-              <!--                            <el-divider></el-divider>-->
-              <!--                          </div>-->
-              <!--                        </li>-->
-              <!--                      </template>-->
-
-              <!--                    </ul>-->
-              <!--                  </div>-->
+              <historical-collections :is-history-collection="isHistoryCollection" @closeDrawer="() => isHistoryCollection = false" @addPiJie="addPiJie"/>
             </div>
             <table border="0" cellpadding="1" cellspacing="1"
                    style="width: 100%; MARGIN-BOTTOM: 5px; table-layout:fixed;word-wrap:break-word;border: 1px solid #A3E7FA"
@@ -474,6 +441,7 @@
           </div>
         </el-col>
       </template>
+
 
       <!-- -------------电脑端pc端页面----------- -->
       <template v-else>
@@ -572,15 +540,15 @@
                     <el-input v-model="searchVal" @change="changeSearch" clearable placeholder="搜索名字"
                               style="width: 260px"
                     />
-                    <el-popconfirm confirm-button-text="确认" cancel-button-text="不了" icon="el-icon-info"
-                                   icon-color="red"
-                                   title="确定清空吗？" @confirm="clearAllList"
-                    >
-                      <template slot="reference">
-                        <el-link type="danger" style="float: right"><i class="el-icon-delete"></i></el-link>
-                      </template>
+<!--                    <el-popconfirm confirm-button-text="确认" cancel-button-text="不了" icon="el-icon-info"-->
+<!--                                   icon-color="red"-->
+<!--                                   title="确定清空吗？" @confirm="clearAllList"-->
+<!--                    >-->
+<!--                      <template slot="reference">-->
+<!--                        <el-link type="danger" style="float: right"><i class="el-icon-delete"></i></el-link>-->
+<!--                      </template>-->
 
-                    </el-popconfirm>
+<!--                    </el-popconfirm>-->
                     <!--                <el-button style="float: right; padding: 3px 0" type="text" @click="clearAllList">清空</el-button>-->
                   </div>
                   <template v-if="list.length >= 1">
@@ -851,7 +819,7 @@
                         <!--                  </div>-->
                         <div>
                           <el-popconfirm confirm-button-text="确认" cancel-button-text="不了" icon="el-icon-info"
-                                         icon-color="red" title="确定清空吗？" @confirm="delTable(tableArr, index)"
+                                         icon-color="red" title="确定删除吗？" @confirm="delTable(tableArr, index)"
                           >
                             <template slot="reference">
                               <el-button size="mini" type="danger">删除</el-button>
@@ -900,6 +868,23 @@
                     </tbody>
                   </table>
                 </div>
+                <div class="ming-pan-input-action" v-show="tableArr.length > 0">
+                  <div @click="onHistoryList">
+                    <el-tooltip class="item" effect="dark" content="收藏的批解和历史批解内容" placement="top">
+                      <el-link type="primary">
+                        <span>解批收藏夹<i class="el-icon-folder-opened"></i></span>
+                      </el-link>
+                    </el-tooltip>
+                  </div>
+                  <div style="display: flex;align-items: center">
+                    <el-tooltip class="item" effect="dark" content="收藏这条解卦内容" placement="bottom">
+                    <collection-btn @submitCollection="submitCollection" class="mr10"/>
+                    </el-tooltip>
+                    <el-button  type="primary" @click="handleTableToImg" :loading="btnLoad">
+                      生成图片
+                    </el-button>
+                  </div>
+                </div>
                 <table border="0" cellpadding="1" cellspacing="1"
                        style="MARGIN-BOTTOM: 5px; table-layout:fixed;word-wrap:break-word;border: 1px solid #A3E7FA"
                        v-show="tableArr.length > 0"
@@ -923,12 +908,6 @@
                   </tbody>
                 </table>
                 <div>
-
-                  <el-button v-show="tableArr.length > 0" type="primary" @click="handleTableToImg" :loading="btnLoad">
-                    生成图片
-                  </el-button>
-                </div>
-                <div>
                   <div ref="imageTable"></div>
                   <el-image v-if="isMobile" style="width: 100%; height: 100%" :src="imgUrl"></el-image>
                 </div>
@@ -947,6 +926,7 @@
           <el-backtop></el-backtop>
         </div>
       </template>
+      <historical-collections :is-history-collection="isHistoryCollection" @closeDrawer="() => isHistoryCollection = false" @addPiJie="addPiJie"/>
 
     </div>
 
@@ -954,8 +934,10 @@
 </template>
 
 <script>
+// 新增命盘时，如果出现这些名字，不覆盖list第一条的名字
+const filterName = ['男方',"男", "男缘主",'女方',"女", "女缘主"]
 // import calendar from 'js-calendar-converter'
-import { postGuoxue } from '../../../api/customer_order_goods/customer'
+import { addCollections, postGuoxue } from '../../../api/customer_order_goods/customer'
 import { v4 as uuid } from 'uuid'
 import html2canvas from 'html2canvas'
 import db from '../../../plugins/db'
@@ -964,7 +946,9 @@ import { Lunar, SolarUtil, Solar, LunarMonth, LunarYear, EightChar } from 'lunar
 import { countWuXin } from '../../../utils'
 import BaZhiFanTui from './baZhiFanTui.vue'
 import ShowLunarAndSolar from './closeLunarOrSolar/showLunarAndSolar.vue'
-import HistoricalUnravelingList from './HistoricalUnravelingList.vue'
+import HistoricalCollections from './collectionsHistory/HistoricalCollections.vue'
+import { mapState } from 'vuex'
+import CollectionBtn from './collectionsHistory/CollectionBtn.vue'
 
 // import { msgError, msg } from '../../../plugins/modal'
 function deepClone(obj) {
@@ -992,14 +976,14 @@ function deepClone(obj) {
 let tableDom = null
 export default {
   name: 'GuoXue',
-  components: { HistoricalUnravelingList, ShowLunarAndSolar, BaZhiFanTui },
+  components: { CollectionBtn, HistoricalCollections, ShowLunarAndSolar, BaZhiFanTui },
   data() {
     return {
       toYear: new Date().getFullYear(),
       isFanTui: false,
       isMobile: false,
       isShiJi: false,
-      isHistoryList: false,
+      isHistoryCollection: false,
       btnLoad: false,
       isDrawer: false,
       imgUrl: null,
@@ -1017,8 +1001,6 @@ export default {
       limit: 40,
       searchVal: '',
       searchList: [],
-      historyList: [],
-      historyListLoading: false,
       historyListDistance: 50,
       tableKey: null,
       updateTableIndex: null,
@@ -1080,6 +1062,7 @@ export default {
     }
   },
   computed: {
+    ...mapState(['collectionTags']), // 映射到全局状态,
     months() {
       let arr = JSON.parse(JSON.stringify(this.lunarMonthArr))
       let monthArr = []
@@ -1115,6 +1098,7 @@ export default {
   created() {
     this.initLocationToIndexedDB()
     this.fetchList()
+    this.loadTags()
     // this.updateTotalCount()
   },
   mounted() {
@@ -1177,6 +1161,9 @@ export default {
       // this.$set(this.baZhiTest, 'wuXinQue', r.wuXinQue)
       // this.$set(this.baZhiTest, 'wangQue', r.wangQue)
 
+    },
+    async loadTags() {
+      await this.$store.dispatch('fetchCollectionTags'); // 调用 action
     },
     async initLocationToIndexedDB() {
       const table_list = this.$cache.local.get('table_list')
@@ -1547,8 +1534,6 @@ export default {
     }
     ,
     repeatPostGuoxue(item) {
-      // console.log(form)
-      // console.log(this.checkForm)
       const data = {
         nian: item.solarYear.slice(0, -1) - 0,
         yue: item.solarMonth.slice(0, -1) - 0,
@@ -1594,7 +1579,7 @@ export default {
       // this.updateLocalTable()
       this.tableIptBlur()
       fn()
-      this.isHistoryList = false
+      this.isHistoryCollection = false
     },
     async currentChange(page) {
       console.log(page)
@@ -1683,8 +1668,9 @@ export default {
     async addLocalTable() {
       const list0name = this.list[0]?.table[0]?.form?.name //获取列表第一条的名字
       // console.log("🚀 ~ file:index method:addLocalTable line:1674 -----this.list[0]", this.list[0])
+      const filterFlg = filterName.some(item => item === list0name)
 
-      if (this.list[0]?.table.length === 1 && this.form.name === list0name) {
+      if (list0name && this.form.name === list0name && !filterFlg) {
         const list0TableKey = this.list[0]?.key //获取列表第一条的key
         console.log('list0TableKey: ', list0TableKey);
         this.tableKey = list0TableKey
@@ -1765,21 +1751,33 @@ export default {
     },
     onHistoryList() {
       console.log("🚀 ~ file:onHistoryList method:onHistoryList line:1730 -----", 'onHistoryList')
-      this.historyList = []
-      this.isHistoryList = true
+      this.isHistoryCollection = true
 
-    }
-    ,
-    historyListLoad() {
-      console.log("🚀 ~ file:index method:historyListLoad line:1738 -----", '+++++++++++++++++++++')
-      if (this.historyListLoading) return;
-      this.historyListLoading = true;
-      setTimeout(() => {
-        const moreItems = (this.historyList.length + 1) + 'Item '
-        this.historyList.push(moreItems);
-        this.historyListLoading = false;
-      }, 1000);
+    },
+    async submitCollection(collectionBtnCloseFn,selectedIds, dynamicTags) {
+      const content = this.textarea.trim()
+      if (!content) {
+        this.$modal.msgError("批解没内容，无法收藏");
+        return
+      }
+      try {
+        const res = await addCollections({tagIds: selectedIds, tags: dynamicTags, content})
+        console.log("🚀 ~ file:res method:handleSubmitCollectBtn line:82 -----", res)
+        if (res.code === 200) {
+          this.$message({
+            message: '收藏成功',
+            type: 'success'
+          });
+          if (this.tableKey) {
+            await db.data.where('key').equals(this.tableKey).modify({ isCollected: true })
+          }
+          await this.$store.dispatch('fetchCollectionTags');
+          collectionBtnCloseFn()
+        }
 
+      }catch (e) {
+
+      }
     },
     handleTableToImg() {
       // const

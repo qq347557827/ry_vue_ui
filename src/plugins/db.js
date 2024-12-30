@@ -6,7 +6,7 @@ const db = new Dexie('guoxue');
 
 // 定义数据库模式
 db.version(1).stores({
-  data: '++id, key,  mingPanText'
+  data: '++id, key,  mingPanText, isCollected'
 });
 
 // 打开数据库
