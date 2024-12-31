@@ -28,8 +28,8 @@
           <el-divider></el-divider>
         </li>
       </ul>
-      <div v-show="(total > historyList.length)"  v-loading="historyListLoading"></div>
-      <div v-show="(historyList.length <= total) && historyListLoading" style="display: flex;justify-content: center">没有更多了</div>
+      <div v-show="total === null || (total > historyList.length)"  v-loading="historyListLoading"></div>
+      <div v-show="total != null && (historyList.length <= total) && historyListLoading" style="display: flex;justify-content: center">没有更多了</div>
     </div>
   </div>
 </template>
@@ -37,7 +37,8 @@
 import db from '../../../../plugins/db'
 import CollectionBtn from './CollectionBtn.vue'
 import { mapActions } from 'vuex'
-import { addCollections } from '../../../../api/customer_order_goods/customer'
+
+import { addCollections } from '../../../../api/customer_order_goods/guoXue'
 
 export default {
   name: "History",

@@ -1,5 +1,5 @@
 <script>
-import { Solar, LunarYear, Lunar, LunarMonth, SolarUtil, Foto } from 'lunar-typescript'
+import { Foto, LunarYear, Solar, SolarUtil } from 'lunar-typescript'
 import I18n from './config';
 
 // const now = new Date()
@@ -74,6 +74,9 @@ export default {
     this.day = now.getDate()
   },
   computed: {
+    isMobile() {
+      return this.$store.state.app.isMobile
+    },
     model: {
       get() {
         return {
@@ -336,277 +339,288 @@ export default {
 
 <template>
 
-  <div style="padding: 36px">
+  <div :style="{'padding' : !isMobile && '36px'}">
     <el-row :gutter="22">
-      <el-col :span="16">
+      <el-col :span="16" :xs="24">
+
+
         <div class="col-left">
           <div class="calendar">
-            <div class="border-right">
-              <div class="row col border-bottom">
-                <div class="label">{{ yearGanZhi }}年</div>
-                <div>属{{ yearShengXiao }}</div>
-                <div>{{ yearNaYin }}</div>
+            <el-row>
+              <el-col :span="6" :xs="24">
+                <div class="border-right">
+                  <div class="row col border-bottom">
+                    <div class="label">{{ yearGanZhi }}年</div>
+                    <div>属{{ yearShengXiao }}</div>
+                    <div>{{ yearNaYin }}</div>
+                  </div>
+                  <div class="row col border-bottom">
+                    <div class="label">{{ monthGanZhi }}月</div>
+                    <div>属{{ monthShengXiao }}</div>
+                    <div>{{ monthNaYin }}</div>
+                  </div>
+                  <div class="row col border-bottom">
+                    <div class="label">{{ dayGanZhi }}日</div>
+                    <div>属{{ dayShengXiao }}</div>
+                    <div>{{ dayNaYin }}</div>
+                  </div>
+                  <div class="row col bg border-bottom">
+                    <div class="ml10">节气{{ prevJq }}</div>
+                  </div>
+                  <div class="yj-container border-bottom">
+                    <div class="yj yi">宜</div>
+                    <ul class="ml10">
+                      <li v-for="(o, index) in dayYi" :key="index">{{ o }}</li>
+                    </ul>
+                  </div>
+                  <div class="border-bottom js">
+                    <div>
+                      <div class="label">吉神宜趋</div>
+                      <ul class="ml10">
+                        <li v-for="o in dayJiShen">{{ o }}</li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="row col bg">
+                    <div class="label">彭祖</div>
+                    <div>{{ pengZuGan }}</div>
+                  </div>
+                  <div class="row col bg border-bottom">
+                    <div class="label">百忌</div>
+                    <div>{{ pengZuZhi }}</div>
+                  </div>
+                  <div class="row col">
+                    <div class="label">月名</div>
+                    <div>{{ yueMing }}</div>
+                  </div>
+                  <div class="row col">
+                    <div class="label">月相</div>
+                    <div>{{ yueXiang }}月</div>
+                  </div>
+                  <div class="row col">
+                    <div class="label">物候</div>
+                    <div>{{ wuHou }}</div>
+                  </div>
+                </div>
+              </el-col>
+              <el-col :span="12" :xs="24">
+              <div class="center border-right bg">
+                <div class="border-bottom">
+                  <div class="inputs">
+                    <div>
+                      <el-select v-model="year" class="el-select-year" placeholder="请选择">
+                        <el-option v-for="item in 50" :key="item" :label="item + 1980" :value="item + 1980">
+                        </el-option>
+                      </el-select>
+                      年
+                    </div>
+                    <div>
+                      <el-select v-model="month" class="el-select-year" placeholder="请选择">
+                        <el-option v-for="item in 12" :key="item" :label="item" :value="item">
+                        </el-option>
+                      </el-select>
+                      月
+                    </div>
+                    <div>
+                      <el-select v-model="day" class="el-select-year" placeholder="请选择">
+                        <el-option v-for="item in dayNum" :key="item" :label="item" :value="item">
+                        </el-option>
+                      </el-select>
+                      日
+                    </div>
+                    <!-- <div>
+                      <input v-model="model.year">年
+                    </div> -->
+                    <!-- <div>
+                      <select v-model="model.month">
+                        <option :value="i" v-for="i in 12">{{ i }}</option>
+                      </select>月
+                    </div> -->
+                    <!-- <div>
+                      <input v-model="model.day">日
+                    </div> -->
+                  </div>
+                  <div>
+                    <div class="pl20">公历{{ year }}年 {{ month }}月 {{ day }}日 星期{{ weekInChinese }} {{ xingZuo }}座
+                    </div>
+                    <div class="today">
+                      <a class="prev" href="javascript:void(0);" @click="prevDay"></a>
+                      {{ day }}
+                      <a class="next" href="javascript:void(0);" @click="nextDay"></a>
+                    </div>
+                    <div class="lunar">
+                      <div class="pl20 ">农历 {{ lunarYearInChinese }}年 {{ lunarMonthInChinese }}月{{
+                          lunarDayInChinese
+                        }}
+                      </div>
+                      <div v-if="festivals.arr" :style="{ 'color': festivals.daysSince ? '#C0C4CC' : '' }" class="pl20">
+                        <span v-if="festivals.daysSince" class="daysSince mr5">({{ festivals.daysSince }}天后)</span>
+                        <span class="mr5">佛教</span>
+                        <span v-for="(item, index) in festivals.arr" :key="index" class="mr5">{{ item }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="grid border-bottom">
+                  <div class="col2 border-right">
+                    <div class="bar">财神位</div>
+                    <div>
+                      <div class="row col">
+                        <div class="label">喜神</div>
+                        <div>{{ positionXi }}</div>
+                      </div>
+                      <div class="row col">
+                        <div class="label">福神</div>
+                        <div>{{ positionFu }}</div>
+                      </div>
+                      <div class="row col">
+                        <div class="label">财神</div>
+                        <div>{{ positionCai }}</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col2">
+                    <div class="bar">阴阳贵神</div>
+                    <div>
+                      <div class="row col">
+                        <div class="label">阳贵神</div>
+                        <div>{{ positionYangGui }}</div>
+                      </div>
+                      <div class="row col">
+                        <div class="label">阴贵神</div>
+                        <div>{{ positionYinGui }}</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="grid">
+                  <div class="col2 border-right">
+                    <div class="bar">空亡所值</div>
+                    <div>
+                      <div class="row col">
+                        <div class="label">年</div>
+                        <div>{{ yearKongWang }}</div>
+                      </div>
+                      <div class="row col">
+                        <div class="label">月</div>
+                        <div>{{ monthKongWang }}</div>
+                      </div>
+                      <div class="row col">
+                        <div class="label">日</div>
+                        <div>{{ dayKongWang }}</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col2">
+                    <div class="bar">九宫飞星</div>
+                    <div>
+                      <div class="row col">
+                        <div class="label">九星</div>
+                        <div>{{ dayJiuXing }}</div>
+                      </div>
+                      <div class="row col">
+                        <div class="label">二十八宿</div>
+                        <div>{{ xiu }}</div>
+                      </div>
+                      <div class="row col">
+                        <div>{{ yearZhiShui }}</div>
+                        <div>{{ yearDeJin }}</div>
+                      </div>
+                      <div class="row col">
+                        <div>{{ yearFenBing }}</div>
+                        <div>{{ yearGenTian }}</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div class="row col border-bottom">
-                <div class="label">{{ monthGanZhi }}月</div>
-                <div>属{{ monthShengXiao }}</div>
-                <div>{{ monthNaYin }}</div>
-              </div>
-              <div class="row col border-bottom">
-                <div class="label">{{ dayGanZhi }}日</div>
-                <div>属{{ dayShengXiao }}</div>
-                <div>{{ dayNaYin }}</div>
-              </div>
-              <div class="row col bg border-bottom">
-                <div class="ml10">节气{{ prevJq }}</div>
-              </div>
-              <div class="yj-container border-bottom">
-                <div class="yj yi">宜</div>
-                <ul class="ml10">
-                  <li v-for="(o, index) in dayYi" :key="index">{{ o }}</li>
-                </ul>
-              </div>
-              <div class="border-bottom js">
-                <div>
-                  <div class="label">吉神宜趋</div>
+              </el-col>
+              <el-col :span="6" :xs="24">
+              <div>
+                <div class="row col border-bottom">
+                  <div class="label">相冲</div>
+                  <div> {{ dayChong }}</div>
+                </div>
+                <div class="row col border-bottom">
+                  <div class="label">值神</div>
+                  <div> {{ dayZhiShen }}</div>
+                </div>
+                <div class="row col border-bottom">
+                  <div class="label">十二神</div>
+                  <div> {{ dayTianShen }}</div>
+                </div>
+                <div class="row col bg border-bottom">
+                  <div class="ml10">节气{{ nextJq }}</div>
+                </div>
+                <div class="yj-container border-bottom">
+                  <div class="yj ji">忌</div>
                   <ul class="ml10">
-                    <li v-for="o in dayJiShen">{{ o }}</li>
+                    <li v-for="o in dayJi">{{ o }}</li>
                   </ul>
                 </div>
-              </div>
-              <div class="row col bg">
-                <div class="label">彭祖</div>
-                <div>{{ pengZuGan }}</div>
-              </div>
-              <div class="row col bg border-bottom">
-                <div class="label">百忌</div>
-                <div>{{ pengZuZhi }}</div>
-              </div>
-              <div class="row col">
-                <div class="label">月名</div>
-                <div>{{ yueMing }}</div>
-              </div>
-              <div class="row col">
-                <div class="label">月相</div>
-                <div>{{ yueXiang }}月</div>
-              </div>
-              <div class="row col">
-                <div class="label">物候</div>
-                <div>{{ wuHou }}</div>
-              </div>
-            </div>
-            <div class="center border-right bg">
-              <div class="border-bottom">
-                <div class="inputs">
+                <div class="border-bottom js">
                   <div>
-                    <el-select v-model="year" placeholder="请选择" class="el-select-year">
-                      <el-option v-for="item in 50" :key="item" :label="item + 1980" :value="item + 1980">
-                      </el-option>
-                    </el-select>
-                    年
-                  </div>
-                  <div>
-                    <el-select v-model="month" placeholder="请选择" class="el-select-year">
-                      <el-option v-for="item in 12" :key="item" :label="item" :value="item">
-                      </el-option>
-                    </el-select>
-                    月
-                  </div>
-                  <div>
-                    <el-select v-model="day" placeholder="请选择" class="el-select-year">
-                      <el-option v-for="item in dayNum" :key="item" :label="item" :value="item">
-                      </el-option>
-                    </el-select>
-                    日
-                  </div>
-                  <!-- <div>
-                    <input v-model="model.year">年
-                  </div> -->
-                  <!-- <div>
-                    <select v-model="model.month">
-                      <option :value="i" v-for="i in 12">{{ i }}</option>
-                    </select>月
-                  </div> -->
-                  <!-- <div>
-                    <input v-model="model.day">日
-                  </div> -->
-                </div>
-                <div>
-                  <div class="pl20">公历{{ year }}年 {{ month }}月 {{ day }}日 星期{{ weekInChinese }} {{ xingZuo }}座
-                  </div>
-                  <div class="today">
-                    <a href="javascript:void(0);" class="prev" @click="prevDay"></a>
-                    {{ day }}
-                    <a href="javascript:void(0);" class="next" @click="nextDay"></a>
-                  </div>
-                  <div class="lunar">
-                    <div class="pl20 ">农历 {{ lunarYearInChinese }}年 {{ lunarMonthInChinese }}月{{
-                        lunarDayInChinese
-                      }}
-                    </div>
-                    <div class="pl20" :style="{ 'color': festivals.daysSince ? '#C0C4CC' : '' }" v-if="festivals.arr">
-                      <span class="daysSince mr5" v-if="festivals.daysSince">({{ festivals.daysSince }}天后)</span>
-                      <span class="mr5">佛教</span>
-                      <span class="mr5" v-for="(item, index) in festivals.arr" :key="index">{{ item }}</span>
-                    </div>
+                    <div class="label">凶煞宜忌</div>
+                    <ul class="ml10">
+                      <li v-for="o in dayXiongSha">{{ o }}</li>
+                    </ul>
                   </div>
                 </div>
-              </div>
-              <div class="grid border-bottom">
-                <div class="col2 border-right">
-                  <div class="bar">财神位</div>
-                  <div>
-                    <div class="row col">
-                      <div class="label">喜神</div>
-                      <div>{{ positionXi }}</div>
-                    </div>
-                    <div class="row col">
-                      <div class="label">福神</div>
-                      <div>{{ positionFu }}</div>
-                    </div>
-                    <div class="row col">
-                      <div class="label">财神</div>
-                      <div>{{ positionCai }}</div>
-                    </div>
-                  </div>
+                <div class="row col bg">
+                  <div class="label">本月胎神</div>
+                  <div>{{ monthTaiShen }}</div>
                 </div>
-                <div class="col2">
-                  <div class="bar">阴阳贵神</div>
-                  <div>
-                    <div class="row col">
-                      <div class="label">阳贵神</div>
-                      <div>{{ positionYangGui }}</div>
-                    </div>
-                    <div class="row col">
-                      <div class="label">阴贵神</div>
-                      <div>{{ positionYinGui }}</div>
-                    </div>
-                  </div>
+                <div class="row col bg border-bottom">
+                  <div class="label">今日胎神</div>
+                  <div>{{ dayTaiShen }}</div>
                 </div>
-              </div>
-              <div class="grid">
-                <div class="col2 border-right">
-                  <div class="bar">空亡所值</div>
-                  <div>
-                    <div class="row col">
-                      <div class="label">年</div>
-                      <div>{{ yearKongWang }}</div>
-                    </div>
-                    <div class="row col">
-                      <div class="label">月</div>
-                      <div>{{ monthKongWang }}</div>
-                    </div>
-                    <div class="row col">
-                      <div class="label">日</div>
-                      <div>{{ dayKongWang }}</div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col2">
-                  <div class="bar">九宫飞星</div>
-                  <div>
-                    <div class="row col">
-                      <div class="label">九星</div>
-                      <div>{{ dayJiuXing }}</div>
-                    </div>
-                    <div class="row col">
-                      <div class="label">二十八宿</div>
-                      <div>{{ xiu }}</div>
-                    </div>
-                    <div class="row col">
-                      <div>{{ yearZhiShui }}</div>
-                      <div>{{ yearDeJin }}</div>
-                    </div>
-                    <div class="row col">
-                      <div>{{ yearFenBing }}</div>
-                      <div>{{ yearGenTian }}</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div>
-              <div class="row col border-bottom">
-                <div class="label">相冲</div>
-                <div> {{ dayChong }}</div>
-              </div>
-              <div class="row col border-bottom">
-                <div class="label">值神</div>
-                <div> {{ dayZhiShen }}</div>
-              </div>
-              <div class="row col border-bottom">
-                <div class="label">十二神</div>
-                <div> {{ dayTianShen }}</div>
-              </div>
-              <div class="row col bg border-bottom">
-                <div class="ml10">节气{{ nextJq }}</div>
-              </div>
-              <div class="yj-container border-bottom">
-                <div class="yj ji">忌</div>
-                <ul class="ml10">
-                  <li v-for="o in dayJi">{{ o }}</li>
-                </ul>
-              </div>
-              <div class="border-bottom js">
-                <div>
-                  <div class="label">凶煞宜忌</div>
-                  <ul class="ml10">
-                    <li v-for="o in dayXiongSha">{{ o }}</li>
-                  </ul>
-                </div>
-              </div>
-              <div class="row col bg">
-                <div class="label">本月胎神</div>
-                <div>{{ monthTaiShen }}</div>
-              </div>
-              <div class="row col bg border-bottom">
-                <div class="label">今日胎神</div>
-                <div>{{ dayTaiShen }}</div>
-              </div>
 
-              <div class="row col">
-                <div class="label">岁煞</div>
-                <div>岁煞{{ daySha }}</div>
-              </div>
-              <div class="row col">
-                <div class="label">六曜</div>
-                <div>{{ liuYao }}</div>
-              </div>
-              <div class="row col">
-                <div class="label">日禄</div>
-                <div>{{ dayLu }}</div>
-              </div>
+                <div class="row col">
+                  <div class="label">岁煞</div>
+                  <div>岁煞{{ daySha }}</div>
+                </div>
+                <div class="row col">
+                  <div class="label">六曜</div>
+                  <div>{{ liuYao }}</div>
+                </div>
+                <div class="row col">
+                  <div class="label">日禄</div>
+                  <div>{{ dayLu }}</div>
+                </div>
 
-            </div>
+              </div>
+              </el-col>
+            </el-row>
+          </div>
+
+  </div>
+  </el-col>
+  <el-col :span="6" :xs="24">
+    <div>
+      <el-card v-for="(time, timeIdx) in timesList" :key="timeIdx" class="box-card">
+        <div class="lunar-time">
+          <span class="red" data-v-739fc6a6="">{{ time.ganZhi }}时</span>
+          <span class="red" data-v-739fc6a6="">冲{{ time.shengXiao }} 煞{{ time.sha }}</span>
+          <span class="red" data-v-739fc6a6="">{{ time.minHh }} - {{ time.maxHh }}</span>
+        </div>
+        <div class="caixi">喜神{{ time.positionXiDesc }} 财神{{ time.positionCaiDesc }} 福神{{
+            time.positionFuDesc
+          }}
+        </div>
+        <div class="yiJi">
+          <div class="yj yi">
+            <img alt="" src="../../../assets/images/yi.f13b8ef.png">
+            <div><span v-for="(yi, yiIdx) in time.yi" :key="yiIdx">{{ yi }}</span></div>
+          </div>
+          <div class="yj ji">
+            <img alt="" src="../../../assets/images/ji.bc4ebad.png">
+            <div><span v-for="(ji, jiIdx) in time.ji" :key="jiIdx">{{ ji }}</span></div>
           </div>
         </div>
-      </el-col>
-      <el-col :span="6">
-        <div>
-          <el-card class="box-card" v-for="(time, timeIdx) in timesList" :key="timeIdx">
-            <div class="lunar-time">
-              <span data-v-739fc6a6="" class="red">{{ time.ganZhi }}时</span>
-              <span data-v-739fc6a6="" class="red">冲{{ time.shengXiao }} 煞{{ time.sha }}</span>
-              <span data-v-739fc6a6="" class="red">{{ time.minHh }} - {{ time.maxHh }}</span>
-            </div>
-            <div class="caixi">喜神{{ time.positionXiDesc }} 财神{{ time.positionCaiDesc }} 福神{{
-                time.positionFuDesc
-              }}
-            </div>
-            <div class="yiJi">
-              <div class="yj yi">
-                <img src="../../../assets/images/yi.f13b8ef.png" alt="">
-                <div><span v-for="(yi, yiIdx) in time.yi" :key="yiIdx">{{ yi }}</span></div>
-              </div>
-              <div class="yj ji">
-                <img src="../../../assets/images/ji.bc4ebad.png" alt="">
-                <div><span v-for="(ji, jiIdx) in time.ji" :key="jiIdx">{{ ji }}</span></div>
-              </div>
-            </div>
-          </el-card>
-        </div>
-      </el-col>
-    </el-row>
+      </el-card>
+    </div>
+  </el-col>
+  </el-row>
   </div>
 </template>
 
@@ -693,8 +707,8 @@ export default {
 
   .lunar {
     display: flex;
-    height: 60px;
-    line-height: 60px;
+    //height: 60px;
+    line-height: 1;
 
     .daysSince {
     }

@@ -1,7 +1,7 @@
 import { login, logout, getInfo } from '@/api/login'
 import { getToken, setToken, removeToken } from '@/utils/auth'
-import { getTags } from '../../api/customer_order_goods/customer'
 import Vue from 'vue'
+import { getTags } from '../../api/customer_order_goods/guoXue'
 
 const user = {
   // namespaced: true, // 启用命名空间

@@ -1,36 +1,41 @@
 <template>
   <div>
-    <el-drawer :destroy-on-close="!!isMobile" :size="isMobile ? '100%' : 760" :visible="isHistoryCollection"
+    <el-drawer  :size="isMobile ? '100%' : 760" :visible="isHistoryCollection"
                class="custom-class"
                direction="ltr"
                @close="closeDrawer" @open="openDrawer"
     >
       <template v-slot:title>
-        <div>
-
+        <div style="position: relative">
           <el-tabs v-model="activeName" class="tab-pane-box" type="border-card" @tab-click="handleClickTab">
             <el-tab-pane class="tab-pane-collection" label="收藏批解" name="collect"/>
             <el-tab-pane label="历史批解" name="history"/>
           </el-tabs>
+          <!--          <el-button type="primary" icon="el-icon-edit" circle>新增</el-button>-->
+          <div
+            style="position: absolute;top: 0; left: 200px; height: 39px;z-index: 99; display: flex;align-items: center;"
+          >
+            <el-button icon="el-icon-plus" round size="mini" type="primary" @click="handleClickAdd">新增</el-button>
+          </div>
         </div>
       </template>
       <div class="nav-bar-box nav-shadow">
         <div style="display: flex; overflow-x: auto">
-<!--          <el-tooltip class="item" content="选中属于该标签的收藏批解" effect="dark" placement="bottom">-->
-            <el-tag v-for="(item, index) in localNavbarTags" :key="index"
-                    :effect="item.selected ? 'dark' : 'plain' "
-                    class="input-new-tag pointer"
-                    type="success"
-                    @click="handleClickNavTags(index)"
-            >
-              {{ item.name }}
-            </el-tag>
+          <!--          <el-tooltip class="item" content="选中属于该标签的收藏批解" effect="dark" placement="bottom">-->
+          <el-tag v-for="(item, index) in localNavbarTags" :key="index"
+                  :effect="item.selected ? 'dark' : 'plain' "
+                  class="input-new-tag pointer"
+                  type="success"
+                  @click="handleClickNavTags(index)"
+          >
+            {{ item.name }}
+          </el-tag>
           <span style="flex: 0 0 auto;width: 56px; height: 27px;">1</span>
         </div>
         <div style="position: absolute; right: 0; top: 0">
           <el-tooltip class="item" content="重置选中的标签刷新收藏批解" effect="dark" placement="bottom">
-          <el-button class="tab-pane-collection-btn" plain size="mini" type="info" @click="handelClickClearTags">重置
-          </el-button>
+            <el-button class="tab-pane-collection-btn" plain size="mini" type="info" @click="handelClickClearTags">重置
+            </el-button>
           </el-tooltip>
         </div>
       </div>
@@ -58,7 +63,7 @@
                 </div>
 
                 <div>
-                  <span @click="addPiJie(item.content)">
+                  <span @click="addPiJie(item)">
                   <el-link type="primary">
                     <i class="el-icon-finished"></i>加入批解</el-link>
                 </span>
@@ -67,8 +72,10 @@
               <el-divider></el-divider>
             </li>
           </ul>
-          <div v-if="(total > collectList.length)" v-loading="ListLoading"></div>
-          <div v-else-if="(collectList.length <= total) && ListLoading" style="display: flex;justify-content: center;">
+          <div v-if="total === null || (total > collectList.length)" v-loading="ListLoading"></div>
+          <div v-else-if="total != null && (collectList.length <= total) && ListLoading"
+               style="display: flex;justify-content: center;"
+          >
             没有更多了
           </div>
         </div>
@@ -88,7 +95,7 @@
                   </template>
 
                 </el-popconfirm>
-                <div>修改收藏批解</div>
+                <div>{{ isUpdate ? '新增收藏' : '修改收藏' }}</div>
               </div>
             </template>
             <template>
@@ -105,7 +112,7 @@
             </template>
             <template v-slot:footer class="dialog-footer">
               <el-button @click="dialogTableVisible = false">取 消</el-button>
-              <el-button type="primary" @click="handelClickUpdateCollection">确 定</el-button>
+              <el-button type="primary" @click="submitCollection">确 定</el-button>
             </template>
           </el-dialog>
         </div>
@@ -119,14 +126,14 @@
 </template>
 <script>
 import History from './history.vue'
-import {
-  delCollections,
-  getCollections,
-  listCollections,
-  updateCollections
-} from '../../../../api/customer_order_goods/customer'
 import CollectionTags from './CollectionTags.vue'
 import { mapActions } from 'vuex'
+import {
+  addCollections,
+  delCollections,
+  getCollections, listCollections,
+  updateCollections, updateCollectionsUsageCount
+} from '../../../../api/customer_order_goods/guoXue'
 
 export default {
   name: 'HistoricalCollections',
@@ -136,6 +143,7 @@ export default {
   },
   data() {
     return {
+      isUpdate: false,
       dialogTableVisible: false,
       updateCollectionIdx: null,
       tags: [],
@@ -218,32 +226,33 @@ export default {
       this.$emit('closeDrawer')
     },
 
-    addPiJie(v) {
-      this.$emit('addPiJie', v, this.handleClickTab)
-
+    async addPiJie(item) {
+      const content = item.content
+      const id = item.id
+      this.$emit('addPiJie', content, this.handleClickTab)
+      const res = await updateCollectionsUsageCount({id})
+      if (res.code === 200) {
+        await this.handelClickClearTags()
+      }
     },
     addPiJieHistory(v) {
       this.addPiJie(v)
     },
     addForCollectList(listItem) {
-      const tagList = []
-      listItem.tagIds && listItem.tagIds.forEach(tagId => {
-        this.globalCollectionTags.forEach(tag => {
-          if (tag.id === tagId) {
-            tagList.push({
-              id: tag.id,
-              name: tag.name
-            })
-          }
-        })
-      })
-      this.$set(listItem, 'tagList', tagList)
-      this.collectList.unshift(listItem)
+      this.handelClickClearTags()
     },
     // 修改收藏
     handleCloseDialog() {
       this.dynamicTags = []
       this.textarea = ''
+    },
+    handleClickAdd() {
+      this.isUpdate = false
+      this.textarea = ""
+      this.dynamicTags = []
+      this.initCollectionTags()
+
+      this.dialogTableVisible = true
     },
     handleClickUpdate(index) {
       this.updateCollectionIdx = index
@@ -291,7 +300,7 @@ export default {
     handleInputConfirm(inputValue) {
       this.dynamicTags.push(inputValue);
     },
-    async handelClickUpdateCollection() {
+    async submitCollection() {
       const loading = this.$loading({
         lock: true,
         text: 'Loading',
@@ -300,24 +309,29 @@ export default {
       });
 
       try {
-        const collection = this.collectList[this.updateCollectionIdx]
         const tagIds = this.localCollectionTags
           .filter(tag => tag.selected) // 筛选出 selected 为 true 的标签
           .map(tag => tag.id);
-        collection.tags = this.dynamicTags
-        collection.tagIds = tagIds
-        collection.content = this.textarea
-        const res = await updateCollections(collection)
-        if (res.code === 200) {
-          // this.$set(this.collectList, this.updateCollectionIdx, )
-          // 根據Collection_id 請求新的
-          const selectCollectionRes = await getCollections(collection.id)
+        const collection = {
+          tagIds,
+          tags: this.dynamicTags,
+          content: this.textarea
+        }
+        let selectCollectionRes
+        if (this.isUpdate) {
+          selectCollectionRes = await this.updateCollection(collection)
           this.$set(this.collectList, this.updateCollectionIdx, selectCollectionRes.data)
-          this.dialogTableVisible = false
-          if (this.dynamicTags.length > 0) {
-            this.fetchCollectionTags()
-            this.dynamicTags = []
-          }
+
+        } else {
+          await this.interCollection(collection)
+          await this.handelClickClearTags()
+
+        }
+
+        this.dialogTableVisible = false
+        if (this.dynamicTags.length > 0) {
+          this.fetchCollectionTags()
+          this.dynamicTags = []
         }
       } catch (e) {
         console.log(e)
@@ -325,6 +339,18 @@ export default {
         loading.close()
       }
 
+    },
+    async updateCollection(collection) {
+      collection.id = this.collectList[this.updateCollectionIdx]
+      const res = await updateCollections(collection)
+      if (res.code === 200) {
+        // this.$set(this.collectList, this.updateCollectionIdx, )
+        // 根據Collection_id 請求新的
+        return await getCollections(collection.id)
+      }
+    },
+    async interCollection(collection) {
+      return addCollections(collection)
     },
     handleCollection(content) {
       console.log("🚀 ~ file:HistoricalCollections method:handleCollection line:101 -----", content)
@@ -363,8 +389,9 @@ export default {
         }
         const res = await listCollections(param)
         const list = res.data.list
+        this.total = res.data.total
         if (res.code === 200 && list.length > 0) {
-          this.total = res.data.total
+
           this.page += 1
           this.collectList.push(...list)
         }
