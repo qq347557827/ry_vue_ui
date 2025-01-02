@@ -30,7 +30,7 @@
           >
             {{ item.name }}
           </el-tag>
-          <span style="flex: 0 0 auto;width: 56px; height: 27px;">1</span>
+          <span style="flex: 0 0 auto;width: 56px; height: 27px;opacity: 0">1</span>
         </div>
         <div style="position: absolute; right: 0; top: 0">
           <el-tooltip class="item" content="重置选中的标签刷新收藏批解" effect="dark" placement="bottom">
@@ -255,6 +255,8 @@ export default {
       this.dialogTableVisible = true
     },
     handleClickUpdate(index) {
+      console.log("🚀 ~ file:HistoricalCollections method:handleClickUpdate line:258 -----", index)
+
       this.updateCollectionIdx = index
       const tagIds = this.collectList[index].tagList.map(item => item.id)
       const content = this.collectList[index].content
@@ -278,8 +280,8 @@ export default {
         const res = await delCollections(id)
         if (res.code === 200) {
           this.$modal.msgSuccess("删除成功");
-          this.collectList.splice(this.updateCollectionIdx, 1)
           this.dialogTableVisible = false
+          await this.handelClickClearTags()
         }
       } finally {
         loading.close()
@@ -320,19 +322,19 @@ export default {
         let selectCollectionRes
         if (this.isUpdate) {
           selectCollectionRes = await this.updateCollection(collection)
-          this.$set(this.collectList, this.updateCollectionIdx, selectCollectionRes.data)
+          // this.$set(this.collectList, this.updateCollectionIdx, selectCollectionRes.data)
 
         } else {
           await this.interCollection(collection)
-          await this.handelClickClearTags()
+
 
         }
-
         this.dialogTableVisible = false
         if (this.dynamicTags.length > 0) {
-          this.fetchCollectionTags()
+          await this.fetchCollectionTags()
           this.dynamicTags = []
         }
+        await this.handelClickClearTags()
       } catch (e) {
         console.log(e)
       } finally {
