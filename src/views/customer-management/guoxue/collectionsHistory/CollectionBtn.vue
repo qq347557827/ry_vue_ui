@@ -3,45 +3,22 @@
     <div v-if="collectItem && collectItem.isCollected" style="color: #E6A23C">
       <i class="el-icon-star-on"></i>
     </div>
-    <el-popover v-else
-                v-model="isPopover"
-                placement="right"
-                trigger="click"
-                @show="showPopover"
-                @hide="closeInit"
-    >
+    <el-popover v-else v-model="isPopover" placement="right" trigger="click" @show="showPopover" @hide="closeInit">
       <div>
         <div class="tag-main">
-          <el-tag v-for="(item, index) in localCollectionTags" :key="index"
-                  :effect="item.selected ? 'dark' : 'plain' "
-                  class="input-new-tag pointer"
-                  type="success"
-                  @click="toggleTag(item.id)"
-          >
+          <el-tag v-for="(item, index) in localCollectionTags" :key="index" :effect="item.selected ? 'dark' : 'plain'"
+            class="input-new-tag pointer" type="success" @click="toggleTag(item.id)">
             {{ item.name }}
           </el-tag>
         </div>
         <div class="tag-main">
-          <el-tag
-            v-for="tag in dynamicTags"
-            :key="tag"
-            :disable-transitions="false"
-            class="input-new-tag"
-            closable
-            @close="handleClose(tag)"
-          >
+          <el-tag v-for="tag in dynamicTags" :key="tag" :disable-transitions="false" class="input-new-tag" closable
+            @close="handleClose(tag)">
             {{ tag }}
           </el-tag>
-          <el-input
-            v-if="inputVisible"
-            ref="saveTagInput"
-            v-model="inputValue"
-            class="input-new-tag"
-            size="small"
-            @blur="handleInputConfirm"
-            @keyup.enter.native="handleInputConfirm"
-          />
-          <el-button v-else class="button-new-tag" size="small" @click="showInput">+ New Tag</el-button>
+          <el-input v-if="inputVisible" ref="saveTagInput" v-model="inputValue" class="input-new-tag" size="small"
+            @blur="handleInputConfirm" @keyup.enter.native="handleInputConfirm" />
+          <el-button v-else class="button-new-tag" size="small" @click="showInput">+ 标签</el-button>
 
         </div>
         <div>
@@ -67,7 +44,7 @@ import { mapMutations } from 'vuex'
 
 export default {
   name: "CollectionBtn",
-  data() {
+  data () {
     return {
       inputVisible: false,
       isPopover: false,
@@ -83,34 +60,34 @@ export default {
       itemKey: String
     }
   },
-  created() {
+  created () {
     // 初始化局部状态
     this.initCollectionTags()
   },
   computed: {
-    globalCollectionTags() {
+    globalCollectionTags () {
       return this.$store.state.user.collectionTags
     }
   },
   methods: {
     ...mapMutations(['TOGGLE_TAG_SELECTION']), // 映射 Vuex Mutation
-    initCollectionTags() {
+    initCollectionTags () {
       this.localCollectionTags = this.globalCollectionTags.map(tag => ({
         ...tag,
         selected: false // 动态添加 selected 属性
       }));
     },
-    closeInit() {
+    closeInit () {
       this.dynamicTags = []
       this.initCollectionTags()
-      this.isPopover = false
+      // this.isPopover = false
     },
 
-    showPopover() {
-      // this.dynamicTags = []
-      // this.initCollectionTags()
+    showPopover () {
+      this.dynamicTags = []
+      this.initCollectionTags()
     },
-    toggleTag(tagId) {
+    toggleTag (tagId) {
       const tagIndex = this.localCollectionTags.findIndex(tag => tag.id === tagId);
       if (tagIndex !== -1) {
         const tag = this.localCollectionTags[tagIndex];
@@ -119,18 +96,18 @@ export default {
         this.$set(this.localCollectionTags, tagIndex, { ...tag });
       }
     },
-    handleClose(tag) {
+    handleClose (tag) {
       this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1);
     },
 
-    showInput() {
+    showInput () {
       this.inputVisible = true;
       this.$nextTick(_ => {
         this.$refs.saveTagInput.$refs.input.focus();
       });
     },
 
-    handleInputConfirm() {
+    handleInputConfirm () {
       let inputValue = this.inputValue;
       if (inputValue) {
         this.dynamicTags.push(inputValue);
@@ -138,7 +115,7 @@ export default {
       this.inputVisible = false;
       this.inputValue = '';
     },
-    submitCollection() {
+    submitCollection () {
       const selectedIds = this.localCollectionTags
         .filter(tag => tag.selected) // 筛选出 selected 为 true 的标签
         .map(tag => tag.id); // 返回它们的 id 数组
@@ -158,7 +135,7 @@ export default {
   align-content: center;
 }
 
-.el-tag + .el-tag {
+.el-tag+.el-tag {
   margin-left: 10px;
 }
 

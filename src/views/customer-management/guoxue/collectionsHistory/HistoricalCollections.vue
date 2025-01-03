@@ -1,20 +1,16 @@
 <template>
   <div>
-    <el-drawer  :size="isMobile ? '100%' : 760" :visible="isHistoryCollection"
-               class="custom-class"
-               direction="ltr"
-               @close="closeDrawer" @open="openDrawer"
-    >
+    <el-drawer :size="isMobile ? '100%' : 760" :visible="isHistoryCollection" class="custom-class" direction="ltr"
+      @close="closeDrawer" @open="openDrawer">
       <template v-slot:title>
         <div style="position: relative">
           <el-tabs v-model="activeName" class="tab-pane-box" type="border-card" @tab-click="handleClickTab">
-            <el-tab-pane class="tab-pane-collection" label="收藏批解" name="collect"/>
-            <el-tab-pane label="历史批解" name="history"/>
+            <el-tab-pane class="tab-pane-collection" label="收藏批解" name="collect" />
+            <el-tab-pane label="历史批解" name="history" />
           </el-tabs>
           <!--          <el-button type="primary" icon="el-icon-edit" circle>新增</el-button>-->
           <div
-            style="position: absolute;top: 0; left: 200px; height: 39px;z-index: 99; display: flex;align-items: center;"
-          >
+            style="position: absolute;top: 0; left: 200px; height: 39px;z-index: 99; display: flex;align-items: center;">
             <el-button icon="el-icon-plus" round size="mini" type="primary" @click="handleClickAdd">新增</el-button>
           </div>
         </div>
@@ -22,12 +18,8 @@
       <div class="nav-bar-box nav-shadow">
         <div style="display: flex; overflow-x: auto">
           <!--          <el-tooltip class="item" content="选中属于该标签的收藏批解" effect="dark" placement="bottom">-->
-          <el-tag v-for="(item, index) in localNavbarTags" :key="index"
-                  :effect="item.selected ? 'dark' : 'plain' "
-                  class="input-new-tag pointer"
-                  type="success"
-                  @click="handleClickNavTags(index)"
-          >
+          <el-tag v-for="(item, index) in localNavbarTags" :key="index" :effect="item.selected ? 'dark' : 'plain'"
+            class="input-new-tag pointer" type="success" @click="handleClickNavTags(index)">
             {{ item.name }}
           </el-tag>
           <span style="flex: 0 0 auto;width: 56px; height: 27px;opacity: 0">1</span>
@@ -41,9 +33,7 @@
       </div>
       <div style=" position: relative; flex: 1;overflow: auto">
         <div v-infinite-scroll="historyListLoad" :infinite-scroll-disabled="ListLoading"
-             :infinite-scroll-distance="ListDistance" :infinite-scroll-immediate="false"
-
-        >
+          :infinite-scroll-distance="ListDistance" :infinite-scroll-immediate="false">
           <ul>
             <li v-for="(item, index) in collectList" :key="index" style="word-wrap: break-word;">
               <div style="white-space:pre-line;"> {{ index }} {{ item.content }}
@@ -64,9 +54,9 @@
 
                 <div>
                   <span @click="addPiJie(item)">
-                  <el-link type="primary">
-                    <i class="el-icon-finished"></i>加入批解</el-link>
-                </span>
+                    <el-link type="primary">
+                      <i class="el-icon-finished"></i>加入批解</el-link>
+                  </span>
                 </div>
               </div>
               <el-divider></el-divider>
@@ -74,22 +64,17 @@
           </ul>
           <div v-if="total === null || (total > collectList.length)" v-loading="ListLoading"></div>
           <div v-else-if="total != null && (collectList.length <= total) && ListLoading"
-               style="display: flex;justify-content: center;"
-          >
+            style="display: flex;justify-content: center;">
             没有更多了
           </div>
         </div>
         <div class="dialog-update-collection">
           <el-dialog :append-to-body="true" :visible.sync="dialogTableVisible" :width="isMobile ? '100%' : '760px'"
-                     class="custom-class" @close="handleCloseDialog"
-          >
+            class="custom-class" @close="handleCloseDialog">
             <template v-slot:title>
               <div style="display: flex;justify-content: center; position: relative">
-                <el-popconfirm cancel-button-text="不了" confirm-button-text="确认" icon="el-icon-info"
-                               icon-color="red"
-                               style="position: absolute; left: 0" title="这是删除哦！确定删除这条收藏吗？"
-                               @confirm="deleteCollection"
-                >
+                <el-popconfirm cancel-button-text="不了" confirm-button-text="确认" icon="el-icon-info" icon-color="red"
+                  style="position: absolute; left: 0" title="这是删除哦！确定删除这条收藏吗？" @confirm="deleteCollection">
                   <template v-slot:reference>
                     <el-link style="float: right" type="danger"><i class="el-icon-delete"></i>删除</el-link>
                   </template>
@@ -99,16 +84,9 @@
               </div>
             </template>
             <template>
-              <el-input
-                v-model="textarea"
-                autosize
-                placeholder="请输入内容"
-                type="textarea"
-              />
+              <el-input v-model="textarea" autosize placeholder="请输入内容" type="textarea" />
               <collection-tags :dynamic-tags="dynamicTags" :local-collection-tags="localCollectionTags"
-                               @handleClose="handleClose"
-                               @handleInputConfirm="handleInputConfirm" @toggleTag="toggleTag"
-              />
+                @handleClose="handleClose" @handleInputConfirm="handleInputConfirm" @toggleTag="toggleTag" />
             </template>
             <template v-slot:footer class="dialog-footer">
               <el-button @click="dialogTableVisible = false">取 消</el-button>
@@ -117,9 +95,8 @@
           </el-dialog>
         </div>
       </div>
-      <history v-if="activeName=== 'history'" :tags="tags" @addForCollectList="addForCollectList"
-               @handleCollection="handleCollection" @historyAddPiJie="addPiJieHistory"
-      />
+      <history v-if="activeName === 'history'" :tags="tags" @addForCollectList="addForCollectList"
+        @handleCollection="handleCollection" @historyAddPiJie="addPiJieHistory" />
     </el-drawer>
   </div>
 
@@ -141,7 +118,7 @@ export default {
   props: {
     isHistoryCollection: Boolean
   },
-  data() {
+  data () {
     return {
       isUpdate: false,
       dialogTableVisible: false,
@@ -161,19 +138,19 @@ export default {
     }
   },
   computed: {
-    globalCollectionTags() {
+    globalCollectionTags () {
       return this.$store.state.user.collectionTags
     },
-    isMobile() {
+    isMobile () {
       return this.$store.state.app.isMobile
     }
   },
-  created() {
+  created () {
     this.initNavbarTags()
   },
   methods: {
     ...mapActions(['fetchCollectionTags']),
-    initTags(tagIds) {
+    initTags (tagIds) {
       console.log("🚀 ~ file:HistoricalCollections method:this.globalCollectionTags line:175 -----", this.globalCollectionTags)
 
       if (tagIds && tagIds.length > 0) {
@@ -195,58 +172,58 @@ export default {
         });
       } else {
         return this.globalCollectionTags.map(tag => ({
-            ...tag,
-            selected: false
-          }
+          ...tag,
+          selected: false
+        }
         ));
       }
 
     },
-    initCollectionTags(tagIds) {
+    initCollectionTags (tagIds) {
       const list = this.initTags(tagIds)
       console.log("🚀 ~ file:HistoricalCollectmethod:historyListLoad line:106ions method:initCollectionTags line:148 -----list", list)
       this.localCollectionTags = []
       this.localCollectionTags.push(...list)
     },
-    initNavbarTags() {
+    initNavbarTags () {
       const list = this.initTags()
       this.localNavbarTags = []
       this.localNavbarTags.push(...list)
     },
-    clearPageList() {
+    clearPageList () {
       this.page = 1
       this.ListLoading = false
       this.collectList = []
 
     },
-    openDrawer() {
+    openDrawer () {
       this.initNavbarTags()
     },
-    closeDrawer() {
+    closeDrawer () {
       this.$emit('closeDrawer')
     },
 
-    async addPiJie(item) {
+    async addPiJie (item) {
       const content = item.content
       const id = item.id
-      this.$emit('addPiJie', content, this.handleClickTab)
-      const res = await updateCollectionsUsageCount({id})
+      this.$emit('addPiJie', content)
+      const res = await updateCollectionsUsageCount({ id })
       if (res.code === 200) {
         await this.handelClickClearTags()
       }
     },
-    addPiJieHistory(v) {
-      this.addPiJie(v)
+    addPiJieHistory (content) {
+      this.$emit('addPiJie', content)
     },
-    addForCollectList(listItem) {
+    addForCollectList (listItem) {
       this.handelClickClearTags()
     },
     // 修改收藏
-    handleCloseDialog() {
+    handleCloseDialog () {
       this.dynamicTags = []
       this.textarea = ''
     },
-    handleClickAdd() {
+    handleClickAdd () {
       this.isUpdate = false
       this.textarea = ""
       this.dynamicTags = []
@@ -254,7 +231,7 @@ export default {
 
       this.dialogTableVisible = true
     },
-    handleClickUpdate(index) {
+    handleClickUpdate (index) {
       console.log("🚀 ~ file:HistoricalCollections method:handleClickUpdate line:258 -----", index)
 
       this.updateCollectionIdx = index
@@ -267,7 +244,7 @@ export default {
       this.textarea = content
 
     },
-    async deleteCollection() {
+    async deleteCollection () {
       const loading = this.$loading({
         lock: true,
         text: 'Loading',
@@ -287,7 +264,7 @@ export default {
         loading.close()
       }
     },
-    toggleTag(tagId) {
+    toggleTag (tagId) {
       const tagIndex = this.localCollectionTags.findIndex(tag => tag.id === tagId);
       if (tagIndex !== -1) {
         const tag = this.localCollectionTags[tagIndex];
@@ -296,13 +273,13 @@ export default {
         this.$set(this.localCollectionTags, tagIndex, { ...tag });
       }
     },
-    handleClose(tag) {
+    handleClose (tag) {
       this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1);
     },
-    handleInputConfirm(inputValue) {
+    handleInputConfirm (inputValue) {
       this.dynamicTags.push(inputValue);
     },
-    async submitCollection() {
+    async submitCollection () {
       const loading = this.$loading({
         lock: true,
         text: 'Loading',
@@ -342,7 +319,7 @@ export default {
       }
 
     },
-    async updateCollection(collection) {
+    async updateCollection (collection) {
       collection.id = this.collectList[this.updateCollectionIdx]
       const res = await updateCollections(collection)
       if (res.code === 200) {
@@ -351,19 +328,19 @@ export default {
         return await getCollections(collection.id)
       }
     },
-    async interCollection(collection) {
+    async interCollection (collection) {
       return addCollections(collection)
     },
-    handleCollection(content) {
+    handleCollection (content) {
       console.log("🚀 ~ file:HistoricalCollections method:handleCollection line:101 -----", content)
 
     },
-    handleClickTab() {
+    handleClickTab () {
       // this.searchVal = ''
       // this.clearPageList()
       // this.historyListLoad()
     },
-    async handleClickNavTags(index) {
+    async handleClickNavTags (index) {
       const item = this.localNavbarTags[index]
       item.selected = !item.selected
       this.$set(this.localNavbarTags, index, item)
@@ -375,12 +352,12 @@ export default {
       await this.historyListLoad(tagIds)
 
     },
-    async handelClickClearTags() {
+    async handelClickClearTags () {
       this.initNavbarTags()
       this.clearPageList()
       await this.historyListLoad()
     },
-    async historyListLoad(tagIds) {
+    async historyListLoad (tagIds) {
       try {
         if (this.ListLoading) return;
         this.ListLoading = true;
@@ -474,6 +451,7 @@ ul {
 
 .dialog-update-collection {
   .custom-class {
+
     //height: 700px;
     .el-dialog__header {
       padding: 10px;
@@ -500,8 +478,7 @@ ul {
   //height: 20px;
   position: relative;
 
-  .tab-pane-collection-btn {
-  }
+  .tab-pane-collection-btn {}
 
   .input-new-tag {
     margin-right: 5px;
@@ -513,5 +490,4 @@ ul {
 .pointer {
   cursor: pointer;
 }
-
 </style>

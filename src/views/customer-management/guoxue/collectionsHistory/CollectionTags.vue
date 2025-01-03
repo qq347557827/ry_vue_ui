@@ -1,36 +1,19 @@
 <template>
   <div>
     <div class="tag-main">
-      <el-tag v-for="(item, index) in localCollectionTags" :key="index"
-              :effect="item.selected ? 'dark' : 'plain' "
-              class="input-new-tag pointer"
-              type="success"
-              @click="toggleTag(item.id)"
-      >
+      <el-tag v-for="(item, index) in localCollectionTags" :key="index" :effect="item.selected ? 'dark' : 'plain'"
+        class="input-new-tag pointer" type="success" @click="toggleTag(item.id)">
         {{ item.name }}
       </el-tag>
     </div>
     <div class="tag-main">
-      <el-tag
-        v-for="tag in dynamicTags"
-        :key="tag"
-        :disable-transitions="false"
-        class="input-new-tag"
-        closable
-        @close="handleClose(tag)"
-      >
+      <el-tag v-for="tag in dynamicTags" :key="tag" :disable-transitions="false" class="input-new-tag" closable
+        @close="handleClose(tag)">
         {{ tag }}
       </el-tag>
-      <el-input
-        v-if="inputVisible"
-        ref="saveTagInput"
-        v-model="inputValue"
-        class="input-new-tag"
-        size="small"
-        @blur="handleInputConfirm"
-        @keyup.enter.native="handleInputConfirm"
-      />
-      <el-button v-else class="button-new-tag" size="small" @click="showInput">+ New Tag</el-button>
+      <el-input v-if="inputVisible" ref="saveTagInput" v-model="inputValue" class="input-new-tag" size="small"
+        @blur="handleInputConfirm" @keyup.enter.native="handleInputConfirm" />
+      <el-button v-else class="button-new-tag" size="small" @click="showInput">+ 标签</el-button>
 
     </div>
   </div>
@@ -39,7 +22,7 @@
 <script>
 export default {
   name: "CollectionTags",
-  data() {
+  data () {
     return {
       inputVisible: false,
       inputValue: ''
@@ -49,7 +32,7 @@ export default {
     localCollectionTags: {
       type: Array,
       required: true,
-      validator(value) {
+      validator (value) {
         // 验证传递过来的数组中的每个元素是否符合要求
         return value.every(item =>
           item.hasOwnProperty('id') &&
@@ -65,21 +48,21 @@ export default {
 
   },
   methods: {
-    toggleTag(tagId) {
+    toggleTag (tagId) {
       this.$emit('toggleTag', tagId)
     },
-    handleClose(tag) {
+    handleClose (tag) {
       this.$emit('handleClose', tag)
     },
 
-    showInput() {
+    showInput () {
       this.inputVisible = true;
       this.$nextTick(_ => {
         this.$refs.saveTagInput.$refs.input.focus();
       });
     },
 
-    handleInputConfirm() {
+    handleInputConfirm () {
       let inputValue = this.inputValue;
       if (inputValue) {
         this.$emit('handleInputConfirm', inputValue)
@@ -100,7 +83,7 @@ export default {
 //  align-content: center;
 //}
 
-.el-tag + .el-tag {
+.el-tag+.el-tag {
   margin-left: 10px;
 }
 

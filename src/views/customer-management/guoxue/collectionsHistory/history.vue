@@ -1,14 +1,10 @@
 <template>
   <div class="history-box">
     <div class="nav-shadow">
-      <el-input v-model.trim="searchVal" clearable placeholder="搜索关键字" style="width: 300px"
-                @change="changeSearch"
-      />
+      <el-input v-model.trim="searchVal" clearable placeholder="搜索关键字" style="width: 300px" @change="changeSearch" />
     </div>
     <div v-infinite-scroll="historyListLoad" :infinite-scroll-disabled="historyListLoading"
-         :infinite-scroll-distance="historyListDistance" :infinite-scroll-immediate="false"
-         style="overflow:auto; flex: 1"
-    >
+      :infinite-scroll-distance="historyListDistance" :infinite-scroll-immediate="false" style="overflow:auto; flex: 1">
       <!--      <div>{{collectionTags}}</div>-->
       <ul>
         <li v-for="(item, index) in historyList" :key="index" style="word-wrap: break-word;">
@@ -20,16 +16,17 @@
             </div>
             <div>
               <span @click="addPiJie(item.content)">
-                    <el-link type="primary">
-                      <i class="el-icon-finished"></i>加入批解</el-link>
-                  </span>
+                <el-link type="primary">
+                  <i class="el-icon-finished"></i>加入批解</el-link>
+              </span>
             </div>
           </div>
           <el-divider></el-divider>
         </li>
       </ul>
-      <div v-show="total === null || (total > historyList.length)"  v-loading="historyListLoading"></div>
-      <div v-show="total != null && (historyList.length <= total) && historyListLoading" style="display: flex;justify-content: center">没有更多了</div>
+      <div v-show="total === null || (total > historyList.length)" v-loading="historyListLoading"></div>
+      <div v-show="total != null && (historyList.length <= total) && historyListLoading"
+        style="display: flex;justify-content: center">没有更多了</div>
     </div>
   </div>
 </template>
@@ -46,7 +43,7 @@ export default {
   props: {
     tags: Array
   },
-  data() {
+  data () {
     return {
       searchVal: '',
       page: 1,
@@ -58,18 +55,18 @@ export default {
       isPopover: false
     }
   },
-  created() {
+  created () {
     console.log("🚀 ~ file:history method:created line:53 -----", this.collectionTags)
 
   },
   computed: {
-    collectionTags() {
+    collectionTags () {
       return this.$store.state.user.collectionTags
     }
   },
   methods: {
     ...mapActions(['fetchCollectionTags']),
-    async historyListLoad() {
+    async historyListLoad () {
       console.log("🚀 ~ file:index method:historyListLoad line:1738 -----", this.historyListLoading)
       if (this.historyListLoading) return;
       this.historyListLoading = true;
@@ -82,11 +79,11 @@ export default {
       console.log("🚀 ~ file:history method:historyListLoad line:80 -----this.historyListLoading", this.historyListLoading)
 
     },
-    async submitCollection(collectionBtnCloseFn,selectedIds, dynamicTags, collectItem) {
+    async submitCollection (collectionBtnCloseFn, selectedIds, dynamicTags, collectItem) {
       const content = collectItem.content
       const itemKey = collectItem.key
       try {
-        const res = await addCollections({tagIds: selectedIds, tags: dynamicTags, content})
+        const res = await addCollections({ tagIds: selectedIds, tags: dynamicTags, content })
         console.log("🚀 ~ file:res method:handleSubmitCollectBtn line:82 -----", res)
         if (res.code === 200) {
           this.$message({
@@ -101,31 +98,31 @@ export default {
 
         }
 
-      }catch (e) {
+      } catch (e) {
 
       }
     },
-    clearPageList() {
+    clearPageList () {
       this.page = 1
       this.historyListLoading = false
       this.historyList = []
 
     },
-    changeSearch() {
+    changeSearch () {
       console.log("🚀 ~ file:HistoricalUnravelingList method:changeSearch line:80 -----", this.searchVal)
 
       this.clearPageList()
       this.historyListLoad()
     },
-    addPiJie(v) {
-      // console.log("🚀 ~ file:history method:addPiJie line:73 -----", v)
+    addPiJie (v) {
+      console.log("🚀 ~ file:history method:addPiJie line:73 -----", v)
 
       this.$emit('historyAddPiJie', v)
     },
-    handleClickCollection(content) {
+    handleClickCollection (content) {
       this.$emit('handleCollection', content)
     },
-    async fetchList() {
+    async fetchList () {
       // 按 id 倒序排序并获取前 20 条记录
       let start = (this.page - 1) * this.limit
       console.log(start)
@@ -182,6 +179,7 @@ ul {
   display: flex;
   flex-direction: column;
 }
+
 .nav-shadow {
   background: #FFFFFF;
   border-bottom: 1px solid #DCDFE6;
