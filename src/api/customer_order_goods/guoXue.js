@@ -64,10 +64,28 @@ export function delCollections(id) {
   })
 }
 
-// 查询批解收藏详细
+// 查询收藏标签
 export function getTags(id) {
   return request({
     url: '/system/collections/tagByUserId',
     method: 'get'
+  })
+}
+
+
+// 修改收藏标签
+export function updateTag(data) {
+  return request({
+    url: '/system/collections/tag',
+    method: 'put',
+    data: data
+  })
+}
+
+// 删除收藏标签
+export function delTag(id) {
+  return request({
+    url: '/system/collections/tag/' + id,
+    method: 'delete'
   })
 }
