@@ -30,7 +30,7 @@
             <el-row class="row-bg">
               <el-col :span="6">
                 <el-form-item prop="nian">
-                  <el-select v-model="form.nian" filterable placeholder="年" @change="changeYueSelect">
+                  <el-select popper-class="year-select" v-model="form.nian" filterable placeholder="年" @change="changeYueSelect">
                     <el-option v-for="item in selectArrYear" :key="item" :label="item" :value="item">
 
                     </el-option>
@@ -280,7 +280,10 @@
               </el-col>
               <el-col :lg="2" :md="2" :sm="2" :xs="2">
                 <el-form-item label="年份" prop="nian">
-                  <el-select v-model="form.nian" filterable placeholder="年" @change="changeYueSelect">
+                  <el-select popper-class="year-select" v-model="form.nian" filterable placeholder="年" @change="changeYueSelect"
+                             @visible-change="handleVisibleChange"
+                             ref="yearSelect"
+                  >
                     <el-option v-for="item in selectArrYear" :key="item" :label="item" :value="item">
                     </el-option>
                   </el-select>
@@ -829,6 +832,33 @@ export default {
     },
     changeYueSelect() {
 
+    },
+    handleVisibleChange(isVisible) {
+      if (isVisible && !this.form.nian) {
+
+        // 条件 2：当 Select 的搜索框有值时，不执行滚动逻辑
+        // const searchInput = this.$refs.yearSelect.$el.querySelector(
+        //   ".el-input__inner"
+        // );
+        // console.log("🚀 ~ file:searchInput method:handleVisibleChange line:846 -----", searchInput)
+        // console.log("🚀 ~ file:searchInput.value method:handleVisibleChange line:846 -----", searchInput.value)
+        //
+        // if (searchInput && searchInput.value) {
+        //   return;
+        // }
+
+
+        // 当下拉框展开时，滚动到指定位置
+        this.$nextTick(() => {
+          const dropdown = this.$refs.yearSelect.$children[1].$el.querySelector(
+            ".el-select-dropdown .el-select-dropdown__wrap"
+          );
+          if (dropdown) {
+            // 滚动到第 10 个选项的位置（假设每个选项高度为 34px）
+            dropdown.scrollTop = 34 * 80; // 10 - 1 = 9
+          }
+        });
+      }
     },
     judgeRelationship(element1, element2) {
       const generateCycle = {
@@ -1686,4 +1716,12 @@ export default {
   display: flex;
   justify-content: space-between;
 }
+//.year-select::v-deep {
+//  .is-vertical {
+//    .el-scrollbar__thumb {
+//      transform: translateY(80%);
+//    }
+//
+//  }
+//}
 </style>
