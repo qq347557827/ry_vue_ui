@@ -4,7 +4,7 @@
                @close="closeDrawer" @open="openDrawer"
     >
       <template v-slot:title>
-        <div class="collect-nav-tabs" :class="isMobile && 'collect-nav-tabs-mobile'">
+        <div :class="isMobile && 'collect-nav-tabs-mobile'" class="collect-nav-tabs">
           <el-tabs v-model="activeName" class="tab-pane-box" type="border-card" @tab-click="handleClickTab">
             <el-tab-pane class="tab-pane-collection" label="收藏批解" name="collect"/>
             <el-tab-pane label="历史批解" name="history"/>
@@ -31,7 +31,7 @@
         </div>
         <div style="position: absolute; right: 0; top: 0">
           <el-tooltip class="item" content="重置选中的标签刷新收藏批解" effect="dark" placement="bottom">
-            <el-button class="tab-pane-collection-btn" plain size="mini" type="info" @click="handelClickClearTags">重置
+            <el-button class="tab-pane-collection-btn" plain size="mini" type="info" @click="handleClickClearTags">重置
             </el-button>
           </el-tooltip>
         </div>
@@ -90,7 +90,7 @@
                   </template>
 
                 </el-popconfirm>
-                <div>{{ isUpdate ? '新增收藏' : '修改收藏' }}</div>
+                <div>{{ isUpdate ? '修改收藏' : '新增收藏' }}</div>
               </div>
             </template>
             <template>
@@ -210,14 +210,14 @@ export default {
       this.$emit('addPiJie', content)
       const res = await updateCollectionsUsageCount({ id })
       if (res.code === 200) {
-        await this.handelClickClearTags()
+        await this.handleClickClearTags()
       }
     },
     addPiJieHistory(content) {
       this.$emit('addPiJie', content)
     },
     addForCollectList(listItem) {
-      this.handelClickClearTags()
+      this.handleClickClearTags()
     },
     // 修改收藏
     handleCloseDialog() {
@@ -240,7 +240,7 @@ export default {
       const content = this.collectList[index].content
       this.initCollectionTags(tagIds)
       console.log("🚀 ~ file:HistoricalCollections method:handleClickUpdate line:171 -----", this.localCollectionTags)
-
+      this.isUpdate = true
       this.dialogTableVisible = true
       this.textarea = content
 
@@ -259,7 +259,7 @@ export default {
         if (res.code === 200) {
           this.$modal.msgSuccess("删除成功");
           this.dialogTableVisible = false
-          await this.handelClickClearTags()
+          await this.handleClickClearTags()
         }
       } finally {
         loading.close()
@@ -311,7 +311,7 @@ export default {
           await this.fetchCollectionTags()
           this.dynamicTags = []
         }
-        await this.handelClickClearTags()
+        await this.handleClickClearTags()
       } catch (e) {
         console.log(e)
       } finally {
@@ -320,7 +320,9 @@ export default {
 
     },
     async updateCollection(collection) {
-      collection.id = this.collectList[this.updateCollectionIdx]
+      collection.id = this.collectList[this.updateCollectionIdx].id
+      console.log("🚀 ~ file:collection method:updateCollection line:324 -----", collection)
+
       const res = await updateCollections(collection)
       if (res.code === 200) {
         // this.$set(this.collectList, this.updateCollectionIdx, )
@@ -352,7 +354,7 @@ export default {
       await this.historyListLoad(tagIds)
 
     },
-    async handelClickClearTags() {
+    async handleClickClearTags() {
       this.initNavbarTags()
       this.clearPageList()
       await this.historyListLoad()
@@ -438,6 +440,7 @@ ul {
 
   .collect-nav-tabs {
     position: relative;
+
     .collection-tabs-btn {
       position: absolute;
       left: 206px;
@@ -448,10 +451,12 @@ ul {
       align-items: center;
     }
   }
+
   .collect-nav-tabs-mobile {
     .collection-tabs-btn {
       left: 165px;
     }
+
     ::v-deep .el-tabs__item {
       padding-left: 10px;
       padding-right: 10px;
