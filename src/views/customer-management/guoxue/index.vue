@@ -30,7 +30,8 @@
               <el-col :span="6">
                 <el-form-item prop="nian">
                   <el-select v-model="form.nian" filterable placeholder="年" @change="changeYueSelect">
-                    <el-option v-for="item in 120" :key="item" :label="toYear - item" :value="toYear - item">
+                    <el-option v-for="item in selectArrYear" :key="item" :label="item" :value="item">
+
                     </el-option>
                   </el-select>
                 </el-form-item>
@@ -164,7 +165,7 @@
             <div style="overflow-x: auto">
               <div id="table-val" style="width: 760px;">
                 <div v-for="(item, index) in tableArr" :key="index" class="tbody-val">
-                  <ming-pan-table :ming-pan-text="textarea" :table-index="index" :table-item="item"></ming-pan-table>
+                  <ming-pan-table :table-index="index" :table-item="item"></ming-pan-table>
                 </div>
                 <div style="width: 100%;">
                   <table v-show="tableArr.length > 0" style="width: 100%;">
@@ -267,7 +268,7 @@
               <el-col :lg="2" :md="2" :sm="2" :xs="2">
                 <el-form-item label="年份" prop="nian">
                   <el-select v-model="form.nian" filterable placeholder="年" @change="changeYueSelect">
-                    <el-option v-for="item in 120" :key="item" :label="toYear - item" :value="toYear - item">
+                    <el-option v-for="item in selectArrYear" :key="item" :label="item" :value="item">
                     </el-option>
                   </el-select>
                 </el-form-item>
@@ -378,7 +379,7 @@
               <div class="main table-width">
                 <div id="table-val">
                   <div v-for="(item, index) in tableArr" :key="index" class="tbody-val">
-                    <ming-pan-table :ming-pan-text="textarea" :table-index="index" :table-item="item"></ming-pan-table>
+                    <ming-pan-table :table-index="index" :table-item="item"></ming-pan-table>
                     <div v-if="!isMobile" class="tbody-val-action">
                       <ming-pan-action :action-index="index" :close-ba-zhi-h="item.closeBaZhiH"
                         :close-lunar-h="item.closeLunarH" :close-solar-h="item.closeSolarH"
@@ -517,14 +518,24 @@ function deepClone (obj) {
   }
   return copy
 }
+function getLast120Years () {
+  const currentYear = new Date().getFullYear(); // 获取当前年份
+  const startYear = currentYear - 119; // 计算起始年份（往前推 119 年，包括今年）
+  const years = [];
 
+  for (let year = startYear; year <= currentYear; year++) {
+    years.push(year); // 将年份添加到数组中
+  }
+
+  return years;
+}
 let tableDom = null
 export default {
   name: 'GuoXue',
   components: { MingPanAction, MingPanTable, CollectionBtn, HistoricalCollections, ShowLunarAndSolar, BaZhiFanTui },
   data () {
     return {
-      toYear: new Date().getFullYear(),
+      selectArrYear: getLast120Years(),
       isFanTui: false,
       isMobile: false,
       isShiJi: false,
@@ -1041,13 +1052,13 @@ export default {
       }
 
       if (this.form.hh === null || this.form.hh === undefined || this.form.hh === '') {
-        obj.closeSolarRow = false
+        obj.closeSolarRow = true
         obj.closeSolarH = false
         obj.closeLunarH = false
         obj.closeBaZhiH = true
         obj.closeWuXinH = true
       } else {
-        obj.closeSolarRow = false
+        obj.closeSolarRow = true
         obj.closeSolarH = true
         obj.closeLunarH = true
         obj.closeBaZhiH = true
@@ -1122,8 +1133,8 @@ export default {
       this.isDrawer = true
     },
     addPiJie (v) {
-      console.log("🚀 ~ file:index method:addPiJie line:1592 -----", v)
-      this.mingPanText += v
+      this.mingPanText = this.mingPanText ? (this.mingPanText + v) : v
+
       // this.updateLocalTable()
       this.tableIptBlur()
       this.isHistoryCollection = false
@@ -1300,7 +1311,9 @@ export default {
 
     },
     async submitCollection (collectionBtnCloseFn, selectedIds, dynamicTags) {
-      const content = this.textarea.trim()
+      console.log("this.mingPanText", this.mingPanText);
+
+      const content = this.mingPanText?.trim()
       if (!content) {
         this.$modal.msgError("批解没内容，无法收藏");
         return
