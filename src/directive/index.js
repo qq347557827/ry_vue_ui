@@ -7,7 +7,7 @@ import clipboard from './module/clipboard'
 import decimal from '@/directive/module/decimal'
 
 
-const install = function(Vue) {
+const install = function (Vue) {
   Vue.directive('hasRole', hasRole)
   Vue.directive('hasPermi', hasPermi)
   Vue.directive('clipboard', clipboard)

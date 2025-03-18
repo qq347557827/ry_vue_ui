@@ -4,8 +4,7 @@
       <template v-if="isMobile">
         <div v-if="isFanTui">
           <BaZhiFanTui :is-fan-tui="isFanTui" @addForm="nZFTAddForm" @switchChange="v => isFanTui = v"
-                       @toForm="nZFTToForm"
-          ></BaZhiFanTui>
+            @toForm="nZFTToForm"></BaZhiFanTui>
         </div>
         <div v-show="!isFanTui">
           <el-form ref="ruleForm" :model="form" :rules="rules">
@@ -30,7 +29,8 @@
             <el-row class="row-bg">
               <el-col :span="6">
                 <el-form-item prop="nian">
-                  <el-select popper-class="year-select" v-model="form.nian" filterable placeholder="年" @change="changeYueSelect">
+                  <el-select popper-class="year-select" v-model="form.nian" filterable placeholder="年"
+                    @change="changeYueSelect">
                     <el-option v-for="item in selectArrYear" :key="item" :label="item" :value="item">
 
                     </el-option>
@@ -71,14 +71,12 @@
             <el-row>
               <el-col :span="4">
                 <el-link style="font-size:medium" type="primary" @click="handleIsDrawer">列表<i
-                  class="el-icon-s-unfold"
-                ></i></el-link>
+                    class="el-icon-s-unfold"></i></el-link>
                 <el-drawer :visible.sync="isDrawer" direction="ltr" size="90%">
                   <template v-slot:title>
                     <div class="clearfix">
                       <el-input v-model="searchVal" clearable placeholder="搜索名字" style="width: 260px"
-                                @change="changeSearch"
-                      />
+                        @change="changeSearch" />
                     </div>
                   </template>
                   <el-card class="box-card">
@@ -103,8 +101,7 @@
                               <!--                    {{item.key}}-->
                             </el-link>
                             <el-popconfirm cancel-button-text="不了" confirm-button-text="确认" icon="el-icon-info"
-                                           icon-color="red" title="确定删除吗？" @confirm="deleteList(item.key)"
-                            >
+                              icon-color="red" title="确定删除吗？" @confirm="deleteList(item.key)">
                               <template slot="reference">
                                 <el-link style="float: right" type="danger"><i class="el-icon-delete"></i></el-link>
                               </template>
@@ -122,8 +119,7 @@
                       </div>
                       <div>
                         <el-pagination :current-page="page" :page-size="limit" :total="total" layout="prev, pager, next"
-                                       small @current-change="currentChange"
-                        >
+                          small @current-change="currentChange">
                         </el-pagination>
                       </div>
 
@@ -151,11 +147,9 @@
                     <div class="mobile-action">
                       <div class="">
                         <ming-pan-action :action-index="index" :close-ba-zhi-h="item.closeBaZhiH"
-                                         :close-lunar-h="item.closeLunarH" :close-solar-h="item.closeSolarH"
-                                         :close-solar-row="item.closeSolarRow" :close-wu-xin-h="item.closeWuXinH"
-                                         @closeChange="closeChange" @delTable="delTable"
-                                         @repeatPostGuoxue="repeatPostGuoxue"
-                        />
+                          :close-lunar-h="item.closeLunarH" :close-solar-h="item.closeSolarH"
+                          :close-solar-row="item.closeSolarRow" :close-wu-xin-h="item.closeWuXinH"
+                          @closeChange="closeChange" @delTable="delTable" @repeatPostGuoxue="repeatPostGuoxue" />
                       </div>
                     </div>
                   </div>
@@ -177,15 +171,14 @@
                 <div style="width: 100%;">
                   <table v-show="tableArr.length > 0" style="width: 100%;">
                     <tbody v-show="tableArr.length > 0">
-                    <tr v-show="!isTextarea" class="heavier-text">
-                      <td width="7%">
-                      </td>
-                      <td id="#pre-line" class="new no-internal-borders" colspan="7"
-                          style="white-space: pre-line; padding-right: 10px; line-height: 1.5"
-                      >
-                        {{ mingPanText }}
-                      </td>
-                    </tr>
+                      <tr v-show="!isTextarea" class="heavier-text">
+                        <td width="7%">
+                        </td>
+                        <td id="#pre-line" class="new no-internal-borders" colspan="7"
+                          style="white-space: pre-line; padding-right: 10px; line-height: 1.5">
+                          {{ mingPanText }}
+                        </td>
+                      </tr>
                     </tbody>
                   </table>
                 </div>
@@ -193,8 +186,7 @@
             </div>
             <div v-show="tableArr.length > 0 && isTextarea">
               <el-input v-model="mingPanText" :rows="2" autosize placeholder="请输入内容" size="medium" type="textarea"
-                        @blur="tableIptBlur"
-              >
+                @blur="tableIptBlur">
               </el-input>
               <div class="ming-pan-input-action">
                 <div @click="onHistoryList">
@@ -202,38 +194,36 @@
                     <span>解批收藏夹<i class="el-icon-folder-opened"></i></span>
                   </el-link>
                 </div>
-                <collection-btn @submitCollection="submitCollection"/>
+                <collection-btn @submitCollection="submitCollection" />
                 <el-button :loading="btnLoad" size="mini" type="primary" @click="handleTableToImg">
                   生成图片
                 </el-button>
               </div>
               <historical-collections :is-history-collection="isHistoryCollection" @addPiJie="addPiJie"
-                                      @closeDrawer="() => isHistoryCollection = false"
-              />
+                @closeDrawer="() => isHistoryCollection = false" />
             </div>
             <table v-show="tableArr.length > 0" border="0" cellpadding="1" cellspacing="1"
-                   style="width: 100%; MARGIN-BOTTOM: 5px; table-layout:fixed;word-wrap:break-word;border: 1px solid #A3E7FA"
-            >
+              style="width: 100%; MARGIN-BOTTOM: 5px; table-layout:fixed;word-wrap:break-word;border: 1px solid #A3E7FA">
               <thead>
-              <tr>
-                <th colspan="2">年柱</th>
-                <th colspan="2">月柱</th>
-                <th colspan="2">日柱</th>
-                <th colspan="2">时柱</th>
-              </tr>
+                <tr>
+                  <th colspan="2">年柱</th>
+                  <th colspan="2">月柱</th>
+                  <th colspan="2">日柱</th>
+                  <th colspan="2">时柱</th>
+                </tr>
               </thead>
               <tbody>
-              <tr v-for="(item, index) in tableArr" :key="index" style=" border-bottom: 1px solid black; ">
-                <td class="new" colspan="2" style="text-align: center;">{{ item.naYinYear }}</td>
-                <td class="new" colspan="2" style="text-align: center;">{{ item.naYinMonth }}</td>
-                <td class="new" colspan="2" style="text-align: center;">{{ item.naYinDay }}</td>
-                <td class="new" colspan="2" style="text-align: center;">{{ item.naYinHh }}</td>
-              </tr>
+                <tr v-for="(item, index) in tableArr" :key="index" style=" border-bottom: 1px solid black; ">
+                  <td class="new" colspan="2" style="text-align: center;">{{ item.naYinYear }}</td>
+                  <td class="new" colspan="2" style="text-align: center;">{{ item.naYinMonth }}</td>
+                  <td class="new" colspan="2" style="text-align: center;">{{ item.naYinDay }}</td>
+                  <td class="new" colspan="2" style="text-align: center;">{{ item.naYinHh }}</td>
+                </tr>
               </tbody>
               <tbody v-if="hePanStr">
-              <tr>
-                <td class="new" colspan="8">{{ hePanStr }}</td>
-              </tr>
+                <tr>
+                  <td class="new" colspan="8">{{ hePanStr }}</td>
+                </tr>
               </tbody>
             </table>
 
@@ -254,15 +244,13 @@
       <template v-else>
         <div v-if="isFanTui">
           <BaZhiFanTui :is-fan-tui="isFanTui" @addForm="nZFTAddForm" @switchChange="v => isFanTui = v"
-                       @toForm="nZFTToForm"
-          ></BaZhiFanTui>
+            @toForm="nZFTToForm"></BaZhiFanTui>
         </div>
         <div v-show="!isFanTui">
           <el-form ref="ruleForm" :model="form" :rules="rules" label-width="80px" labelPosition="top">
             <el-row class="row-bg" justify="center" type="flex">
               <el-col :lg="5" :md="4" :sm="4" :xs="2"
-                      style="display: flex;align-content: center;justify-content: center;font-size: 18px"
-              >
+                style="display: flex;align-content: center;justify-content: center;font-size: 18px">
                 <el-form-item label="八字反推">
                   <el-switch v-model="isFanTui" active-color="#13ce66" inactive-color="#ff4949">
                   </el-switch>
@@ -280,10 +268,8 @@
               </el-col>
               <el-col :lg="2" :md="2" :sm="2" :xs="2">
                 <el-form-item label="年份" prop="nian">
-                  <el-select popper-class="year-select" v-model="form.nian" filterable placeholder="年" @change="changeYueSelect"
-                             @visible-change="handleVisibleChange"
-                             ref="yearSelect"
-                  >
+                  <el-select popper-class="year-select" v-model="form.nian" filterable placeholder="年"
+                    @change="changeYueSelect" @visible-change="handleVisibleChange" ref="yearSelect">
                     <el-option v-for="item in selectArrYear" :key="item" :label="item" :value="item">
                     </el-option>
                   </el-select>
@@ -340,8 +326,7 @@
                 <el-card class="box-card cardW">
                   <div slot="header" class="clearfix">
                     <el-input v-model="searchVal" clearable placeholder="搜索名字" style="max-width: 260px"
-                              @change="changeSearch"
-                    />
+                      @change="changeSearch" />
                     <!--                    <el-popconfirm confirm-button-text="确认" cancel-button-text="不了" icon="el-icon-info"-->
                     <!--                                   icon-color="red"-->
                     <!--                                   title="确定清空吗？" @confirm="clearAllList"-->
@@ -368,8 +353,7 @@
                           </div>
                         </el-link>
                         <el-popconfirm cancel-button-text="不了" confirm-button-text="确认" icon="el-icon-info"
-                                       icon-color="red" title="确定删除吗？" @confirm="deleteList(item.key)"
-                        >
+                          icon-color="red" title="确定删除吗？" @confirm="deleteList(item.key)">
                           <template slot="reference">
                             <el-link style="float: right" type="danger"><i class="el-icon-delete"></i></el-link>
                           </template>
@@ -386,8 +370,7 @@
                   </template>
                   <div>
                     <el-pagination :current-page="page" :page-size="limit" :total="total" layout="prev, pager, next"
-                                   small @current-change="currentChange"
-                    >
+                      small @current-change="currentChange">
                     </el-pagination>
                   </div>
                 </el-card>
@@ -401,36 +384,32 @@
                     <ming-pan-table :table-index="index" :table-item="item"></ming-pan-table>
                     <div v-if="!isMobile" class="tbody-val-action">
                       <ming-pan-action :action-index="index" :close-ba-zhi-h="item.closeBaZhiH"
-                                       :close-lunar-h="item.closeLunarH" :close-solar-h="item.closeSolarH"
-                                       :close-solar-row="item.closeSolarRow" :close-wu-xin-h="item.closeWuXinH"
-                                       @closeChange="closeChange" @delTable="delTable"
-                                       @repeatPostGuoxue="repeatPostGuoxue"
-                      />
+                        :close-lunar-h="item.closeLunarH" :close-solar-h="item.closeSolarH"
+                        :close-solar-row="item.closeSolarRow" :close-wu-xin-h="item.closeWuXinH"
+                        @closeChange="closeChange" @delTable="delTable" @repeatPostGuoxue="repeatPostGuoxue" />
                     </div>
                   </div>
                   <div style="width: 100%;">
                     <table v-show="tableArr.length > 0" style="width: 100%;">
                       <tbody v-show="tableArr.length > 0">
-                      <tr v-show="isTextarea">
-                        <td style="vertical-align: top;text-align: center;" width="7%">
-                        </td>
-                        <td class="table-textarea" colspan="7">
-                          <el-input v-model="mingPanText" :rows="2" autosize placeholder="请输入内容" size="medium"
-                                    type="textarea" @blur="tableIptBlur"
-                          >
-                          </el-input>
-                        </td>
+                        <tr v-show="isTextarea">
+                          <td style="vertical-align: top;text-align: center;" width="7%">
+                          </td>
+                          <td class="table-textarea" colspan="7">
+                            <el-input v-model="mingPanText" :rows="2" autosize placeholder="请输入内容" size="medium"
+                              type="textarea" @blur="tableIptBlur">
+                            </el-input>
+                          </td>
 
-                      </tr>
-                      <tr v-show="!isTextarea" class="heavier-text">
-                        <td width="7%">
-                        </td>
-                        <td id="#pre-line" class="new no-internal-borders" colspan="7"
-                            style="white-space: pre-line; padding-right: 10px; line-height: 1.5"
-                        >
-                          {{ mingPanText }}
-                        </td>
-                      </tr>
+                        </tr>
+                        <tr v-show="!isTextarea" class="heavier-text">
+                          <td width="7%">
+                          </td>
+                          <td id="#pre-line" class="new no-internal-borders" colspan="7"
+                            style="white-space: pre-line; padding-right: 10px; line-height: 1.5">
+                            {{ mingPanText }}
+                          </td>
+                        </tr>
                       </tbody>
                     </table>
                   </div>
@@ -445,32 +424,32 @@
                   </div>
                   <div style="display: flex;align-items: center">
                     <el-tooltip class="item" content="收藏这条解卦内容" effect="dark" placement="bottom">
-                      <collection-btn class="mr10" @submitCollection="submitCollection"/>
+                      <collection-btn class="mr10" @submitCollection="submitCollection" />
                     </el-tooltip>
-                    <el-button :loading="btnLoad" type="primary" @click="handleTableToImg">
+                    <el-button :loading="btnLoad" type="primary" @click="handleTableToImg"
+                      v-hasPermi="['system:guoxue:list']">
                       生成图片
                     </el-button>
                   </div>
                 </div>
                 <table v-show="tableArr.length > 0" border="0" cellpadding="1" cellspacing="1"
-                       style="MARGIN-BOTTOM: 5px; table-layout:fixed;word-wrap:break-word;border: 1px solid #A3E7FA"
-                >
+                  style="MARGIN-BOTTOM: 5px; table-layout:fixed;word-wrap:break-word;border: 1px solid #A3E7FA">
 
                   <tbody>
-                  <tr v-for="(item, index) in tableArr" :key="index" style=" border-bottom: 1px solid black; ">
-                    <td class="new" style="width: 190px">纳音</td>
-                    <td class="new" style="width: 78px">{{ item.naYinYear }}</td>
-                    <td class="new" style="width: 78px">{{ item.naYinMonth }}</td>
-                    <td class="new" style="width: 94px">{{ item.naYinDay }}</td>
-                    <td class="new">{{ item.naYinHh }}</td>
-                    <td class="new" colspan="3"></td>
-                  </tr>
+                    <tr v-for="(item, index) in tableArr" :key="index" style=" border-bottom: 1px solid black; ">
+                      <td class="new" style="width: 190px">纳音</td>
+                      <td class="new" style="width: 78px">{{ item.naYinYear }}</td>
+                      <td class="new" style="width: 78px">{{ item.naYinMonth }}</td>
+                      <td class="new" style="width: 94px">{{ item.naYinDay }}</td>
+                      <td class="new">{{ item.naYinHh }}</td>
+                      <td class="new" colspan="3"></td>
+                    </tr>
 
                   </tbody>
                   <tbody v-if="hePanStr">
-                  <tr>
-                    <td class="new" colspan="8">{{ hePanStr }}</td>
-                  </tr>
+                    <tr>
+                      <td class="new" colspan="8">{{ hePanStr }}</td>
+                    </tr>
                   </tbody>
                 </table>
                 <div>
@@ -492,10 +471,8 @@
           <el-backtop></el-backtop>
         </div>
       </template>
-      <historical-collections ref="historicalCollections"
-                              :is-history-collection="isHistoryCollection" @addPiJie="addPiJie"
-                              @closeDrawer="() => isHistoryCollection = false"
-      />
+      <historical-collections ref="historicalCollections" :is-history-collection="isHistoryCollection"
+        @addPiJie="addPiJie" @closeDrawer="() => isHistoryCollection = false" />
 
     </div>
 
@@ -523,7 +500,7 @@ import { addCollections, postGuoxue } from '../../../api/customer_order_goods/gu
 const filterName = ['男方', "男", "男缘主", '女方', "女", "女缘主"]
 
 // import { msgError, msg } from '../../../plugins/modal'
-function deepClone(obj) {
+function deepClone (obj) {
   if (obj === null || typeof obj !== 'object') {
     return obj
   }
@@ -545,7 +522,7 @@ function deepClone(obj) {
   return copy
 }
 
-function getLast120Years() {
+function getLast120Years () {
   const currentYear = new Date().getFullYear(); // 获取当前年份
   const startYear = currentYear - 119; // 计算起始年份（往前推 119 年，包括今年）
   const years = [];
@@ -561,7 +538,7 @@ let tableDom = null
 export default {
   name: 'GuoXue',
   components: { MingPanAction, MingPanTable, CollectionBtn, HistoricalCollections, ShowLunarAndSolar, BaZhiFanTui },
-  data() {
+  data () {
     return {
       selectArrYear: getLast120Years(),
       isFanTui: false,
@@ -647,7 +624,7 @@ export default {
   },
   computed: {
     ...mapState(['collectionTags']), // 映射到全局状态,
-    months() {
+    months () {
       let arr = JSON.parse(JSON.stringify(this.lunarMonthArr))
       let monthArr = []
       const leapMonth = LunarYear.fromYear(this.form.nian).getLeapMonth();
@@ -662,14 +639,14 @@ export default {
       return monthArr
     },
     // 合年柱月柱日柱
-    hePanStr() {
+    hePanStr () {
       if (this.tableArr.length === 2) {
         return this.hePan()
       } else {
         return ''
       }
     },
-    randomOffsets() {
+    randomOffsets () {
       return this.tableArr.map((item) => {
         let obj = {}
         Object.keys(item).map(key => {
@@ -679,24 +656,24 @@ export default {
       })
     }
   },
-  created() {
+  created () {
     this.initLocationToIndexedDB()
     this.fetchList()
     this.loadTags()
     // this.updateTotalCount()
   },
-  mounted() {
+  mounted () {
     this.checkIfMobile()
   },
   methods: {
     // css样式
-    paddingStyle(index, property) {
+    paddingStyle (index, property) {
       return {
         paddingBottom: this.randomOffsets[index][property] + 'px',
         paddingLeft: this.randomOffsets[index][property] + 'px'
       };
     },
-    LunarTest() {
+    LunarTest () {
       const nian = 2000
       const yue = 1
       let ri = 1
@@ -745,10 +722,10 @@ export default {
       // this.$set(this.baZhiTest, 'wangQue', r.wangQue)
 
     },
-    async loadTags() {
+    async loadTags () {
       await this.$store.dispatch('fetchCollectionTags'); // 调用 action
     },
-    async initLocationToIndexedDB() {
+    async initLocationToIndexedDB () {
       const table_list = this.$cache.local.get('table_list')
       if (table_list) {
         const list = JSON.parse(table_list)
@@ -764,7 +741,7 @@ export default {
         this.$cache.local.remove('table_list')
       }
     },
-    test() {
+    test () {
       const chineseCharacters = [
         '你', '我', '他', '的', '是', '了', '在', '有', '和', '不', '就', '人', '都', '一', '上', '中', '大', '来', '说', '个',
         '这', '们', '为', '子', '到', '地', '出', '道', '也', '时', '要', '下', '会', '里', '生', '着', '去', '样', '过', '看',
@@ -792,7 +769,7 @@ export default {
         })
       }
     },
-    async fetchList() {
+    async fetchList () {
       // 按 id 倒序排序并获取前 20 条记录
       let start = (this.page - 1) * this.limit
       const value = this.searchVal.trim()
@@ -827,13 +804,13 @@ export default {
       // this.last20Items = items.reverse();
       // console.log(this.list.length, this.total)
     },
-    async updateTotalCount() {
+    async updateTotalCount () {
       this.total = await db.data.count()
     },
-    changeYueSelect() {
+    changeYueSelect () {
 
     },
-    handleVisibleChange(isVisible) {
+    handleVisibleChange (isVisible) {
       if (isVisible && !this.form.nian) {
 
         // 条件 2：当 Select 的搜索框有值时，不执行滚动逻辑
@@ -860,7 +837,7 @@ export default {
         });
       }
     },
-    judgeRelationship(element1, element2) {
+    judgeRelationship (element1, element2) {
       const generateCycle = {
         木: '火',
         火: '土',
@@ -895,7 +872,7 @@ export default {
       // console.log(element1, element2)
       return checkRelationship(element1, element2)
     },
-    hePan() {
+    hePan () {
       const naYinYear0 = this.tableArr[0].naYinYear
       const naYinYear1 = this.tableArr[1].naYinYear
       const nian = this.judgeRelationship(naYinYear0[2], naYinYear1[2])
@@ -907,12 +884,12 @@ export default {
       const day = this.judgeRelationship(naYinDay0[2], naYinDay1[2])
       return `从双方命格上来看，一方为${naYinYear0}命、一方为${naYinYear1}命，${nian}。从双方月柱上来看，一方为${naYinMonth0[2]}、一方为${naYinMonth1[2]}，${month}。从双方日柱上来看，一方为${naYinDay0[2]}、一方为${naYinDay1[2]}，${day}`
     },
-    checkIfMobile() {
+    checkIfMobile () {
       this.isMobile = /iphone|ipad|ipod|android|blackberry|mini|windows\sce|palm/i.test(navigator.userAgent.toLowerCase())
       // console.log(this.isMobile)
     }
     ,
-    validateForm() {
+    validateForm () {
       try {
         if (this.form.isSolar) {
           const daysOfMonth = SolarUtil.getDaysOfMonth(this.form.nian, this.form.yue)
@@ -923,9 +900,9 @@ export default {
             throw { code: 3, message: `${this.form.yue}月只有${daysOfMonth}天，请检查是否正确` }
           }
         } else {
-          const lunarMonth = LunarMonth.fromYm(this.form.nian, this.form.yue)
           const lunarYear = LunarYear.fromYear(this.form.nian);
           const leapMonth = lunarYear.getLeapMonth()
+          let initMonth = this.form.yue
           // 判断是否闰月
           if (this.form.isLeapMonth) {
 
@@ -935,12 +912,14 @@ export default {
             } else if (leapMonth !== this.form.yue) {
               throw { code: 2, message: `该年闰${leapMonth}月，请检查是否正确` }
             }
+            initMonth = -initMonth
           }
 
+          const lunarMonth = LunarMonth.fromYm(this.form.nian, initMonth)
           // 判断该月天数
           const getDayCount = lunarMonth.getDayCount()
           if (this.form.ri > getDayCount) {
-            throw { code: 3, message: `${this.form.yue}月只有${getDayCount}天，请检查是否正确` }
+            throw { code: 3, message: `${initMonth < 0 ? '闰' : ''}${this.form.yue}月只有${getDayCount}天，请检查是否正确` }
           }
         }
         return true
@@ -950,7 +929,7 @@ export default {
       }
     }
     ,
-    nZFTIntoForm(form) {
+    nZFTIntoForm (form) {
       this.$set(this.form, 'name', form.name)
       this.$set(this.form, 'nian', form.lunar._year)
       this.$set(this.form, 'ri', form.lunar._day)
@@ -967,7 +946,7 @@ export default {
         this.$set(this.form, 'isLeapMonth', false)
       }
     },
-    nZFTToForm(form, clearCalendarArr) {
+    nZFTToForm (form, clearCalendarArr) {
       console.log("🚀 ~ file:form method:nZFTToForm line:1190 -----", form)
       this.nZFTIntoForm(form)
       console.log("🚀 ~ file:index method:nZFTToForm line:1318 -----", this.form)
@@ -977,7 +956,7 @@ export default {
 
       clearCalendarArr()
     },
-    nZFTAddForm(form, clearCalendarArr) {
+    nZFTAddForm (form, clearCalendarArr) {
       console.log("🚀 ~ file:form method:nZFTToForm line:1190 -----", form)
       this.nZFTIntoForm(form)
       this.onSubmit('add')
@@ -989,7 +968,7 @@ export default {
       // this.tableArr.push(obj)
       // this.updateLocalTable()
     },
-    onSubmit(type) {
+    onSubmit (type) {
       // const eightChar = new EightChar("丁丑", "癸卯", "癸丑", "辛酉");
       // const solar = Solar.fromBaZi("丁丑", "癸卯", "癸丑", "壬子")
       this.$refs['ruleForm'].validate((valid) => {
@@ -1029,7 +1008,7 @@ export default {
     }
     ,
 
-    initGaiYao(tdGaiYaoStr, str) {
+    initGaiYao (tdGaiYaoStr, str) {
       // console.log(tdGaiYaoStr)
       // console.log(str)
       const searchPattern = /日柱.*?命/g // 匹配以<b>赵开头，“<br /><br />”结尾的文本
@@ -1044,7 +1023,7 @@ export default {
     }
     ,
 
-    initTableObj() {
+    initTableObj () {
       const year = this.form.nian
       const month = this.form.isLeapMonth ? -this.form.yue : this.form.yue
       const day = this.form.ri
@@ -1122,19 +1101,19 @@ export default {
       return obj
     }
     ,
-    updateTableForm(index) {
+    updateTableForm (index) {
       // console.log(index)
       this.updateTableIndex = index
       const updateTable = this.tableArr[index]
       // console.log(updateTable.form)
       this.form = updateTable.form
     },
-    async closeChange(type, value, index) {
+    async closeChange (type, value, index) {
       const item = this.tableArr[index]
       this.$set(item, type, value)
       this.tableKey && (await this.updateLocalTable())
     },
-    delTable(index) {
+    delTable (index) {
       this.delToUpdateForm(this.tableArr[index].form)
       this.tableArr.splice(index, 1)
 
@@ -1146,7 +1125,7 @@ export default {
 
     }
     ,
-    repeatPostGuoxue(index) {
+    repeatPostGuoxue (index) {
       const item = this.tableArr[index]
       const data = {
         nian: item.solarYear.slice(0, -1) - 0,
@@ -1184,23 +1163,23 @@ export default {
       }
 
     },
-    handleIsDrawer() {
+    handleIsDrawer () {
       this.isDrawer = true
     },
-    addPiJie(v) {
+    addPiJie (v) {
       this.mingPanText = this.mingPanText ? (this.mingPanText + v) : v
 
       // this.updateLocalTable()
       this.tableIptBlur()
       this.isHistoryCollection = false
     },
-    async currentChange(page) {
+    async currentChange (page) {
       console.log(page)
       console.log(this.page)
       this.page = page
       await this.fetchList()
     },
-    async changeSearch() {
+    async changeSearch () {
       await this.fetchList()
       // const value = this.searchVal.trim()
       // console.log(value)
@@ -1217,7 +1196,7 @@ export default {
       // // console.log(this.searchList)
     }
     ,
-    async cardClick(item) {
+    async cardClick (item) {
       console.log('item.key', item.key)
       this.tableKey = item.key
       this.mingPanText = item.mingPanText
@@ -1232,11 +1211,11 @@ export default {
       }
       this.isMobile && (this.isDrawer = false)
     },
-    resetTableImg() {
+    resetTableImg () {
       const tableImg = this.$refs.imageTable
       tableImg.textContent = ''
     },
-    delToUpdateForm(form) {
+    delToUpdateForm (form) {
       this.$set(this.form, 'name', form.name)
       this.$set(this.form, 'nian', form.nian)
       this.$set(this.form, 'yue', form.yue)
@@ -1247,7 +1226,7 @@ export default {
       this.$set(this.form, 'isLeapMonth', form.isLeapMonth)
     },
     // 列表删除按钮
-    async deleteList(key) {
+    async deleteList (key) {
       if (key) {
         if (typeof key === 'string' || typeof key === 'number') {
           await db.data.where('key').equals(key).delete()
@@ -1268,7 +1247,7 @@ export default {
     }
     ,
     // 列表清空按钮
-    async clearAllList() {
+    async clearAllList () {
       // this.list.forEach((i) => {
       //   this.$cache.local.remove(i.key)
       // })
@@ -1278,7 +1257,7 @@ export default {
 
     }
     ,
-    async addLocalTable() {
+    async addLocalTable () {
       const list0name = this.list[0]?.table[0]?.form?.name //获取列表第一条的名字
       // console.log("🚀 ~ file:index method:addLocalTable line:1674 -----this.list[0]", this.list[0])
       const filterFlg = filterName.some(item => item === list0name)
@@ -1306,7 +1285,7 @@ export default {
       }
     }
     ,
-    async updateLocalTable() {
+    async updateLocalTable () {
       if (this.tableKey) {
       }
       await db.data.where('key').equals(this.tableKey).modify({ table: this.tableArr })
@@ -1340,32 +1319,32 @@ export default {
       // })
     }
     ,
-    async tableIptBlur() {
+    async tableIptBlur () {
       db.data.where('key').equals(this.tableKey).modify({ mingPanText: this.mingPanText })
       await this.fetchList()
       // this.updateLocalTable()
     },
-    replacePattern(html, searchPattern, replaceText) {
+    replacePattern (html, searchPattern, replaceText) {
       // const regex = new RegExp(searchPattern, 'g')
       const regex = new RegExp(searchPattern)
       return html.replace(regex, replaceText)
     }
     ,
-    resetHH() {
+    resetHH () {
       this.$set(this.form, 'isSolar', false)
       this.$set(this.form, 'isLeapMonth', false)
       this.$set(this.form, 'hh', null)
       this.$set(this.form, 'mm', null)
     },
-    initHistoryList() {
+    initHistoryList () {
       // this.
     },
-    onHistoryList() {
+    onHistoryList () {
       console.log("🚀 ~ file:onHistoryList method:onHistoryList line:1730 -----", 'onHistoryList')
       this.isHistoryCollection = true
 
     },
-    async submitCollection(collectionBtnCloseFn, selectedIds, dynamicTags) {
+    async submitCollection (collectionBtnCloseFn, selectedIds, dynamicTags) {
       console.log("this.mingPanText", this.mingPanText);
 
       const content = this.mingPanText?.trim()
@@ -1395,7 +1374,7 @@ export default {
 
       }
     },
-    handleTableToImg() {
+    handleTableToImg () {
       // const
       // html2canvas(tableDom).then(function(canvas) {
       //   console.log(canvas)
@@ -1406,13 +1385,13 @@ export default {
       this.resetTableImg()
       this.btnLoad = true
       const that = this
-      this.$nextTick(function() {
+      this.$nextTick(function () {
         html2canvas(table, {
           letterRendering: true,
           // scale: window.devicePixelRatio
           scale: 2
           // width: 760
-        }).then(function(canvas) {
+        }).then(function (canvas) {
           // console.log(canvas)
           // document.body.appnedChild(canvas)
           // console.log(canvas)
@@ -1451,7 +1430,7 @@ export default {
 
     }
     ,
-    reset() {
+    reset () {
       this.$refs['ruleForm'].resetFields()
       // this.updateTableIndex = null
       this.form = {
@@ -1546,14 +1525,14 @@ export default {
 
   .action,
   {
-    position: absolute;
-    top: 0;
-    right: -120px;
+  position: absolute;
+  top: 0;
+  right: -120px;
 
-    div {
-      height: 46px;
-    }
+  div {
+    height: 46px;
   }
+}
 }
 
 .tbody-val {
@@ -1561,26 +1540,26 @@ export default {
 
   .tbody-val-action,
   {
-    position: absolute;
-    top: 0;
-    //left: 760px;
-    right: -230px;
-    //display: flex;
+  position: absolute;
+  top: 0;
+  //left: 760px;
+  right: -230px;
+  //display: flex;
 
 
-  }
+}
 
-  .tbody-val-action-mobile,
-  {
-    position: absolute;
-    top: 0;
-    right: 0;
-    display: flex;
+.tbody-val-action-mobile,
+{
+position: absolute;
+top: 0;
+right: 0;
+display: flex;
 
-    div {
-      padding: 4px 2px;
-    }
-  }
+div {
+  padding: 4px 2px;
+}
+}
 }
 
 .table-width {
@@ -1716,6 +1695,7 @@ export default {
   display: flex;
   justify-content: space-between;
 }
+
 //.year-select::v-deep {
 //  .is-vertical {
 //    .el-scrollbar__thumb {
@@ -1723,5 +1703,4 @@ export default {
 //    }
 //
 //  }
-//}
-</style>
+//}</style>

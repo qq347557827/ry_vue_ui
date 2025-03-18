@@ -52,6 +52,7 @@
     "js-calendar-converter": "^0.0.6",
     "js-cookie": "3.0.1",
     "jsencrypt": "3.0.0-rc.1",
+    "jwt-decode": "^4.0.0",
     "lunar-javascript": "^1.6.12",
     "lunar-typescript": "^1.7.5",
     "nprogress": "0.2.0",
