@@ -1,8 +1,14 @@
-import Vue from 'vue';
+// src/directives/permission/auth.js
 import Cookies from 'js-cookie';
 import jwtDecode from 'jwt-decode';
 
-Vue.directive('auth', {
+// 跳转登录页函数
+const redirectToLogin = () => {
+  window.location.href = '/login';
+};
+
+// 定义指令逻辑
+const auth = {
   mounted (el, binding) {
     el.addEventListener('click', () => {
       const token = Cookies.get('admin-token'); // 从Cookie获取Token
@@ -15,28 +21,21 @@ Vue.directive('auth', {
       }
 
       try {
-        // 解析Token内容
         const decoded = jwtDecode(token);
-        // 检查是否过期（exp是秒级时间戳）
         const isExpired = decoded.exp * 1000 < Date.now();
 
         if (isExpired) {
           alert('登录已过期，请重新登录！');
           redirectToLogin();
         } else {
-          // 执行绑定的原方法（如提交表单）
-          binding.value();
+          binding.value(); // 执行绑定的原方法
         }
       } catch (error) {
-        // Token解析失败（格式错误或被篡改）
         alert('无效的Token，请重新登录！');
         redirectToLogin();
       }
     });
   }
-});
+};
 
-// 跳转登录页
-function redirectToLogin () {
-  window.location.href = '/login';
-}
+export default auth;
