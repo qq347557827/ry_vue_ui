@@ -306,7 +306,6 @@
               </el-col>
               <el-col :lg="9" :md="7" :sm="7" :xs="8">
                 <el-form-item label="操作栏">
-
                   <el-button type="primary" @click="onSubmit">新增</el-button>
                   <el-button :disabled="tableArr.length < 1" type="primary" @click="onSubmit('add')">增加</el-button>
 
@@ -496,6 +495,7 @@ import { mapState } from 'vuex'
 import CollectionBtn from './collectionsHistory/CollectionBtn.vue'
 import MingPanAction from './MingPanAction.vue'
 import { addCollections, postGuoxue } from '../../../api/customer_order_goods/guoXue'
+import { checkAuth } from '../../../utils/authUtils'
 
 const filterName = ['男方', "男", "男缘主", '女方', "女", "女缘主"]
 
@@ -666,6 +666,10 @@ export default {
     this.checkIfMobile()
   },
   methods: {
+    cesTest () {
+      console.log('点击了');
+
+    },
     // css样式
     paddingStyle (index, property) {
       return {
@@ -969,8 +973,7 @@ export default {
       // this.updateLocalTable()
     },
     onSubmit (type) {
-      // const eightChar = new EightChar("丁丑", "癸卯", "癸丑", "辛酉");
-      // const solar = Solar.fromBaZi("丁丑", "癸卯", "癸丑", "壬子")
+      checkAuth()
       this.$refs['ruleForm'].validate((valid) => {
         if (valid) {
           const flg = this.validateForm()

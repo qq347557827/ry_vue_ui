@@ -5,7 +5,7 @@ import dialogDragWidth from './dialog/dragWidth'
 import dialogDragHeight from './dialog/dragHeight'
 import clipboard from './module/clipboard'
 import decimal from '@/directive/module/decimal'
-import auth from './permission/auth' // 新增导入
+import auth from './module/auth' // 新增导入
 
 const install = function (Vue) {
   Vue.directive('hasRole', hasRole)
@@ -15,7 +15,7 @@ const install = function (Vue) {
   Vue.directive('dialogDragWidth', dialogDragWidth)
   Vue.directive('dialogDragHeight', dialogDragHeight)
   Vue.directive('decimal', decimal)
-  Vue.directive('v-auth', auth) // 新增注册
+  // Vue.directive('auth', auth) // 新增注册
 }
 
 if (window.Vue) {

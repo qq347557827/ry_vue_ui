@@ -10,13 +10,16 @@ const redirectToLogin = () => {
 // 定义指令逻辑
 const auth = {
   mounted (el, binding) {
-    el.addEventListener('click', () => {
+    el.addEventListener('click', (event) => {
+      event.preventDefault(); // 阻止默认行为
+      console.log("token");
+
       const token = Cookies.get('admin-token'); // 从Cookie获取Token
 
       // 检查Token是否存在
       if (!token) {
         alert('Token不存在，请登录！');
-        redirectToLogin();
+        // redirectToLogin();
         return;
       }
 
@@ -26,13 +29,13 @@ const auth = {
 
         if (isExpired) {
           alert('登录已过期，请重新登录！');
-          redirectToLogin();
+          // redirectToLogin();
         } else {
           binding.value(); // 执行绑定的原方法
         }
       } catch (error) {
         alert('无效的Token，请重新登录！');
-        redirectToLogin();
+        // redirectToLogin();
       }
     });
   }
