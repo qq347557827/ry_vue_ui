@@ -382,6 +382,26 @@
             >
               <el-link type="primary">踢回修改</el-link>
             </div>
+            <div class="bgf-pd10 ml10 mt1" v-if="detailOrder.status === '1' || detailOrder.status === '2'"
+                 @click="createSFOrder(detailOrder.orderId)"
+            >
+              <el-link type="primary">获取顺丰单号</el-link>
+            </div>
+            <div class="bgf-pd10 ml10 mt1" v-if="detailOrder.status === '1' || detailOrder.status === '2'"
+                 @click="searchSFOrder(detailOrder.orderId)"
+            >
+              <el-link type="primary">查询顺丰单号</el-link>
+            </div>
+            <div class="bgf-pd10 ml10 mt1" v-if="detailOrder.status === '1' || detailOrder.status === '2'"
+                 @click="cancelSFOrder(detailOrder.orderId)"
+            >
+              <el-link type="primary">取消顺丰单号</el-link>
+            </div>
+            <div class="bgf-pd10 ml10 mt1" v-if="detailOrder.status === '1' || detailOrder.status === '2'"
+                 @click="searchSFRoutes(detailOrder.orderId)"
+            >
+              <el-link type="primary">查询物流信息</el-link>
+            </div>
             <div class="bgf-pd10 ml10" v-if="detailOrder.status === '2'">
               <el-popover
                 placement="right"
@@ -536,6 +556,13 @@ import { getToken } from '@/utils/auth'
 import Editor from '@/views/order_content/editor/editor.vue'
 import DetailBox from '@/views/components/detailBox/index.vue'
 import { getCustomer } from '@/api/customer_order_goods/customer'
+import {
+  cancelSFOrder,
+  cancerOrder,
+  createSFOrder,
+  querySFOrder,
+  searchSFRoutes
+} from '../../../api/customer_order_goods/order'
 
 const statusTabsActiveNameMap = new Map([['all', null], ['modified', 0], ['review', 1], ['pendingShipment', 2], ['Shipped', 3], ['received', 4], ['rejected', 5], ['refund', 6]])
 
@@ -675,16 +702,6 @@ export default {
 
   },
   methods: {
-    // tableCellstyle({row, column, rowIndex, columnIndex}) {
-    //   const className = ''
-    //   // console.log('row.status',row)
-    //   // if (row.status === '0') {
-    //   //   return 'status-modified'
-    //   // }
-    //   return {
-    //     'background-color': '#F56C6C'
-    //   }
-    // },
     /** tab点击操作 */
     tabHandleClick(data) {
       console.log('tabHandleClickvalue', data)
@@ -837,6 +854,47 @@ export default {
       this.$set(this.detailShipmentForm, 'expressCompany', this.detailOrder.expressCompany)
       this.$set(this.detailShipmentForm, 'trackingNumber', this.detailOrder.trackingNumber)
       // this.isDetailShipment = false
+    },
+    /** 获取顺丰单号 */
+    createSFOrder(orderId) {
+      createSFOrder({orderId}).then(res => {
+        // detailOrder
+        console.log("🚀 ~ file:index method: line:840 -----", )
+        if (res.code === 200) {
+          const trackingNumber = res.data.trackingNumber
+          this.$set(this.detailOrder, "trackingNumber", trackingNumber)
+          this.$set(this.detailOrder, "expressCompany", '顺丰快递')
+          this.$modal.msg(`获取单号成功${trackingNumber}`)
+        }
+      }).catch(err => console.log(err))
+    },
+    /** 查询顺丰单号 */
+    searchSFOrder(orderId) {
+      console.log("🚀 ~ file:index method:searchSFOrder line:873 -----orderId", orderId)
+
+      querySFOrder(orderId).then(res => {
+        // detailOrder
+        console.log("🚀 ~ file:index method: line:840 -----", )
+        if (res.code === 200) {
+          const trackingNumber = res.data.trackingNumber
+          this.$set(this.detailOrder, "trackingNumber", trackingNumber)
+          this.$set(this.detailOrder, "expressCompany", '顺丰快递')
+          this.$modal.msg(`获取单号成功${trackingNumber}`)
+        }
+      }).catch(err => console.log(err))
+    },
+    /** 取消顺丰单号 */
+    cancelSFOrder(orderId) {
+      cancelSFOrder(orderId).then(res => {
+        // detailOrder
+        console.log("🚀 ~ file:index method: line:840 -----", )
+        if (res.code === 200) {
+          const trackingNumber = res.data.trackingNumber
+          this.$set(this.detailOrder, "trackingNumber", trackingNumber)
+          this.$set(this.detailOrder, "expressCompany", '顺丰快递')
+          this.$modal.msg(`获取单号成功${trackingNumber}`)
+        }
+      }).catch(err => console.log(err))
     },
     /** 详情页发货提交 */
     async detailShipmentOnSubmit() {

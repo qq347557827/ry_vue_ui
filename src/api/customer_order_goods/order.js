@@ -93,6 +93,40 @@ export function shipmentOrder(data) {
     data
   })
 }
+// 订单发货
+export function createSFOrder(data) {
+  return request({
+    url: '/system/order/createSFOrder',
+    method: 'post',
+    data
+  })
+}
+export function querySFOrder(id) {
+  console.log("🚀 ~ file:order method:querySFOrder line:105 -----id", id)
+
+  return request({
+    url: '/system/order/queryOrder/' + id,
+    method: 'get',
+  })
+}
+export function cancelSFOrder(id) {
+  return request({
+    url: '/system/order/cancerOrder/' + id,
+    method: 'get',
+  })
+}
+export function searchSFRoutes(id) {
+  return request({
+    url: '/system/order/searchSFRoutes/' + id,
+    method: 'get',
+  })
+}
+export function accessToken() {
+  return request({
+    url: '/system/order/accessToken',
+    method: 'get',
+  })
+}
 
 // 二次收款
 export function secondaryRevenueOrder(data) {
