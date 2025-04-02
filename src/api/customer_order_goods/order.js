@@ -121,7 +121,7 @@ export function searchSFRoutes(id) {
     method: 'get',
   })
 }
-export function accessToken() {
+export function getAccessToken() {
   return request({
     url: '/system/order/accessToken',
     method: 'get',

@@ -10,36 +10,36 @@
       <el-tab-pane label="拒收" name="rejected"/>
       <el-tab-pane label="退款" name="refund"/>
     </el-tabs>
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
+    <el-form v-show="showSearch" ref="queryForm" :inline="true" :model="queryParams" label-width="68px" size="small">
       <el-form-item label="订单编号" prop="orderId">
         <el-input
           v-model="queryParams.orderId"
-          placeholder="订单编号"
           clearable
+          placeholder="订单编号"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
       <el-form-item label="客户编号" prop="customerId">
         <el-input
           v-model="queryParams.customerId"
-          placeholder="请输入客户编号"
           clearable
+          placeholder="请输入客户编号"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
       <el-form-item label="姓名" prop="name">
         <el-input
           v-model="queryParams.name"
-          placeholder="请输入姓名"
           clearable
+          placeholder="请输入姓名"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
       <el-form-item label="手机" prop="phone">
         <el-input
           v-model="queryParams.phone"
-          placeholder="请输入手机"
           clearable
+          placeholder="请输入手机"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
@@ -54,8 +54,8 @@
       <el-form-item label="微信" prop="wechat">
         <el-input
           v-model="queryParams.wechat"
-          placeholder="请输入微信"
           clearable
+          placeholder="请输入微信"
           @keyup.enter.native="handleQuery"
         />
 
@@ -78,7 +78,7 @@
         </el-radio-group>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+        <el-button icon="el-icon-search" size="mini" type="primary" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
@@ -88,23 +88,23 @@
       <template v-if="statusTabsActiveName === 'all' || statusTabsActiveName === 'review'">
         <el-col :span="1.5">
           <el-button
-            type="primary"
-            plain
-            icon="el-icon-s-check"
-            size="mini"
-            @click="handleApproval"
             v-hasPermi="['system:order:approval']"
+            icon="el-icon-s-check"
+            plain
+            size="mini"
+            type="primary"
+            @click="handleApproval"
           >审核
           </el-button>
         </el-col>
         <el-col :span="2">
           <el-button
-            type="danger"
-            plain
-            icon="el-icon-s-check"
-            size="mini"
-            @click="handleReject"
             v-hasPermi="['system:order:approval']"
+            icon="el-icon-s-check"
+            plain
+            size="mini"
+            type="danger"
+            @click="handleReject"
           >拒绝
           </el-button>
         </el-col>
@@ -112,70 +112,70 @@
 
       <el-col :span="1.5">
         <el-button
-          type="primary"
-          plain
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
           v-hasPermi="['system:order:add']"
+          icon="el-icon-plus"
+          plain
+          size="mini"
+          type="primary"
+          @click="handleAdd"
         >新增
         </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
-          type="success"
-          plain
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
           v-hasPermi="['system:order:edit']"
+          :disabled="single"
+          icon="el-icon-edit"
+          plain
+          size="mini"
+          type="success"
+          @click="handleUpdate"
         >修改
         </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
-          type="danger"
-          plain
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
           v-hasPermi="['system:order:remove']"
+          :disabled="multiple"
+          icon="el-icon-delete"
+          plain
+          size="mini"
+          type="danger"
+          @click="handleDelete"
         >删除
         </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
-          type="warning"
-          plain
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
           v-hasPermi="['system:order:export']"
+          icon="el-icon-download"
+          plain
+          size="mini"
+          type="warning"
+          @click="handleExport"
         >导出
         </el-button>
       </el-col>
       <template v-if="statusTabsActiveName=== 'all' || statusTabsActiveName === 'pendingShipment'">
         <el-col :span="1.5">
           <el-button
-            type="info"
+            v-hasPermi="['system:order:import']"
             icon="el-icon-upload2"
             size="mini"
+            type="info"
             @click="handleImport"
-            v-hasPermi="['system:order:import']"
           >导入发货
           </el-button>
         </el-col>
         <el-col :span="1.5">
           <el-button
+            v-hasPermi="['system:order:export']"
+            icon="el-icon-download"
+            plain
+            size="mini"
             title="如果没有勾选表格中的订单，默认导出没有导出过的所有待发货订单，如需导出特定待发货订单，请先勾选"
             type="warning"
-            plain
-            icon="el-icon-download"
-            size="mini"
             @click="handleExportShipment"
-            v-hasPermi="['system:order:export']"
           >导出待发货
           </el-button>
         </el-col>
@@ -185,21 +185,21 @@
     </el-row>
 
     <el-table v-loading="loading" :data="orderList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center"/>
-      <el-table-column label="订单编号" width="180" align="center" prop="orderId">
+      <el-table-column align="center" type="selection" width="55"/>
+      <el-table-column align="center" label="订单编号" prop="orderId" width="180">
         <template v-slot="scope">
           <el-link type="primary" @click="handleClickOrderId(scope.row)">{{ scope.row.orderId }}</el-link>
         </template>
       </el-table-column>
-      <el-table-column label="订单类型" align="center" prop="orderType">
+      <el-table-column align="center" label="订单类型" prop="orderType">
         <template v-slot="scope">
           <div>{{ orderTypeArr[scope.row.orderType] }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="订单状态" align="center" prop="status">
+      <el-table-column align="center" label="订单状态" prop="status">
         <template v-slot="scope">
           <template v-if="scope.row.status==='0'">
-            <el-button type="danger" size="mini" plain
+            <el-button plain size="mini" type="danger"
                        @click="handleCellUpdate(scope.row)"
             >{{ scope.row.statusName }}
             </el-button>
@@ -216,51 +216,51 @@
 
       </el-table-column>
       <!--      <el-table-column label="订单状态" align="center" prop="statusName" :cell-style	="tableCellstyle"	/>-->
-      <el-table-column label="客户编号" align="center" prop="customerId"/>
-      <el-table-column label="姓名" align="center" prop="name"/>
-      <el-table-column label="手机" align="center" width="120" prop="phone"/>
-      <el-table-column label="地址" align="center" min-width="280" prop="address"/>
-      <el-table-column label="微信" align="center" prop="wechat"/>
-      <el-table-column label="商品数量" align="center" width="180" prop="orderGoodsList">
+      <el-table-column align="center" label="客户编号" prop="customerId"/>
+      <el-table-column align="center" label="姓名" prop="name"/>
+      <el-table-column align="center" label="手机" prop="phone" width="120"/>
+      <el-table-column align="center" label="地址" min-width="280" prop="address"/>
+      <el-table-column align="center" label="微信" prop="wechat"/>
+      <el-table-column align="center" label="商品数量" prop="orderGoodsList" width="180">
         <template v-slot="scope">
           <div v-for="(item, index) in scope.row.orderGoodsList">
             <div :key="index">{{ item.goodsNameQuantity }}</div>
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="总金额" align="center" prop="totalAmount"/>
-      <el-table-column label="定金" align="center" prop="deposit"/>
-      <el-table-column label="支付方式" align="center" prop="payMethod"/>
-      <el-table-column label="代收金额" align="center" prop="collectAmount"/>
-      <el-table-column label="退款金额" align="center" prop="refund"/>
-      <el-table-column label="实际金额" align="center" prop="actualAmount"/>
-      <el-table-column label="快递公司" align="center" prop="expressCompany"/>
-      <el-table-column label="快递单号" align="center" prop="trackingNumber"/>
-      <el-table-column label="下单员工" align="center" prop="userName"/>
-      <el-table-column label="部门" align="center" prop="deptName"/>
-      <el-table-column label="导出发货" align="center" prop="exportShipment">
+      <el-table-column align="center" label="总金额" prop="totalAmount"/>
+      <el-table-column align="center" label="定金" prop="deposit"/>
+      <el-table-column align="center" label="支付方式" prop="payMethod"/>
+      <el-table-column align="center" label="代收金额" prop="collectAmount"/>
+      <el-table-column align="center" label="退款金额" prop="refund"/>
+      <el-table-column align="center" label="实际金额" prop="actualAmount"/>
+      <el-table-column align="center" label="快递公司" prop="expressCompany"/>
+      <el-table-column align="center" label="快递单号" prop="trackingNumber"/>
+      <el-table-column align="center" label="下单员工" prop="userName"/>
+      <el-table-column align="center" label="部门" prop="deptName"/>
+      <el-table-column align="center" label="导出发货" prop="exportShipment">
         <template slot-scope="scope">
           <div>{{ scope.row.exportShipment ? scope.row.exportShipment : '未导出' }}</div>
         </template>
       </el-table-column>
 
-      <el-table-column label="原订单号" align="center" prop="oldId"/>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column align="center" label="原订单号" prop="oldId"/>
+      <el-table-column align="center" class-name="small-padding fixed-width" label="操作">
         <template slot-scope="scope">
           <el-button
+            v-hasPermi="['system:order:edit']"
+            icon="el-icon-edit"
             size="mini"
             type="text"
-            icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:order:edit']"
           >修改
           </el-button>
           <el-button
+            v-hasPermi="['system:order:remove']"
+            icon="el-icon-delete"
             size="mini"
             type="text"
-            icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['system:order:remove']"
           >删除
           </el-button>
         </template>
@@ -269,24 +269,24 @@
 
     <pagination
       v-show="total>0"
-      :total="total"
-      :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
+      :page.sync="queryParams.pageNum"
+      :total="total"
       @pagination="getList"
     />
-    <Editor :dialog="open" :title="title"
-            :propForm="form"
+    <Editor :dialog="open" :propForm="form"
+            :title="title"
             :type="editorType"
             @handleClose="handleCloseDetail"
             @handleSuccess="handleSuccessDetail"
     />
     <el-drawer
+      ref="orderDetail"
       :title="detailTitle"
       :visible.sync="isDetail"
-      direction="rtl"
-      custom-class="demo-drawer"
-      ref="orderDetail"
       :wrapperClosable="false"
+      custom-class="demo-drawer"
+      direction="rtl"
       size="50%"
     >
       <div style="background-color: #f7f7f7; height: 100%; width: 100%">
@@ -305,19 +305,19 @@
 
               <el-descriptions title="订单信息">
 
-                <el-descriptions-item label="订单类型" :span="1">{{
+                <el-descriptions-item :span="1" label="订单类型">{{
                     orderTypeArr[detailOrder.orderType]
                   }}
                 </el-descriptions-item>
-                <el-descriptions-item label="订单状态" :span="2">{{ detailOrder.statusName }}</el-descriptions-item>
-                <el-descriptions-item label="所属部门" :span="1">{{ detailOrder.deptName }}</el-descriptions-item>
-                <el-descriptions-item label="创建员工" :span="2">{{ detailOrder.userName }}</el-descriptions-item>
+                <el-descriptions-item :span="2" label="订单状态">{{ detailOrder.statusName }}</el-descriptions-item>
+                <el-descriptions-item :span="1" label="所属部门">{{ detailOrder.deptName }}</el-descriptions-item>
+                <el-descriptions-item :span="2" label="创建员工">{{ detailOrder.userName }}</el-descriptions-item>
               </el-descriptions>
               <el-divider content-position="center">收件人信息</el-divider>
               <el-descriptions>
-                <el-descriptions-item label="客户姓名" :span="4">{{ detailOrder.name }}</el-descriptions-item>
-                <el-descriptions-item label="手机号" :span="4">{{ detailOrder.phone }}</el-descriptions-item>
-                <el-descriptions-item label="收货地址" :span="4">{{ detailOrder.address }}</el-descriptions-item>
+                <el-descriptions-item :span="4" label="客户姓名">{{ detailOrder.name }}</el-descriptions-item>
+                <el-descriptions-item :span="4" label="手机号">{{ detailOrder.phone }}</el-descriptions-item>
+                <el-descriptions-item :span="4" label="收货地址">{{ detailOrder.address }}</el-descriptions-item>
               </el-descriptions>
 
               <el-divider content-position="center">商品信息</el-divider>
@@ -327,38 +327,38 @@
                 style="width: 100%"
               >
                 <el-table-column
+                  align="center"
                   label="ID"
                   type="index"
                   width="90"
-                  align="center"
                 />
                 <el-table-column
-                  prop="goodsName"
                   label="商品名"
+                  prop="goodsName"
                   width="300"
                 >
                 </el-table-column>
                 <el-table-column
-                  prop="quantity"
                   label="数量"
+                  prop="quantity"
                 >
                 </el-table-column>
               </el-table>
               <el-divider content-position="center">金额信息</el-divider>
               <el-descriptions :column="4">
-                <el-descriptions-item label="总金额" :span="4">{{ detailOrder.totalAmount }}</el-descriptions-item>
-                <el-descriptions-item label="定金" :span="1">{{ detailOrder.deposit }}</el-descriptions-item>
-                <el-descriptions-item label="支付方式" :span="1">{{ detailOrder.payMethod }}</el-descriptions-item>
-                <el-descriptions-item v-if="detailOrder.secondaryRevenue" label="二次收款" :span="1">
+                <el-descriptions-item :span="4" label="总金额">{{ detailOrder.totalAmount }}</el-descriptions-item>
+                <el-descriptions-item :span="1" label="定金">{{ detailOrder.deposit }}</el-descriptions-item>
+                <el-descriptions-item :span="1" label="支付方式">{{ detailOrder.payMethod }}</el-descriptions-item>
+                <el-descriptions-item v-if="detailOrder.secondaryRevenue" :span="1" label="二次收款">
                   {{ detailOrder.secondaryRevenue }}
                 </el-descriptions-item>
-                <el-descriptions-item v-if="detailOrder.secondaryRevenueMethod" label="二次收款方式" :span="1">
+                <el-descriptions-item v-if="detailOrder.secondaryRevenueMethod" :span="1" label="二次收款方式">
                   {{ detailOrder.secondaryRevenueMethod }}
                 </el-descriptions-item>
-                <el-descriptions-item label="代收货款" :span="1">{{ detailOrder.collectAmount }}</el-descriptions-item>
-                <el-descriptions-item label="快递公司" :span="2">{{ detailOrder.expressCompany }}</el-descriptions-item>
-                <el-descriptions-item label="快递单号" :span="2">{{ detailOrder.trackingNumber }}</el-descriptions-item>
-                <el-descriptions-item label="订单备注" :span="4">{{ detailOrder.remark }}</el-descriptions-item>
+                <el-descriptions-item :span="1" label="代收货款">{{ detailOrder.collectAmount }}</el-descriptions-item>
+                <el-descriptions-item :span="2" label="快递公司">{{ detailOrder.expressCompany }}</el-descriptions-item>
+                <el-descriptions-item :span="2" label="快递单号">{{ detailOrder.trackingNumber }}</el-descriptions-item>
+                <el-descriptions-item :span="4" label="订单备注">{{ detailOrder.remark }}</el-descriptions-item>
               </el-descriptions>
             </div>
 
@@ -366,7 +366,7 @@
           </template>
           <template v-slot:action>
 
-            <div class="bgf-pd10 ml10" v-if="detailOrder.status === '0'"
+            <div v-if="detailOrder.status === '0'" class="bgf-pd10 ml10"
                  @click="handleCellUpdate(detailOrder)"
             >
               <el-link type="primary">修改</el-link>
@@ -377,36 +377,64 @@
               </div>
 
             </template>
-            <div class="bgf-pd10 ml10 mt1" v-if="detailOrder.status === '1' || detailOrder.status === '2'"
+            <div v-if="detailOrder.status === '1' || detailOrder.status === '2'" class="bgf-pd10 ml10 mt1"
                  @click="handleOrderReject(detailOrder.orderId)"
             >
               <el-link type="primary">踢回修改</el-link>
             </div>
-            <div class="bgf-pd10 ml10 mt1" v-if="detailOrder.status === '1' || detailOrder.status === '2'"
+            <div v-if="detailOrder.status === '1' || detailOrder.status === '2'" class="bgf-pd10 ml10 mt1"
                  @click="createSFOrder(detailOrder.orderId)"
             >
               <el-link type="primary">获取顺丰单号</el-link>
             </div>
-            <div class="bgf-pd10 ml10 mt1" v-if="detailOrder.status === '1' || detailOrder.status === '2'"
+            <div v-if="detailOrder.status === '1' || detailOrder.status === '2'" class="bgf-pd10 ml10 mt1"
                  @click="searchSFOrder(detailOrder.orderId)"
             >
               <el-link type="primary">查询顺丰单号</el-link>
             </div>
-            <div class="bgf-pd10 ml10 mt1" v-if="detailOrder.status === '1' || detailOrder.status === '2'"
+            <div v-if="detailOrder.status === '1' || detailOrder.status === '2'" class="bgf-pd10 ml10 mt1"
                  @click="cancelSFOrder(detailOrder.orderId)"
             >
               <el-link type="primary">取消顺丰单号</el-link>
             </div>
-            <div class="bgf-pd10 ml10 mt1" v-if="detailOrder.status === '1' || detailOrder.status === '2'"
+            <div v-if="detailOrder.status === '1' || detailOrder.status === '2'" class="bgf-pd10 ml10 mt1"
                  @click="searchSFRoutes(detailOrder.orderId)"
             >
               <el-link type="primary">查询物流信息</el-link>
             </div>
-            <div class="bgf-pd10 ml10" v-if="detailOrder.status === '2'">
+            <div>
+              <el-button
+                :loading="printing"
+                type="primary"
+                @click="handlePrint"
+              >
+                打印面单
+              </el-button>
+
+              <el-dialog
+                :visible.sync="showPrinterDialog"
+                title="打印机选择"
+                width="30%"
+              >
+                <el-select v-model="selectedPrinter">
+                  <el-option
+                    v-for="printer in printers"
+                    :key="printer.index"
+                    :label="printer.name"
+                    :value="printer.index"
+                  />
+                </el-select>
+                <span slot="footer">
+        <el-button @click="showPrinterDialog = false">取消</el-button>
+        <el-button type="primary" @click="confirmPrinter">确定</el-button>
+      </span>
+              </el-dialog>
+            </div>
+            <div v-if="detailOrder.status === '2'" class="bgf-pd10 ml10">
               <el-popover
+                v-model="isDetailShipment"
                 placement="right"
                 width="400"
-                v-model="isDetailShipment"
               >
                 <template v-slot:reference>
                   <div @click="detailShipmentClick">
@@ -440,9 +468,9 @@
             <template v-if="detailOrder.status === '3'">
               <div class="bgf-pd10 ml10 mt1">
                 <el-popover
+                  v-model="isDetailSecondaryRevenue"
                   placement="right"
                   width="400"
-                  v-model="isDetailSecondaryRevenue"
                 >
                   <template v-slot:reference>
                     <div @click="detailSecondaryRevenueClick">
@@ -488,11 +516,12 @@
                 <el-link type="primary">拒收</el-link>
               </div>
             </template>
-            <div class="bgf-pd10 ml10 mt1" v-if="detailOrder.status === '3' || detailOrder.status === '4'">
+            <div v-if="detailOrder.status === '3' || detailOrder.status === '4'" class="bgf-pd10 ml10 mt1">
               <el-link type="primary">退差价</el-link>
             </div>
-            <div class="bgf-pd10 ml10 mt1"
-                 v-if="detailOrder.status === '3' || detailOrder.status ==='4'|| detailOrder.status ==='5'|| detailOrder.status ==='8'"
+            <div
+              v-if="detailOrder.status === '3' || detailOrder.status ==='4'|| detailOrder.status ==='5'|| detailOrder.status ==='8'"
+              class="bgf-pd10 ml10 mt1"
             >
               <el-link type="primary">退款</el-link>
             </div>
@@ -508,15 +537,15 @@
     <el-dialog :title="upload.title" :visible.sync="upload.open" width="400px">
       <el-upload
         ref="upload"
-        :limit="1"
-        accept=".xlsx, .xls"
-        :headers="upload.headers"
         :action="upload.url + '?updateSupport=' + upload.updateSupport"
+        :auto-upload="false"
         :disabled="upload.isUploading"
+        :headers="upload.headers"
+        :limit="1"
+        :on-error="handleFileError"
         :on-progress="handleFileUploadProgress"
         :on-success="handleFileSuccess"
-        :on-error="handleFileError"
-        :auto-upload="false"
+        accept=".xlsx, .xls"
         drag
       >
         <i class="el-icon-upload"></i>
@@ -524,12 +553,12 @@
           将文件拖到此处，或
           <em>点击上传</em>
         </div>
-        <div class="el-upload__tip" slot="tip">
+        <div slot="tip" class="el-upload__tip">
           <el-checkbox v-model="upload.updateSupport"/>
           是否更新已经存在的用户数据
-          <el-link type="info" style="font-size:12px" @click="importTemplate">下载模板</el-link>
+          <el-link style="font-size:12px" type="info" @click="importTemplate">下载模板</el-link>
         </div>
-        <div class="el-upload__tip" style="color:red" slot="tip">提示：仅允许导入“xls”或“xlsx”格式文件！</div>
+        <div slot="tip" class="el-upload__tip" style="color:red">提示：仅允许导入“xls”或“xlsx”格式文件！</div>
       </el-upload>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitFileForm">确 定</el-button>
@@ -541,28 +570,24 @@
 
 <script>
 import {
-  listOrder,
-  getOrder,
+  approvalOrderIds,
+  approvalRejectByOrderId,
   delOrder,
-  addOrder,
-  updateOrder,
-  approvalOrderIds, rejectOrderIds, testM, approvalRejectByOrderId, shipmentOrder, secondaryRevenueOrder
+  getOrder,
+  listOrder,
+  rejectOrderIds,
+  secondaryRevenueOrder,
+  shipmentOrder
 } from '@/api/customer_order_goods/order'
 import { formatDateStr } from '@/utils'
 import { mapGetters, mapState } from 'vuex'
-import store from '@/store'
 
 import { getToken } from '@/utils/auth'
 import Editor from '@/views/order_content/editor/editor.vue'
 import DetailBox from '@/views/components/detailBox/index.vue'
 import { getCustomer } from '@/api/customer_order_goods/customer'
-import {
-  cancelSFOrder,
-  cancerOrder,
-  createSFOrder,
-  querySFOrder,
-  searchSFRoutes
-} from '../../../api/customer_order_goods/order'
+import { cancelSFOrder, createSFOrder, querySFOrder } from '../../../api/customer_order_goods/order'
+import { initSfPrint, printWaybill } from '../../../utils/sfPrint'
 
 const statusTabsActiveNameMap = new Map([['all', null], ['modified', 0], ['review', 1], ['pendingShipment', 2], ['Shipped', 3], ['received', 4], ['rejected', 5], ['refund', 6]])
 
@@ -571,6 +596,12 @@ export default {
   components: { DetailBox, Editor },
   data() {
     return {
+      printing: false,
+      showPrinterDialog: false,
+      printers: [],
+      selectedPrinter: null,
+      // 顺丰打印相关
+
       // exportShipment单选框
       exportShipmentLabelArr: ['未导出', '已导出'],
       statusColor: ['.status-danger', '.status-Warning', '.status-success', '.status-success', '.status-brand', '.status-success'],
@@ -701,7 +732,83 @@ export default {
     this.getList()
 
   },
+  mounted() {
+    // 初始化插件（替换实际 partnerID）
+    if (!window.sfPrinter) {
+      initSfPrint();
+    }
+
+    // 获取打印机列表
+    window.sfPrinter.getPrinters()
+      .then(printers => {
+        this.printers = printers;
+      })
+      .catch(error => {
+        console.error('获取打印机失败:', error);
+      });
+  },
   methods: {
+    async handlePrint() {
+      try {
+        const token = await this.$store.dispatch('order/getSfToken');
+        const result = await window.sfPrinter.print({
+          requestID: `PRINT_${Date.now()}`,
+          accessToken: token,
+          templateCode: 'fm_76165_standard2_YNR1URDE',
+          documents: [{ masterWaybillNo: this.detailOrder.trackingNumber }]
+        });
+
+        if (result.code === 1) {
+          console.log('打印任务已推送');
+        }
+      } catch (error) {
+        console.error('打印失败:', error);
+      }
+    },
+    // async loadPrinters() {
+    //   try {
+    //     this.printers = await window.SCPPrint.getPrinters();
+    //   } catch (error) {
+    //     this.$message.error('获取打印机失败');
+    //   }
+    // },
+    //
+    // async handlePrint() {
+    //   this.printing = true;
+    //   try {
+    //     // 获取 accessToken（假设已实现）
+    //     const token = await this.$store.dispatch('getSfToken');
+    //
+    //     // 打印参数
+    //     const params = {
+    //       accessToken: token,
+    //       templateCode: 'fm_76130_standard_xxx', // 实际模板编码
+    //       waybillNo: this.detailOrder.trackingNumber            // 实际运单号
+    //     };
+    //
+    //     await printWaybill(params);
+    //     this.$message.success('打印任务已发送');
+    //   } catch (error) {
+    //     if (error.downloadUrl) {
+    //       this.showPrinterDialog = true;
+    //     } else {
+    //       this.$message.error(error.message);
+    //     }
+    //   } finally {
+    //     this.printing = false;
+    //   }
+    // },
+
+    confirmPrinter() {
+      if (this.selectedPrinter) {
+        window.SCPPrint.setPrinter(this.selectedPrinter);
+        this.$message.success('打印机已切换');
+        this.showPrinterDialog = false;
+      }
+    },
+
+
+
     /** tab点击操作 */
     tabHandleClick(data) {
       console.log('tabHandleClickvalue', data)
@@ -713,21 +820,26 @@ export default {
         this.$set(this.queryParams, 'status', s)
       }
       this.handleQuery()
-    }, /** 导入按钮操作 */
+    }
+    ,
+    /** 导入按钮操作 */
     handleImport() {
       this.upload.title = '用户导入'
       this.upload.open = true
-    },
+    }
+    ,
     /** 下载模板操作 */
     importTemplate() {
       importTemplate().then(response => {
         this.download(response.msg)
       })
-    },
+    }
+    ,
 // 文件上传中处理
     handleFileUploadProgress(event, file, fileList) {
       this.upload.isUploading = true
-    },
+    }
+    ,
 // 文件上传成功处理
     handleFileSuccess(response, file, fileList) {
       this.upload.open = false
@@ -735,19 +847,22 @@ export default {
       this.$refs.upload.clearFiles()
       this.$alert(response.msg, '导入结果', { dangerouslyUseHTMLString: true })
       this.getList()
-    },
-    // 文件上传处理
+    }
+    ,
+// 文件上传处理
     handleFileError(response, file, fileList) {
       this.upload.open = false
       this.upload.isUploading = false
       this.$refs.upload.clearFiles()
       this.$alert(response.msg, '导入结果', { dangerouslyUseHTMLString: true })
       this.getList()
-    },
+    }
+    ,
 // 提交上传文件
     submitFileForm() {
       this.$refs.upload.submit()
-    },
+    }
+    ,
     /** 查询订单列表 */
     getList() {
       this.loading = true
@@ -756,7 +871,8 @@ export default {
         this.total = response.total
         this.loading = false
       })
-    },
+    }
+    ,
 
     /** 订单分类切换tab */
     exportShipmentHandle(value) {
@@ -765,26 +881,30 @@ export default {
       console.log('value--idx', idx)
       this.$set(this.queryParams, 'exportShipment', idx)
       this.handleQuery()
-    },
+    }
+    ,
     /** 搜索按钮操作 */
     handleQuery() {
       this.queryParams.pageNum = 1
       this.getList()
-    },
+    }
+    ,
     /** 重置按钮操作 */
     resetQuery() {
       this.resetForm('queryForm')
       this.handleQuery()
       this.radio1 = ''
-    },
-    // 多选框选中数据
+    }
+    ,
+// 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.orderId)
       this.isApproval = selection.every(item => item.status === '1')
       console.log('this.isApproval', this.isApproval)
       this.single = selection.length !== 1
       this.multiple = !selection.length
-    },
+    }
+    ,
     handleClickOrderId(row) {
       console.log(row)
       this.isDetail = true
@@ -793,8 +913,9 @@ export default {
         this.detailCustomer = res.data
       })
       this.detailOrder = row
-    },
-    // 审核拒绝通用方法
+    }
+    ,
+// 审核拒绝通用方法
     approvalRejectUtils(fn) {
       // 判断有无选中订单
       if (this.ids.length > 0) {
@@ -814,17 +935,20 @@ export default {
       } else {
         this.$modal.msg('没有选中订单')
       }
-    },
-    // 批量审核订单
+    }
+    ,
+// 批量审核订单
     handleApproval() {
       this.approvalRejectUtils(approvalOrderIds)
-    },
+    }
+    ,
 
-    // 批量拒绝订单
+// 批量拒绝订单
     handleReject() {
       this.approvalRejectUtils(rejectOrderIds)
-    },
-    // 单个审核
+    }
+    ,
+// 单个审核
     handleOrderApproval(orderId) {
       console.log('orderId', orderId)
       approvalRejectByOrderId({ orderId, status: '2' }).then(res => {
@@ -835,9 +959,10 @@ export default {
           this.isDetail = false
         }
       }).catch(err => console.log(err))
-    },
+    }
+    ,
 
-    // 单个拒绝
+// 单个拒绝
     handleOrderReject(orderId) {
       approvalRejectByOrderId({ orderId, status: '0' }).then(res => {
         console.log(res)
@@ -847,19 +972,21 @@ export default {
           this.isDetail = false
         }
       }).catch(err => console.log(err))
-    },
+    }
+    ,
     /** 详情页发货点击 */
     detailShipmentClick() {
       console.log('detailShipmentClick', this.isDetailShipment)
       this.$set(this.detailShipmentForm, 'expressCompany', this.detailOrder.expressCompany)
       this.$set(this.detailShipmentForm, 'trackingNumber', this.detailOrder.trackingNumber)
       // this.isDetailShipment = false
-    },
+    }
+    ,
     /** 获取顺丰单号 */
     createSFOrder(orderId) {
-      createSFOrder({orderId}).then(res => {
+      createSFOrder({ orderId }).then(res => {
         // detailOrder
-        console.log("🚀 ~ file:index method: line:840 -----", )
+        console.log("🚀 ~ file:index method: line:840 -----")
         if (res.code === 200) {
           const trackingNumber = res.data.trackingNumber
           this.$set(this.detailOrder, "trackingNumber", trackingNumber)
@@ -867,14 +994,15 @@ export default {
           this.$modal.msg(`获取单号成功${trackingNumber}`)
         }
       }).catch(err => console.log(err))
-    },
+    }
+    ,
     /** 查询顺丰单号 */
     searchSFOrder(orderId) {
       console.log("🚀 ~ file:index method:searchSFOrder line:873 -----orderId", orderId)
 
       querySFOrder(orderId).then(res => {
         // detailOrder
-        console.log("🚀 ~ file:index method: line:840 -----", )
+        console.log("🚀 ~ file:index method: line:840 -----")
         if (res.code === 200) {
           const trackingNumber = res.data.trackingNumber
           this.$set(this.detailOrder, "trackingNumber", trackingNumber)
@@ -882,12 +1010,13 @@ export default {
           this.$modal.msg(`获取单号成功${trackingNumber}`)
         }
       }).catch(err => console.log(err))
-    },
+    }
+    ,
     /** 取消顺丰单号 */
     cancelSFOrder(orderId) {
       cancelSFOrder(orderId).then(res => {
         // detailOrder
-        console.log("🚀 ~ file:index method: line:840 -----", )
+        console.log("🚀 ~ file:index method: line:840 -----")
         if (res.code === 200) {
           const trackingNumber = res.data.trackingNumber
           this.$set(this.detailOrder, "trackingNumber", trackingNumber)
@@ -895,7 +1024,8 @@ export default {
           this.$modal.msg(`获取单号成功${trackingNumber}`)
         }
       }).catch(err => console.log(err))
-    },
+    }
+    ,
     /** 详情页发货提交 */
     async detailShipmentOnSubmit() {
       if (this.detailShipmentForm.expressCompany && this.detailShipmentForm.trackingNumber) {
@@ -922,20 +1052,23 @@ export default {
         }
 
       }
-    },
+    }
+    ,
     /** 详情页发货取消 */
     detailShipmentOnCanel() {
       console.log('detailShipmentOnCanel')
       this.isDetailShipment = false
       this.detailShipmentForm = {}
-    },
+    }
+    ,
     /** 二次收款点击 */
     detailSecondaryRevenueClick() {
       console.log('detailShipmentClick', this.isDetailShipment)
       this.$set(this.detailSecondaryRevenueForm, 'secondaryRevenue', this.detailOrder.secondaryRevenue)
       this.$set(this.detailSecondaryRevenueForm, 'secondaryRevenueMethod', this.detailOrder.secondaryRevenueMethod)
       // this.isDetailShipment = false
-    },
+    }
+    ,
     /** 二次收款提交 */
     async detailSecondaryRevenueOnSubmit() {
       if (this.detailSecondaryRevenueForm.secondaryRevenue && this.detailSecondaryRevenueForm.secondaryRevenueMethod) {
@@ -961,13 +1094,15 @@ export default {
         }
 
       }
-    },
+    }
+    ,
     /** 二次收款取消 */
     detailSecondaryRevenueOnCanel() {
       console.log('detailShipmentOnCanel')
       this.isDetailSecondaryRevenue = false
       this.detailSecondaryRevenueForm = {}
-    },
+    }
+    ,
     /** 新增按钮操作 */
     handleAdd() {
       // this.$tab.openPage("个人中心", "/user/profile");
@@ -975,7 +1110,8 @@ export default {
       this.open = true
       this.title = '添加订单'
       // console.log("mapGetters(['goodsList'])", goodsList)
-    },
+    }
+    ,
     /** 修改按钮操作 */
     handleUpdate(row) {
       // this.reset()
@@ -986,7 +1122,8 @@ export default {
         this.title = '修改订单'
         this.editorType = 'updateOrder'
       })
-    },
+    }
+    ,
 
     /** 修改单个按钮操作 */
     handleCellUpdate(row) {
@@ -996,7 +1133,8 @@ export default {
       this.open = true
       this.title = '修改订单'
       this.editorType = 'updateOrder'
-    },
+    }
+    ,
 
     /** 删除按钮操作 */
     handleDelete(row) {
@@ -1008,13 +1146,15 @@ export default {
         this.$modal.msgSuccess('删除成功')
       }).catch(() => {
       })
-    },
+    }
+    ,
     /** 导出按钮操作 */
     handleExport() {
       this.download('system/order/export', {
         ...this.queryParams
       }, `order_${new Date().getTime()}.xlsx`)
-    },
+    }
+    ,
     /** 导出待发货操作 */
     handleExportShipment() {
       console.log(123)
@@ -1038,12 +1178,14 @@ export default {
           ...this.queryParams
         }, `待发货_${str}.xlsx`)
       }
-    },
+    }
+    ,
     handleCloseDetail(v) {
       this.open = false
       this.editorType = ''
       // this.isUpdateOrder = false
-    },
+    }
+    ,
     handleSuccessDetail() {
       this.handleCloseDetail()
       this.getList()
