@@ -9,6 +9,7 @@ export const initSfPrint = () => {
     env: 'sbox', // 生产环境
     notips: false, // 关闭 SDK 默认提示
     callback: (result) => {
+      console.log(result.getPrint)
       if (result.code === 2 || result.code === 3) {
         console.error('需安装或升级插件:', result.downloadUrl);
       }

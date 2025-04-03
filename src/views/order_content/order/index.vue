@@ -219,7 +219,11 @@
       <el-table-column align="center" label="客户编号" prop="customerId"/>
       <el-table-column align="center" label="姓名" prop="name"/>
       <el-table-column align="center" label="手机" prop="phone" width="120"/>
-      <el-table-column align="center" label="地址" min-width="280" prop="address"/>
+      <el-table-column align="center" label="地址" min-width="280" prop="address">
+        <template slot-scope="scope">
+          <div>{{ scope.row.province + scope.row.city + scope.row.district + scope.row.detailAddress }}</div>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="微信" prop="wechat"/>
       <el-table-column align="center" label="商品数量" prop="orderGoodsList" width="180">
         <template v-slot="scope">
@@ -382,31 +386,37 @@
             >
               <el-link type="primary">踢回修改</el-link>
             </div>
-            <div v-if="detailOrder.status === '1' || detailOrder.status === '2'" class="bgf-pd10 ml10 mt1"
+            <div v-if="!detailOrder.trackingNumber && detailOrder.status === '2'" class="bgf-pd10 ml10 mt1"
                  @click="createSFOrder(detailOrder.orderId)"
             >
               <el-link type="primary">获取顺丰单号</el-link>
             </div>
-            <div v-if="detailOrder.status === '1' || detailOrder.status === '2'" class="bgf-pd10 ml10 mt1"
+
+            <div v-if="!detailOrder.trackingNumber && detailOrder.status === '2'" class="bgf-pd10 ml10 mt1"
                  @click="searchSFOrder(detailOrder.orderId)"
             >
               <el-link type="primary">查询顺丰单号</el-link>
             </div>
-            <div v-if="detailOrder.status === '1' || detailOrder.status === '2'" class="bgf-pd10 ml10 mt1"
+
+            <div v-if="detailOrder.trackingNumber" class="bgf-pd10 ml10 mt1"
                  @click="cancelSFOrder(detailOrder.orderId)"
             >
               <el-link type="primary">取消顺丰单号</el-link>
             </div>
-            <div v-if="detailOrder.status === '1' || detailOrder.status === '2'" class="bgf-pd10 ml10 mt1"
-                 @click="searchSFRoutes(detailOrder.orderId)"
-            >
-              <el-link type="primary">查询物流信息</el-link>
-            </div>
-            <div>
+            <div v-if="detailOrder.trackingNumber">
               <el-button
                 :loading="printing"
                 type="primary"
                 @click="handlePrint"
+              >
+                打印面单
+              </el-button>
+            </div>
+            <div v-if="detailOrder.trackingNumber">
+              <el-button
+                :loading="printing"
+                type="primary"
+                @click="clickPrint"
               >
                 打印面单
               </el-button>
@@ -425,10 +435,15 @@
                   />
                 </el-select>
                 <span slot="footer">
-        <el-button @click="showPrinterDialog = false">取消</el-button>
-        <el-button type="primary" @click="confirmPrinter">确定</el-button>
-      </span>
+                  <el-button @click="showPrinterDialog = false">取消</el-button>
+                  <el-button type="primary" @click="confirmPrinter">确定</el-button>
+                </span>
               </el-dialog>
+            </div>
+            <div v-if="detailOrder.trackingNumber" class="bgf-pd10 ml10 mt1"
+                 @click="searchSFRoutes(detailOrder.orderId)"
+            >
+              <el-link type="primary">查询物流信息</el-link>
             </div>
             <div v-if="detailOrder.status === '2'" class="bgf-pd10 ml10">
               <el-popover
@@ -587,7 +602,7 @@ import Editor from '@/views/order_content/editor/editor.vue'
 import DetailBox from '@/views/components/detailBox/index.vue'
 import { getCustomer } from '@/api/customer_order_goods/customer'
 import { cancelSFOrder, createSFOrder, querySFOrder } from '../../../api/customer_order_goods/order'
-import { initSfPrint, printWaybill } from '../../../utils/sfPrint'
+import { initSfPrint } from '../../../utils/sfPrint'
 
 const statusTabsActiveNameMap = new Map([['all', null], ['modified', 0], ['review', 1], ['pendingShipment', 2], ['Shipped', 3], ['received', 4], ['rejected', 5], ['refund', 6]])
 
@@ -751,19 +766,34 @@ export default {
     async handlePrint() {
       try {
         const token = await this.$store.dispatch('order/getSfToken');
+        const loading = this.$loading({
+          lock: true,
+          text: '打印中....',
+          spinner: 'el-icon-loading',
+          background: 'rgba(0, 0, 0, 0.7)'
+        });
         const result = await window.sfPrinter.print({
           requestID: `PRINT_${Date.now()}`,
           accessToken: token,
-          templateCode: 'fm_76165_standard2_YNR1URDE',
-          documents: [{ masterWaybillNo: this.detailOrder.trackingNumber }]
+          templateCode: 'fm_76130_standard_YNR1URDE',
+          documents: [{ masterWaybillNo: this.detailOrder.trackingNumber }, { masterWaybillNo: "SF7444495986133" }]
+        }, (callback) => {
+          loading.close();
+          if (callback.code === 1) {
+            this.$modal.msg("打印成功")
+          }
         });
 
         if (result.code === 1) {
           console.log('打印任务已推送');
+
         }
       } catch (error) {
-        console.error('打印失败:', error);
       }
+    },
+    async clickPrint() {
+      this.printers = await window.SCPPrint.getPrinters();
+      this.showPrinterDialog = true
     },
     // async loadPrinters() {
     //   try {
@@ -806,8 +836,6 @@ export default {
         this.showPrinterDialog = false;
       }
     },
-
-
 
     /** tab点击操作 */
     tabHandleClick(data) {
